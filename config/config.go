@@ -13,6 +13,11 @@ func InitConfig() {
 }
 
 func initDefaults() {
+
+	// JWT
+	viper.SetDefault("api.secret", "")
+
+	// Database
 	viper.SetDefault("db.name", "")
 	viper.SetDefault("db.user", "")
 	viper.SetDefault("db.pass", "")
