@@ -1,25 +1,20 @@
 package main
 
 import (
-	"net/http"
-	"time"
-
 	"github.com/CalendarPal/calpal-api/config"
-	"github.com/CalendarPal/calpal-api/models"
-
-	"github.com/go-chi/chi"
-	"github.com/rs/cors"
+	"github.com/CalendarPal/calpal-api/controllers"
+	"github.com/CalendarPal/calpal-api/seed"
 )
 
+var server = controllers.Server{}
+
 func main() {
-	r := chi.NewRouter()
 
 	config.InitConfig()
 
-	handler := cors.AllowAll().Handler(r)
+	server.Initialize()
 
-	time.Sleep(time.Second * 2)
-	models.InitModels()
+	seed.Load(server.DB)
 
-	http.ListenAndServe(":8080", handler)
+	server.Run(":8080")
 }
