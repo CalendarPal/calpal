@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/CalendarPal/calpal-api/handlers"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,8 +18,8 @@ func main() {
 
 	router := gin.Default()
 
-	router.GET("/api/account", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"hello": "world"})
+	handlers.NewHandler(&handlers.Config{
+		R: router,
 	})
 
 	srv := &http.Server{
