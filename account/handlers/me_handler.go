@@ -1,0 +1,46 @@
+package handlers
+
+import (
+	"log"
+	"net/http"
+
+	"github.com/CalendarPal/calpal-api/models"
+	"github.com/CalendarPal/calpal-api/utils/apperrors"
+	"github.com/gin-gonic/gin"
+)
+
+// Me handler calls services to get the users details
+func (h *Handler) Me(c *gin.Context) {
+	// TODO: Add *models.User to context in middleware
+	user, exists := c.Get("user")
+
+	// This should never happen due to the middleware throwing an error but ill leave it here for extra safety
+	if !exists {
+		log.Printf("Unable to extract user from the request context: %v\n", c)
+		err := apperrors.NewInternal()
+		c.JSON(err.Status(), gin.H{
+			"error": err,
+		})
+
+		return
+	}
+
+	uid := user.(*models.User).UID
+
+	// gin.Context satisfies the go context.Context interface
+	u, err := h.UserService.Get(c, uid)
+
+	if err != nil {
+		log.Printf("Unable to find user: %v\n%v", uid, err)
+		e := apperrors.NewNotFound("user", uid.String())
+
+		c.JSON(e.Status(), gin.H{
+			"error": e,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"user": u,
+	})
+}

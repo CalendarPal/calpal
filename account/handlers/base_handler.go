@@ -4,19 +4,24 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/CalendarPal/calpal-api/models"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
+	UserService models.UserService
 }
 
 type Config struct {
-	R *gin.Engine
+	R           *gin.Engine
+	UserService models.UserService
 }
 
 func NewHandler(c *Config) {
 
-	h := &Handler{}
+	h := &Handler{
+		UserService: c.UserService,
+	}
 
 	g := c.R.Group(os.Getenv("ACCOUNT_API_URL"))
 
@@ -30,11 +35,7 @@ func NewHandler(c *Config) {
 	g.PUT("/details", h.Details)
 }
 
-func (h *Handler) Me(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"this is": "me",
-	})
-}
+
 
 func (h *Handler) Signup(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
