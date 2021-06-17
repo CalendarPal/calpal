@@ -1,4 +1,4 @@
-package services
+package auth
 
 import (
 	"crypto/rand"
@@ -9,7 +9,7 @@ import (
 	"golang.org/x/crypto/scrypt"
 )
 
-func hashPassword(password string) (string, error) {
+func HashPassword(password string) (string, error) {
 
 	salt := make([]byte, 32)
 	_, err := rand.Read(salt)
@@ -28,7 +28,7 @@ func hashPassword(password string) (string, error) {
 	return hashedPassword, nil
 }
 
-func comparePasswords(storedPassword string, suppliedPassword string) (bool, error) {
+func ComparePasswords(storedPassword string, suppliedPassword string) (bool, error) {
 
 	pwsalt := strings.Split(storedPassword, ".")
 
