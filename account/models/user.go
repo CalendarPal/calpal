@@ -7,11 +7,12 @@ import (
 )
 
 type User struct {
-	UID       uuid.UUID `gorm:"primary_key;auto_increment" json:"uid"`
-	Name      string    `gorm:"size:255;not null" json:"name"`
-	Email     string    `gorm:"size:100;not null" json:"email"`
-	Password  string    `gorm:"size:100;not null;" json:"password"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
-	ImageURL  string    `json:"imageUrl"`
+	UID       uuid.UUID `db:"uid" json:"uid"`
+	Email     string    `db:"email" json:"email"`
+	Password  string    `db:"password" json:"-"`
+	Name      string    `db:"name" json:"name"`
+	ImageURL  string    `db:"image_url" json:"imageUrl"`
+	Website   string    `db:"website" json:"website"`
+	CreatedAt time.Time `db:"created_at" json:"createdAt"`
+	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
 }
