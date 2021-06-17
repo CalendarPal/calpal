@@ -120,6 +120,7 @@ func TestSignup(t *testing.T) {
 		assert.Equal(t, 400, rr.Code)
 		mockUserService.AssertNotCalled(t, "Signup")
 	})
+
 	t.Run("Password too long", func(t *testing.T) {
 
 		mockUserService := new(mocks.MockUserService)
@@ -190,5 +191,120 @@ func TestSignup(t *testing.T) {
 
 		assert.Equal(t, 409, rr.Code)
 		mockUserService.AssertExpectations(t)
+	})
+
+	t.Run("Successful Token Creation", func(t *testing.T) {
+		u := &models.User{
+			Email:    "bob@bob.com",
+			Password: "avalidpassword",
+		}
+
+		mockTokenResp := &models.TokenPair{
+			IDToken:      "idToken",
+			RefreshToken: "refreshToken",
+		}
+
+		mockUserService := new(mocks.MockUserService)
+		mockTokenService := new(mocks.MockTokenService)
+
+		mockUserService.
+			On("Signup", mock.AnythingOfType("*gin.Context"), u).
+			Return(nil)
+		mockTokenService.
+			On("NewPairFromUser", mock.AnythingOfType("*gin.Context"), u, "").
+			Return(mockTokenResp, nil)
+
+		// Http response recorder
+		rr := httptest.NewRecorder()
+
+		router := gin.Default()
+
+		handlers.NewHandler(&handlers.Config{
+			R:            router,
+			UserService:  mockUserService,
+			TokenService: mockTokenService,
+		})
+
+		// Create a request body
+		reqBody, err := json.Marshal(gin.H{
+			"email":    u.Email,
+			"password": u.Password,
+		})
+		assert.NoError(t, err)
+
+		// Create a reader
+		request, err := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(reqBody))
+		assert.NoError(t, err)
+
+		request.Header.Set("Content-Type", "application/json")
+
+		router.ServeHTTP(rr, request)
+
+		respBody, err := json.Marshal(gin.H{
+			"tokens": mockTokenResp,
+		})
+		assert.NoError(t, err)
+
+		assert.Equal(t, http.StatusCreated, rr.Code)
+		assert.Equal(t, respBody, rr.Body.Bytes())
+
+		mockUserService.AssertExpectations(t)
+		mockTokenService.AssertExpectations(t)
+	})
+
+	t.Run("Failed Token Creation", func(t *testing.T) {
+		u := &models.User{
+			Email:    "bob@bob.com",
+			Password: "avalidpassword",
+		}
+
+		mockErrorResponse := apperrors.NewInternal()
+
+		mockUserService := new(mocks.MockUserService)
+		mockTokenService := new(mocks.MockTokenService)
+
+		mockUserService.
+			On("Signup", mock.AnythingOfType("*gin.Context"), u).
+			Return(nil)
+		mockTokenService.
+			On("NewPairFromUser", mock.AnythingOfType("*gin.Context"), u, "").
+			Return(nil, mockErrorResponse)
+
+		// Http response recorder
+		rr := httptest.NewRecorder()
+
+		router := gin.Default()
+
+		handlers.NewHandler(&handlers.Config{
+			R:            router,
+			UserService:  mockUserService,
+			TokenService: mockTokenService,
+		})
+
+		// Create a request body
+		reqBody, err := json.Marshal(gin.H{
+			"email":    u.Email,
+			"password": u.Password,
+		})
+		assert.NoError(t, err)
+
+		// Create a reader
+		request, err := http.NewRequest(http.MethodPost, "/signup", bytes.NewBuffer(reqBody))
+		assert.NoError(t, err)
+
+		request.Header.Set("Content-Type", "application/json")
+
+		router.ServeHTTP(rr, request)
+
+		respBody, err := json.Marshal(gin.H{
+			"error": mockErrorResponse,
+		})
+		assert.NoError(t, err)
+
+		assert.Equal(t, mockErrorResponse.Status(), rr.Code)
+		assert.Equal(t, respBody, rr.Body.Bytes())
+
+		mockUserService.AssertExpectations(t)
+		mockTokenService.AssertExpectations(t)
 	})
 }
