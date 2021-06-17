@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/CalendarPal/calpal-api/models"
+	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,8 +34,6 @@ func NewHandler(c *Config) {
 	g.DELETE("/image", h.DeleteImage)
 	g.PUT("/details", h.Details)
 }
-
-
 
 func (h *Handler) Signup(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{

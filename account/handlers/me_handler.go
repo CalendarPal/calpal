@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/CalendarPal/calpal-api/models"
-	"github.com/CalendarPal/calpal-api/utils/apperrors"
+	"github.com/CalendarPal/calpal-api/account/models"
+	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 )
 

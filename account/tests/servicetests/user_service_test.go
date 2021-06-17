@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/CalendarPal/calpal-api/models"
-	"github.com/CalendarPal/calpal-api/services"
-	"github.com/CalendarPal/calpal-api/tests/mocks"
+	"github.com/CalendarPal/calpal-api/account/models"
+	"github.com/CalendarPal/calpal-api/account/services"
+	"github.com/CalendarPal/calpal-api/account/tests/mocks"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

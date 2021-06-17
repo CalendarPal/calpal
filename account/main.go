@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/CalendarPal/calpal-api/handlers"
+	"github.com/CalendarPal/calpal-api/account/handlers"
 	"github.com/gin-gonic/gin"
 )
 

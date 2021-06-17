@@ -3,7 +3,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/CalendarPal/calpal-api/models"
+	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 )

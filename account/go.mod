@@ -1,4 +1,4 @@
-module github.com/CalendarPal/calpal-api
+module github.com/CalendarPal/calpal-api/account
 
 go 1.16
 
