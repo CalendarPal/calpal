@@ -33,3 +33,16 @@ func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*mode
 
 	return r0, r1
 }
+
+// Mock of UserRepository Create
+func (m *MockUserRepository) Create(ctx context.Context, u *models.User) error {
+
+	ret := m.Called(ctx, u)
+
+	var r0 error
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(error)
+	}
+
+	return r0
+}
