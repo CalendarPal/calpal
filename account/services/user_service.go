@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/CalendarPal/calpal-api/account/auth"
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
 	"github.com/google/uuid"
@@ -37,7 +38,7 @@ func (s *UserService) Get(ctx context.Context, uid uuid.UUID) (*models.User, err
 // Checks using the UserRepository that the email address is available, then signs up the user
 func (s *UserService) Signup(ctx context.Context, u *models.User) error {
 
-	pw, err := hashPassword(u.Password)
+	pw, err := auth.HashPassword(u.Password)
 	if err != nil {
 		log.Printf("Unable to signup user with email: %v\n", u.Email)
 		return apperrors.NewInternal()
