@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
@@ -17,7 +18,7 @@ type signupRequest struct {
 
 // Signup handler
 func (h *Handler) Signup(c *gin.Context) {
-	
+
 	// Variable to hold the incoming json body {email, password}
 	var req signupRequest
 
@@ -40,4 +41,22 @@ func (h *Handler) Signup(c *gin.Context) {
 		})
 		return
 	}
+
+	// Create a token pair as strings
+	tokens, err := h.TokenService.NewPairFromUser(c, u, "")
+
+	if err != nil {
+		log.Printf("Failed to create tokens for user: %v\n", err.Error())
+
+		// TODO: Create rollback logic to ensure the "created user" is cleared from the database
+
+		c.JSON(apperrors.Status(err), gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"tokens": tokens,
+	})
 }
