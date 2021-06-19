@@ -1,6 +1,7 @@
 package data
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
@@ -18,6 +19,17 @@ type invalidArgument struct {
 
 // Helper function, returns false if data is not bound
 func BindData(c *gin.Context, req interface{}) bool {
+
+	if c.ContentType() != "application/json" {
+		msg := fmt.Sprintf("%s only accepts Content-Type application/json", c.FullPath())
+
+		err := apperrors.NewUnsupportedMediaType(msg)
+
+		c.JSON(err.Status(), gin.H{
+			"error": err,
+		})
+		return false
+	}
 
 	// Bind incoming json to struct and check for validation errors
 	if err := c.ShouldBind(req); err != nil {

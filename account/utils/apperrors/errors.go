@@ -11,12 +11,13 @@ type Type string
 
 // valid errorTypes
 const (
-	Authorization   Type = "AUTHORIZATION"   // Authentication Failures - 401
-	BadRequest      Type = "BADREQUEST"      // Validation errors / BadInput - 400
-	Conflict        Type = "CONFLICT"        // Already exists (e.g create account with existent email) - 409
-	Internal        Type = "INTERNAL"        // Server and fallback errors - 500
-	NotFound        Type = "NOTFOUND"        // Resource not found - 404
-	PayloadTooLarge Type = "PAYLOADTOOLARGE" // Uploading too much data - 413
+	Authorization        Type = "AUTHORIZATION"        // Authentication Failures - 401
+	BadRequest           Type = "BADREQUEST"           // Validation errors / BadInput - 400
+	Conflict             Type = "CONFLICT"             // Already exists (e.g create account with existent email) - 409
+	Internal             Type = "INTERNAL"             // Server and fallback errors - 500
+	NotFound             Type = "NOTFOUND"             // Resource not found - 404
+	PayloadTooLarge      Type = "PAYLOADTOOLARGE"      // Uploading too much data - 413
+	UnsupportedMediaType Type = "UNSUPPORTEDMEDIATYPE" // Uploading incorrect media type - 415
 )
 
 // Custom error
@@ -45,6 +46,8 @@ func (e *Error) Status() int {
 		return http.StatusNotFound
 	case PayloadTooLarge:
 		return http.StatusRequestEntityTooLarge
+	case UnsupportedMediaType:
+		return http.StatusUnsupportedMediaType
 	default:
 		return http.StatusInternalServerError
 	}
@@ -108,5 +111,13 @@ func NewPayloadTooLarge(maxBodySize int64, contentLength int64) *Error {
 	return &Error{
 		Type:    PayloadTooLarge,
 		Message: fmt.Sprintf("Max payload size of %v exceeded. Actual payload size: %v", maxBodySize, contentLength),
+	}
+}
+
+// NewUnsupportedMediaType ->	415
+func NewUnsupportedMediaType(reason string) *Error {
+	return &Error{
+		Type:    UnsupportedMediaType,
+		Message: reason,
 	}
 }
