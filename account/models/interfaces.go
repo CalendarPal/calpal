@@ -11,6 +11,7 @@ import (
 type UserService interface {
 	Get(ctx context.Context, uid uuid.UUID) (*User, error)
 	Signup(ctx context.Context, u *User) error
+	Signin(ctx context.Context, u *User) error
 }
 
 // TokenService defines methods the handler later expects to interact with to produce JWT's as string

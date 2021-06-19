@@ -51,3 +51,8 @@ func (s *UserService) Signup(ctx context.Context, u *models.User) error {
 
 	return nil
 }
+
+// Checks using the UserRepository that the user exists, then compares the supplied password with the provided password
+func (s *UserService) Signin(ctx context.Context, u *models.User) error {
+	panic("Not implemented")
+}
