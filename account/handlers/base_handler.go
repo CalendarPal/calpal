@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/gin-gonic/gin"
@@ -19,6 +18,7 @@ type Config struct {
 	R            *gin.Engine
 	UserService  models.UserService
 	TokenService models.TokenService
+	BaseURL      string
 }
 
 // Initializes the handler with the required injected services and the http routes
@@ -31,7 +31,7 @@ func NewHandler(c *Config) {
 	}
 
 	// Create the account group
-	g := c.R.Group(os.Getenv("ACCOUNT_API_URL"))
+	g := c.R.Group(c.BaseURL)
 
 	g.GET("/me", h.Me)
 	g.POST("/signup", h.Signup)

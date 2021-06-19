@@ -25,7 +25,7 @@ func (r *PostgresUserRepository) Create(ctx context.Context, u *models.User) err
 
 	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *"
 
-	if err := r.DB.Get(u, query, u.Email, u.Password); err != nil {
+	if err := r.DB.GetContext(ctx, u, query, u.Email, u.Password); err != nil {
 		// Checks the unique constraint
 		if err, ok := err.(*pq.Error); ok && err.Code.Name() == "unique_violation" {
 			log.Printf("Could not create a user with email: %v. Reason: %v\n", u.Email, err.Code.Name())
@@ -45,7 +45,7 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*
 	query := "SELECT * FROM users WHERE uid=$1"
 
 	// TODO: Further error checking
-	if err := r.DB.Get(user, query, uid); err != nil {
+	if err := r.DB.GetContext(ctx, user, query, uid); err != nil {
 		return user, apperrors.NewNotFound("uid", uid.String())
 	}
 
