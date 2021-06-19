@@ -23,9 +23,10 @@ func inject(d *dataSources) (*gin.Engine, error) {
 	 * Repository layer
 	 */
 	userRepository := repository.NewUserRepository(d.DB)
+	tokenRepository := repository.NewTokenRepository(d.RedisClient)
 
 	/*
-	 * Repository layer
+	 * Service layer
 	 */
 	userService := services.NewUserService(&services.UserServiceConfig{
 		UserRepository: userRepository,
@@ -76,6 +77,7 @@ func inject(d *dataSources) (*gin.Engine, error) {
 	}
 
 	tokenService := services.NewTokenService(&services.TokenServiceConfig{
+		TokenRepository:       tokenRepository,
 		PrivKey:               privKey,
 		PubKey:                pubKey,
 		RefreshSecret:         refreshSecret,
