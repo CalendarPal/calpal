@@ -11,13 +11,14 @@ type Type string
 
 // valid errorTypes
 const (
-	Authorization        Type = "AUTHORIZATION"        // Authentication Failures - 401
-	BadRequest           Type = "BADREQUEST"           // Validation errors / BadInput - 400
-	Conflict             Type = "CONFLICT"             // Already exists (e.g create account with existent email) - 409
-	Internal             Type = "INTERNAL"             // Server and fallback errors - 500
-	NotFound             Type = "NOTFOUND"             // Resource not found - 404
-	PayloadTooLarge      Type = "PAYLOADTOOLARGE"      // Uploading too much data - 413
-	UnsupportedMediaType Type = "UNSUPPORTEDMEDIATYPE" // Uploading incorrect media type - 415
+	Authorization        Type = "AUTHORIZATION"          // Authentication Failures - 401
+	BadRequest           Type = "BAD_REQUEST"            // Validation errors / BadInput - 400
+	Conflict             Type = "CONFLICT"               // Already exists (e.g create account with existent email) - 409
+	Internal             Type = "INTERNAL"               // Server and fallback errors - 500
+	NotFound             Type = "NOT_FOUND"              // Resource not found - 404
+	PayloadTooLarge      Type = "PAYLOAD_TOO_LARGE"      // Uploading too much data - 413
+	ServiceUnavailable   Type = "SERVICE_UNAVAILABLE"    // Handler running for too long - 503
+	UnsupportedMediaType Type = "UNSUPPORTED_MEDIA_TYPE" // Uploading incorrect media type - 415
 )
 
 // Custom error
@@ -46,6 +47,8 @@ func (e *Error) Status() int {
 		return http.StatusNotFound
 	case PayloadTooLarge:
 		return http.StatusRequestEntityTooLarge
+	case ServiceUnavailable:
+		return http.StatusServiceUnavailable
 	case UnsupportedMediaType:
 		return http.StatusUnsupportedMediaType
 	default:
@@ -114,7 +117,15 @@ func NewPayloadTooLarge(maxBodySize int64, contentLength int64) *Error {
 	}
 }
 
-// NewUnsupportedMediaType ->	415
+// NewServiceUnavailable ->	code 503
+func NewServiceUnavailable() *Error {
+	return &Error{
+		Type:    ServiceUnavailable,
+		Message: fmt.Sprintf("Service unavailable or timed out"),
+	}
+}
+
+// NewUnsupportedMediaType ->	code 415
 func NewUnsupportedMediaType(reason string) *Error {
 	return &Error{
 		Type:    UnsupportedMediaType,

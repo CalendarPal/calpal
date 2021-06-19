@@ -2,8 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/CalendarPal/calpal-api/account/middlewares"
 	"github.com/CalendarPal/calpal-api/account/models"
+	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,10 +18,11 @@ type Handler struct {
 
 // Holds services that will be injected into the handler layer on handler initialization
 type Config struct {
-	R            *gin.Engine
-	UserService  models.UserService
-	TokenService models.TokenService
-	BaseURL      string
+	R               *gin.Engine
+	UserService     models.UserService
+	TokenService    models.TokenService
+	BaseURL         string
+	TimeoutDuration time.Duration
 }
 
 // Initializes the handler with the required injected services and the http routes
@@ -32,6 +36,10 @@ func NewHandler(c *Config) {
 
 	// Create the account group
 	g := c.R.Group(c.BaseURL)
+
+	if gin.Mode() != gin.TestMode {
+		g.Use(middlewares.Timeout(c.TimeoutDuration, apperrors.NewServiceUnavailable()))
+	}
 
 	g.GET("/me", h.Me)
 	g.POST("/signup", h.Signup)
