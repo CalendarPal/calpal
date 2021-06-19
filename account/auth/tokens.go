@@ -17,10 +17,10 @@ type IDTokenCustomClaims struct {
 }
 
 // Generate an IDToken which is a JWT with Custom Claims
-func GenerateIDToken(u *models.User, key *rsa.PrivateKey) (string, error) {
+func GenerateIDToken(u *models.User, key *rsa.PrivateKey, exp int64) (string, error) {
 
 	unixTime := time.Now().Unix()
-	tokenExp := unixTime + 60*15 // 15 minutes from current time
+	tokenExp := unixTime + exp
 
 	claims := IDTokenCustomClaims{
 		User: u,
@@ -55,10 +55,10 @@ type RefreshTokenCustomClaims struct {
 }
 
 // Creates a refresh token, the refresh token stores only the user's ID
-func GenerateRefreshToken(uid uuid.UUID, key string) (*RefreshToken, error) {
+func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshToken, error) {
 
 	currentTime := time.Now()
-	tokenExp := currentTime.AddDate(0, 0, 3) // 3 days
+	tokenExp := currentTime.Add(time.Duration(exp) * time.Second)
 	tokenID, err := uuid.NewRandom()
 
 	if err != nil {

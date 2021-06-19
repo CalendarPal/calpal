@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/CalendarPal/calpal-api/account/handlers"
 	"github.com/CalendarPal/calpal-api/account/repository"
@@ -60,19 +61,39 @@ func inject(d *dataSources) (*gin.Engine, error) {
 	// Load refresh token secret from env variable
 	refreshSecret := os.Getenv("REFRESH_SECRET")
 
+	// Load expiration lengths from env variables and parse as int
+	idTokenExp := os.Getenv("ID_TOKEN_EXP")
+	refreshTokenExp := os.Getenv("REFRESH_TOKEN_EXP")
+
+	idExp, err := strconv.ParseInt(idTokenExp, 0, 64)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse ID_TOKEN_EXP as int: %w", err)
+	}
+
+	refreshExp, err := strconv.ParseInt(refreshTokenExp, 0, 64)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse REFRESH_TOKEN_EXP as int: %w", err)
+	}
+
 	tokenService := services.NewTokenService(&services.TokenServiceConfig{
-		PrivKey:       privKey,
-		PubKey:        pubKey,
-		RefreshSecret: refreshSecret,
+		PrivKey:               privKey,
+		PubKey:                pubKey,
+		RefreshSecret:         refreshSecret,
+		IDExpirationSecs:      idExp,
+		RefreshExpirationSecs: refreshExp,
 	})
 
 	// Initialize gin.Engine
 	router := gin.Default()
 
+	// Read in ACCOUNT_API_URL
+	baseURL := os.Getenv("ACCOUNT_API_URL")
+
 	handlers.NewHandler(&handlers.Config{
 		R:            router,
 		UserService:  userService,
 		TokenService: tokenService,
+		BaseURL:      baseURL,
 	})
 
 	return router, nil
