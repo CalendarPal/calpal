@@ -41,10 +41,10 @@ func GenerateIDToken(u *models.User, key *rsa.PrivateKey, exp int64) (string, er
 	return ss, nil
 }
 
-// RefreshToken Struct holds the actual signed JWT string along with the ID
-type RefreshToken struct {
+// RefreshTokenData Struct holds the actual signed JWT string along with the ID
+type RefreshTokenData struct {
 	SS        string
-	ID        string
+	ID        uuid.UUID
 	ExpiresIn time.Duration
 }
 
@@ -55,7 +55,7 @@ type RefreshTokenCustomClaims struct {
 }
 
 // GenerateRefreshToken Creates a refresh token, the refresh token stores only the user's ID
-func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshToken, error) {
+func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshTokenData, error) {
 	currentTime := time.Now()
 	tokenExp := currentTime.Add(time.Duration(exp) * time.Second)
 	tokenID, err := uuid.NewRandom()
@@ -82,9 +82,9 @@ func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshToken, 
 		return nil, err
 	}
 
-	return &RefreshToken{
+	return &RefreshTokenData{
 		SS:        ss,
-		ID:        tokenID.String(),
+		ID:        tokenID,
 		ExpiresIn: tokenExp.Sub(currentTime),
 	}, nil
 }
