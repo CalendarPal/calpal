@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"crypto/rsa"
+	"github.com/google/uuid"
 	"log"
 
 	"github.com/CalendarPal/calpal-api/account/auth"
@@ -44,6 +45,15 @@ func NewTokenService(c *TokenServiceConfig) models.TokenService {
 }
 
 func (s *TokenService) NewPairFromUser(ctx context.Context, u *models.User, prevTokenID string) (*models.TokenPair, error) {
+	// Delete user's current refresh token if possible
+	if prevTokenID != "" {
+		if err := s.TokenRepository.DeleteRefreshToken(ctx, u.UID.String(), prevTokenID); err != nil {
+			log.Printf("Could not delete previous refreshToken for uid: %v, tokenID: %v\n", u.UID.String(), prevTokenID)
+
+			return nil, err
+		}
+	}
+
 	idToken, err := auth.GenerateIDToken(u, s.PrivKey, s.IDExpirationSecs)
 
 	if err != nil {
@@ -64,13 +74,6 @@ func (s *TokenService) NewPairFromUser(ctx context.Context, u *models.User, prev
 		return nil, apperrors.NewInternal()
 	}
 
-	// Delete user's current refresh token
-	if prevTokenID != "" {
-		if err := s.TokenRepository.DeleteRefreshToken(ctx, u.UID.String(), prevTokenID); err != nil {
-			log.Printf("Could not delete previous refreshToken for uid: %v, tokenID: %v\n", u.UID.String(), prevTokenID)
-		}
-	}
-
 	return &models.TokenPair{
 		IDToken:      models.IDToken{SS: idToken},
 		RefreshToken: models.RefreshToken{SS: refreshToken.SS, ID: refreshToken.ID, UID: u.UID},
@@ -88,4 +91,29 @@ func (s *TokenService) ValidateIDToken(tokenString string) (*models.User, error)
 	}
 
 	return claims.User, nil
+}
+
+// ValidateRefreshToken Validates the JWT string provided then returns a RefreshToken
+func (s *TokenService) ValidateRefreshToken(tokenString string) (*models.RefreshToken, error) {
+	// Validate the actual JWT with secret
+	claims, err := auth.ValidateRefreshToken(tokenString, s.RefreshSecret)
+
+	// Return unauthorized error if user verification fails
+	if err != nil {
+		log.Printf("Unable to validate or parse refreshToken for token string: %s\n%v\n", tokenString, err)
+		return nil, apperrors.NewAuthorization("Unable to verify user from refreshToken")
+	}
+
+	tokenUUID, err := uuid.Parse(claims.Id)
+
+	if err != nil {
+		log.Printf("Claims ID could not be parsed as UUID: %s\n%v\n", claims.Id, err)
+		return nil, apperrors.NewAuthorization("Unable to verify user from refreshToken")
+	}
+
+	return &models.RefreshToken{
+		SS:  tokenString,
+		ID:  tokenUUID,
+		UID: claims.UID,
+	}, nil
 }
