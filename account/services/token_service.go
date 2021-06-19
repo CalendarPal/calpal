@@ -31,7 +31,7 @@ type TokenServiceConfig struct {
 	RefreshExpirationSecs int64
 }
 
-// Initializes a UserService with its repository layer dependencies
+// Initializes a UserService with its repositories layer dependencies
 func NewTokenService(c *TokenServiceConfig) models.TokenService {
 	return &TokenService{
 		TokenRepository:       c.TokenRepository,

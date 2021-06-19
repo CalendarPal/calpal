@@ -9,22 +9,22 @@ import (
 	"time"
 
 	"github.com/CalendarPal/calpal-api/account/handlers"
-	"github.com/CalendarPal/calpal-api/account/repository"
+	"github.com/CalendarPal/calpal-api/account/repositories"
 	"github.com/CalendarPal/calpal-api/account/services"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
 // Initialize a handler starting from data sources which injects into
-// the repository layer, the service layer, and the handler layer
+// the repositories layer, the service layer, and the handler layer
 func inject(d *dataSources) (*gin.Engine, error) {
 	log.Println("Injecting data sources")
 
 	/*
 	 * Repository layer
 	 */
-	userRepository := repository.NewUserRepository(d.DB)
-	tokenRepository := repository.NewTokenRepository(d.RedisClient)
+	userRepository := repositories.NewUserRepository(d.DB)
+	tokenRepository := repositories.NewTokenRepository(d.RedisClient)
 
 	/*
 	 * Service layer

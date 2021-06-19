@@ -20,7 +20,7 @@ type UserServiceConfig struct {
 	UserRepository models.UserRepository
 }
 
-// Initializes a UserService with its repository layer dependencies
+// Initializes a UserService with its repositories layer dependencies
 func NewUserService(c *UserServiceConfig) models.UserService {
 	return &UserService{
 		UserRepository: c.UserRepository,

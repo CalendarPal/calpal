@@ -19,13 +19,13 @@ type TokenService interface {
 	NewPairFromUser(ctx context.Context, u *User, prevTokenID string) (*TokenPair, error)
 }
 
-// UserRepository defines methods the service layer expects the repository it interacts with to implement
+// UserRepository defines methods the service layer expects the repositories it interacts with to implement
 type UserRepository interface {
 	FindByID(ctx context.Context, uid uuid.UUID) (*User, error)
 	Create(ctx context.Context, u *User) error
 }
 
-// TokenRepository defines methods the service layer expects the repository it interacts with to implement
+// TokenRepository defines methods the service layer expects the repositories it interacts with to implement
 type TokenRepository interface {
 	SetRefreshToken(ctx context.Context, userID string, tokenID string, expiresIn time.Duration) error
 	DeleteRefreshToken(ctx context.Context, userID string, prevTokenID string) error
