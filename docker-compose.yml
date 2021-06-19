@@ -13,21 +13,21 @@ services:
       - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  postgres-auth:
+  postgres-account:
     image: "postgres:alpine"
     environment:
       - POSTGRES_PASSWORD=***
     ports:
       - "5432:5432"
     volumes:
-      - "pgdata_auth:/var/lib/postgresql/data"
+      - "pgdata_account:/var/lib/postgresql/data"
     command: ["postgres", "-c", "log_statement=all"]
   account:
     build:
       context: ./account
       target: builder
     image: account
-    env_file: .env.dev
+    env_file: ./account/.env.dev
     expose:
       - "8080"
     labels:
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./account:/go/src/app
     depends_on:
-      - postgres-auth
+      - postgres-account
     command: reflex -r "\.go$$" -s -- sh -c "go run ./"
 volumes:
-  pgdata_auth:
+  pgdata_account:
