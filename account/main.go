@@ -8,19 +8,23 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-
-	"github.com/CalendarPal/calpal-api/account/handlers"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	log.Println("Starting server...")
 
-	router := gin.Default()
+	// Initialize data sources
+	ds, err := initDS()
 
-	handlers.NewHandler(&handlers.Config{
-		R: router,
-	})
+	if err != nil {
+		log.Fatalf("Unable to initialize data sources: %v\n", err)
+	}
+
+	router, err := inject(ds)
+
+	if err != nil {
+		log.Fatalf("Failed to inject data sources: %v\n", err)
+	}
 
 	srv := &http.Server{
 		Addr:    ":8080",
@@ -47,6 +51,11 @@ func main() {
 	// CTX tells the server it has 5 seconds to finish the request it is currently handling
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	// Shutdown data sources
+	if err := ds.close(); err != nil {
+		log.Fatalf("A problem occurred gracefully shutting down data sources: %v\n", err)
+	}
 
 	// Shutdown server
 	log.Println("Shutting down server...")
