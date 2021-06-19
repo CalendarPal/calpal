@@ -49,3 +49,20 @@ func (m *MockTokenService) ValidateIDToken(tokenString string) (*models.User, er
 
 	return r0, r1
 }
+
+// ValidateRefreshToken Mock of ValidateRefreshToken
+func (m *MockTokenService) ValidateRefreshToken(refreshTokenString string) (*models.RefreshToken, error) {
+	ret := m.Called(refreshTokenString)
+
+	var r0 *models.RefreshToken
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(*models.RefreshToken)
+	}
+
+	var r1 error
+	if ret.Get(1) != nil {
+		r1 = ret.Get(1).(error)
+	}
+
+	return r0, r1
+}
