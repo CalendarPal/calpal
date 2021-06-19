@@ -21,7 +21,7 @@ const (
 	UnsupportedMediaType Type = "UNSUPPORTED_MEDIA_TYPE" // Uploading incorrect media type - 415
 )
 
-// Custom error
+// Error Custom error
 type Error struct {
 	Type    Type   `json:"type"`
 	Message string `json:"message"`
@@ -32,7 +32,7 @@ func (e *Error) Error() string {
 	return e.Message
 }
 
-// Mapping errors to status codes
+// Status Mapping errors to status codes
 func (e *Error) Status() int {
 	switch e.Type {
 	case Authorization:
@@ -121,7 +121,7 @@ func NewPayloadTooLarge(maxBodySize int64, contentLength int64) *Error {
 func NewServiceUnavailable() *Error {
 	return &Error{
 		Type:    ServiceUnavailable,
-		Message: fmt.Sprintf("Service unavailable or timed out"),
+		Message: "Service unavailable or timed out",
 	}
 }
 

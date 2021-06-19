@@ -104,7 +104,7 @@ func inject(d *dataSources) (*gin.Engine, error) {
 		UserService:     userService,
 		TokenService:    tokenService,
 		BaseURL:         baseURL,
-		TimeoutDuration: time.Duration(time.Duration(ht) * time.Second),
+		TimeoutDuration: time.Duration(ht) * time.Second,
 	})
 
 	return router, nil

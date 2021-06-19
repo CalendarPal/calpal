@@ -10,7 +10,6 @@ import (
 )
 
 func HashPassword(password string) (string, error) {
-
 	salt := make([]byte, 32)
 	_, err := rand.Read(salt)
 	if err != nil {
@@ -36,7 +35,7 @@ func ComparePasswords(storedPassword string, suppliedPassword string) (bool, err
 	salt, err := hex.DecodeString(pwsalt[1])
 
 	if err != nil {
-		return false, fmt.Errorf("Unable to verify user password")
+		return false, fmt.Errorf("unable to verify user password")
 	}
 
 	shash, err := scrypt.Key([]byte(suppliedPassword), salt, 32768, 8, 1, 32)

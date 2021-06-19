@@ -10,13 +10,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Holds required services for the handler to function
+// Handler Holds required services for the handler to function
 type Handler struct {
 	UserService  models.UserService
 	TokenService models.TokenService
 }
 
-// Holds services that will be injected into the handler layer on handler initialization
+// Config Holds services that will be injected into the handler layer on handler initialization
 type Config struct {
 	R               *gin.Engine
 	UserService     models.UserService
@@ -25,10 +25,8 @@ type Config struct {
 	TimeoutDuration time.Duration
 }
 
-// Initializes the handler with the required injected services and the http routes
-func NewHandler(c *Config) {
-
-	// Create the handler
+// NewHandler Initializes the handler with the required injected services and the http routes
+func NewHandler(c *Config) { // Create the handler
 	h := &Handler{
 		UserService:  c.UserService,
 		TokenService: c.TokenService,

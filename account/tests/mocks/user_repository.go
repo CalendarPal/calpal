@@ -8,15 +8,13 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// Mock type for models.UserRepository
+// MockUserRepository Mock type for models.UserRepository
 type MockUserRepository struct {
 	mock.Mock
 }
 
-// Mock of UserRepository FindByID
-func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*models.User, error) {
-
-	// Args that will get returned in the tests when a function is called with a uid
+// FindByID Mock of UserRepository FindByID
+func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*models.User, error) { // Args that will get returned in the tests when a function is called with a uid
 	ret := m.Called(ctx, uid)
 
 	// The first value to return
@@ -34,9 +32,8 @@ func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*mode
 	return r0, r1
 }
 
-// Mock of UserRepository Create
+// Create Mock of UserRepository Create
 func (m *MockUserRepository) Create(ctx context.Context, u *models.User) error {
-
 	ret := m.Called(ctx, u)
 
 	var r0 error
@@ -47,9 +44,8 @@ func (m *MockUserRepository) Create(ctx context.Context, u *models.User) error {
 	return r0
 }
 
-// Mock of UserRepository FindByEmail
+// FindByEmail Mock of UserRepository FindByEmail
 func (m *MockUserRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
-
 	ret := m.Called(ctx, email)
 
 	var r0 *models.User

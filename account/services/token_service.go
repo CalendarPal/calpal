@@ -10,7 +10,7 @@ import (
 	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
 )
 
-// Struct used for injecting an implementation of TokenRepository for
+// TokenService Struct used for injecting an implementation of TokenRepository for
 // use in service methods along with keys and secrets for signing JWT's
 type TokenService struct {
 	TokenRepository       models.TokenRepository
@@ -31,7 +31,7 @@ type TokenServiceConfig struct {
 	RefreshExpirationSecs int64
 }
 
-// Initializes a UserService with its repositories layer dependencies
+// NewTokenService Initializes a UserService with its repositories layer dependencies
 func NewTokenService(c *TokenServiceConfig) models.TokenService {
 	return &TokenService{
 		TokenRepository:       c.TokenRepository,
@@ -44,7 +44,6 @@ func NewTokenService(c *TokenServiceConfig) models.TokenService {
 }
 
 func (s *TokenService) NewPairFromUser(ctx context.Context, u *models.User, prevTokenID string) (*models.TokenPair, error) {
-
 	idToken, err := auth.GenerateIDToken(u, s.PrivKey, s.IDExpirationSecs)
 
 	if err != nil {
@@ -78,9 +77,8 @@ func (s *TokenService) NewPairFromUser(ctx context.Context, u *models.User, prev
 	}, nil
 }
 
-// Validates the ID token JWT string and returns the user extract from the IDTokenCustomClaims
+// ValidateIDToken Validates the ID token JWT string and returns the user extract from the IDTokenCustomClaims
 func (s *TokenService) ValidateIDToken(tokenString string) (*models.User, error) {
-
 	claims, err := auth.ValidateIDToken(tokenString, s.PubKey)
 
 	// Return unauthorized error if user verification fails

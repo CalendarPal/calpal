@@ -77,7 +77,7 @@ func TestNewPairFromUser(t *testing.T) {
 
 	// mock call argument/responses
 	mockTokenRepository.On("SetRefreshToken", setSuccessArguments...).Return(nil)
-	mockTokenRepository.On("SetRefreshToken", setErrorArguments...).Return(fmt.Errorf("Error setting refresh token"))
+	mockTokenRepository.On("SetRefreshToken", setErrorArguments...).Return(fmt.Errorf("error setting refresh token"))
 	mockTokenRepository.On("DeleteRefreshToken", deleteWithPrevIDArguments...).Return(nil)
 
 	t.Run("Returns a token pair with proper values", func(t *testing.T) {

@@ -90,7 +90,7 @@ func TestMe(t *testing.T) {
 	t.Run("NotFound", func(t *testing.T) {
 		uid, _ := uuid.NewRandom()
 		mockUserService := new(mocks.MockUserService)
-		mockUserService.On("Get", mock.Anything, uid).Return(nil, fmt.Errorf("Some error down call chain"))
+		mockUserService.On("Get", mock.Anything, uid).Return(nil, fmt.Errorf("some error down call chain"))
 
 		// Http response recorder
 		rr := httptest.NewRecorder()

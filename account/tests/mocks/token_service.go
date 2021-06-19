@@ -7,14 +7,13 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// Mock type for models.TokenService
+// MockTokenService Mock type for models.TokenService
 type MockTokenService struct {
 	mock.Mock
 }
 
-// Mock of NewPairFromUser
+// NewPairFromUser Mock of NewPairFromUser
 func (m *MockTokenService) NewPairFromUser(ctx context.Context, u *models.User, prevTokenID string) (*models.TokenPair, error) {
-
 	ret := m.Called(ctx, u, prevTokenID)
 
 	// The first value to return
@@ -32,9 +31,8 @@ func (m *MockTokenService) NewPairFromUser(ctx context.Context, u *models.User, 
 	return r0, r1
 }
 
-// Mock of ValidateIDToken
+// ValidateIDToken Mock of ValidateIDToken
 func (m *MockTokenService) ValidateIDToken(tokenString string) (*models.User, error) {
-
 	ret := m.Called(tokenString)
 
 	// The first value to return

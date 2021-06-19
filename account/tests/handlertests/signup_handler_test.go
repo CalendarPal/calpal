@@ -21,7 +21,6 @@ func TestSignup(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	t.Run("Email and Password Required", func(t *testing.T) {
-
 		mockUserService := new(mocks.MockUserService)
 		mockUserService.On("Signup", mock.AnythingOfType("*context.emptyCtx"), mock.AnythingOfType("*models.User")).Return(nil)
 

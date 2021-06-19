@@ -46,7 +46,7 @@ func TestGet(t *testing.T) {
 			UserRepository: mockUserRepository,
 		})
 
-		mockUserRepository.On("FindByID", mock.Anything, uid).Return(nil, fmt.Errorf("Some error down the call chain"))
+		mockUserRepository.On("FindByID", mock.Anything, uid).Return(nil, fmt.Errorf("some error down the call chain"))
 
 		ctx := context.TODO()
 		u, err := us.Get(ctx, uid)

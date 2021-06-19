@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Struct for injecting UserRepository for use in service methods
+// UserService Struct for injecting UserRepository for use in service methods
 type UserService struct {
 	UserRepository models.UserRepository
 }
@@ -20,24 +20,22 @@ type UserServiceConfig struct {
 	UserRepository models.UserRepository
 }
 
-// Initializes a UserService with its repositories layer dependencies
+// NewUserService Initializes a UserService with its repositories layer dependencies
 func NewUserService(c *UserServiceConfig) models.UserService {
 	return &UserService{
 		UserRepository: c.UserRepository,
 	}
 }
 
-// Retrieves a user based on their uuid
+// Get Retrieves a user based on their uuid
 func (s *UserService) Get(ctx context.Context, uid uuid.UUID) (*models.User, error) {
-
 	u, err := s.UserRepository.FindByID(ctx, uid)
 
 	return u, err
 }
 
-// Checks using the UserRepository that the email address is available, then signs up the user
+// Signup Checks using the UserRepository that the email address is available, then signs up the user
 func (s *UserService) Signup(ctx context.Context, u *models.User) error {
-
 	pw, err := auth.HashPassword(u.Password)
 	if err != nil {
 		log.Printf("Unable to signup user with email: %v\n", u.Email)
@@ -45,16 +43,11 @@ func (s *UserService) Signup(ctx context.Context, u *models.User) error {
 	}
 
 	u.Password = pw
-	if err := s.UserRepository.Create(ctx, u); err != nil {
-		return err
-	}
-
-	return nil
+	return s.UserRepository.Create(ctx, u)
 }
 
-// Checks using the UserRepository that the user exists, then compares the supplied password with the provided password
+// Signin Checks using the UserRepository that the user exists, then compares the supplied password with the provided password
 func (s *UserService) Signin(ctx context.Context, u *models.User) error {
-
 	uFetched, err := s.UserRepository.FindByEmail(ctx, u.Email)
 
 	//	Returns NotAuthorized to the client

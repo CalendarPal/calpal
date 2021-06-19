@@ -11,15 +11,14 @@ import (
 	"github.com/google/uuid"
 )
 
-// Structure of JWT claims of idToken
+// IDTokenCustomClaims Structure of JWT claims of idToken
 type IDTokenCustomClaims struct {
 	User *models.User `json:"user"`
 	jwt.StandardClaims
 }
 
-// Generate an IDToken which is a JWT with Custom Claims
+// GenerateIDToken Generate an IDToken which is a JWT with Custom Claims
 func GenerateIDToken(u *models.User, key *rsa.PrivateKey, exp int64) (string, error) {
-
 	unixTime := time.Now().Unix()
 	tokenExp := unixTime + exp
 
@@ -42,22 +41,21 @@ func GenerateIDToken(u *models.User, key *rsa.PrivateKey, exp int64) (string, er
 	return ss, nil
 }
 
-// Struct holds the actual signed JWT string along with the ID
+// RefreshToken Struct holds the actual signed JWT string along with the ID
 type RefreshToken struct {
 	SS        string
 	ID        string
 	ExpiresIn time.Duration
 }
 
-// Struct holds the payload of a refresh token
+// RefreshTokenCustomClaims Struct holds the payload of a refresh token
 type RefreshTokenCustomClaims struct {
 	UID uuid.UUID `json:"uid"`
 	jwt.StandardClaims
 }
 
-// Creates a refresh token, the refresh token stores only the user's ID
+// GenerateRefreshToken Creates a refresh token, the refresh token stores only the user's ID
 func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshToken, error) {
-
 	currentTime := time.Now()
 	tokenExp := currentTime.Add(time.Duration(exp) * time.Second)
 	tokenID, err := uuid.NewRandom()
@@ -91,9 +89,8 @@ func GenerateRefreshToken(uid uuid.UUID, key string, exp int64) (*RefreshToken, 
 	}, nil
 }
 
-// Returns the token's claims if the token in valid
+// ValidateIDToken Returns the token's claims if the token in valid
 func ValidateIDToken(tokenString string, key *rsa.PublicKey) (*IDTokenCustomClaims, error) {
-
 	claims := &IDTokenCustomClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {

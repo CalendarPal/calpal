@@ -22,7 +22,6 @@ func NewUserRepository(db *sqlx.DB) models.UserRepository {
 }
 
 func (r *PostgresUserRepository) Create(ctx context.Context, u *models.User) error {
-
 	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *"
 
 	if err := r.DB.GetContext(ctx, u, query, u.Email, u.Password); err != nil {
@@ -39,7 +38,6 @@ func (r *PostgresUserRepository) Create(ctx context.Context, u *models.User) err
 }
 
 func (r *PostgresUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*models.User, error) {
-
 	user := &models.User{}
 
 	query := "SELECT * FROM users WHERE uid=$1"
@@ -53,7 +51,6 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*
 }
 
 func (r *PostgresUserRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
-
 	user := &models.User{}
 
 	query := "SELECT * FROM users WHERE email=$1"

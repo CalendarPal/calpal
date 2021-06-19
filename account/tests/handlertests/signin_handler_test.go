@@ -32,9 +32,7 @@ func TestSignin(t *testing.T) {
 		TokenService: mockTokenService,
 	})
 
-	t.Run("Bad request data", func(t *testing.T) {
-
-		// Http response recorder
+	t.Run("Bad request data", func(t *testing.T) { // Http response recorder
 		rr := httptest.NewRecorder()
 
 		// Create a request body with invalid fields

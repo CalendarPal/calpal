@@ -16,7 +16,6 @@ type signinRequest struct {
 }
 
 func (h *Handler) Signin(c *gin.Context) {
-
 	var req signinRequest
 
 	if ok := data.BindData(c, &req); !ok {

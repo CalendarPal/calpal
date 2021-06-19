@@ -17,9 +17,7 @@ type signupRequest struct {
 }
 
 // Signup handler
-func (h *Handler) Signup(c *gin.Context) {
-
-	// Variable to hold the incoming json body {email, password}
+func (h *Handler) Signup(c *gin.Context) { // Variable to hold the incoming json body {email, password}
 	var req signupRequest
 
 	// Bind incoming json to the struct and check for validation errors

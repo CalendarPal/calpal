@@ -48,7 +48,10 @@ func Timeout(timeout time.Duration, errTimeout *apperrors.Error) gin.HandlerFunc
 			eResp, _ := json.Marshal(gin.H{
 				"error": e,
 			})
-			tw.ResponseWriter.Write(eResp)
+			_, err := tw.ResponseWriter.Write(eResp)
+			if err != nil {
+				return
+			}
 		case <-finished:
 			// If finished, set headers and write response
 			tw.mu.Lock()
@@ -59,7 +62,10 @@ func Timeout(timeout time.Duration, errTimeout *apperrors.Error) gin.HandlerFunc
 				dst[k] = vv
 			}
 			tw.ResponseWriter.WriteHeader(tw.code)
-			tw.ResponseWriter.Write(tw.wbuf.Bytes())
+			_, err := tw.ResponseWriter.Write(tw.wbuf.Bytes())
+			if err != nil {
+				return
+			}
 		case <-ctx.Done():
 			// Timeout has occurred, send errTimeout and write headers
 			tw.mu.Lock()
@@ -70,7 +76,10 @@ func Timeout(timeout time.Duration, errTimeout *apperrors.Error) gin.HandlerFunc
 			eResp, _ := json.Marshal(gin.H{
 				"error": errTimeout,
 			})
-			tw.ResponseWriter.Write(eResp)
+			_, err := tw.ResponseWriter.Write(eResp)
+			if err != nil {
+				return
+			}
 			c.Abort()
 			tw.SetTimedOut()
 		}
@@ -120,7 +129,7 @@ func (tw *timeoutWriter) Header() http.Header {
 	return tw.h
 }
 
-// Sets timedOut field to true
+// SetTimedOut Sets timedOut field to true
 func (tw *timeoutWriter) SetTimedOut() {
 	tw.timedOut = true
 }

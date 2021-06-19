@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -33,7 +34,7 @@ func main() {
 
 	// Server shutdown
 	go func() {
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("Failed to initialize server: %v\n", err)
 		}
 	}()
@@ -54,12 +55,12 @@ func main() {
 
 	// Shutdown data sources
 	if err := ds.close(); err != nil {
-		log.Fatalf("A problem occurred gracefully shutting down data sources: %v\n", err)
+		log.Panicf("A problem occurred gracefully shutting down data sources: %v\n", err)
 	}
 
 	// Shutdown server
 	log.Println("Shutting down server...")
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server forced to shutdown: %v\n", err)
+		log.Panicf("Server forced to shutdown: %v\n", err)
 	}
 }
