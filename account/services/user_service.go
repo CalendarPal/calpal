@@ -69,7 +69,7 @@ func (s *UserService) Signin(ctx context.Context, u *models.User) error {
 		return apperrors.NewInternal()
 	}
 
-	if !match{
+	if !match {
 		return apperrors.NewAuthorization("Invalid email and password combination")
 	}
 
