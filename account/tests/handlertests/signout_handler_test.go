@@ -46,7 +46,7 @@ func TestSignout(t *testing.T) {
 		router.ServeHTTP(rr, request)
 
 		respBody, _ := json.Marshal(gin.H{
-			"message": "user signed out successfully!",
+			"message": "user signed out successfully",
 		})
 
 		assert.Equal(t, http.StatusOK, rr.Code)
