@@ -14,7 +14,7 @@ type signinRequest struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,gte=6,lte=30"`
 }
-
+// Signin handler
 func (h *Handler) Signin(c *gin.Context) {
 	var req signinRequest
 
