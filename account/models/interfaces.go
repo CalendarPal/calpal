@@ -12,6 +12,7 @@ type UserService interface {
 	Get(ctx context.Context, uid uuid.UUID) (*User, error)
 	Signup(ctx context.Context, u *User) error
 	Signin(ctx context.Context, u *User) error
+	UpdateDetails(ctx context.Context, u *User) error
 }
 
 // TokenService defines methods the handler later expects to interact with to produce JWT's as string
@@ -27,6 +28,7 @@ type UserRepository interface {
 	FindByID(ctx context.Context, uid uuid.UUID) (*User, error)
 	FindByEmail(ctx context.Context, email string) (*User, error)
 	Create(ctx context.Context, u *User) error
+	Update(ctx context.Context, u *User) error
 }
 
 // TokenRepository defines methods the service layer expects the repositories it interacts with to implement
