@@ -55,4 +55,3 @@ func NewHandler(c *Config) { // Create the handler
 	g.POST("/signin", h.Signin)
 	g.POST("/tokens", h.Tokens)
 }
-

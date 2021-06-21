@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 )
+
 // DeleteImage handler
 func (h *Handler) DeleteImage(c *gin.Context) {
 	authUser := c.MustGet("user").(*models.User)
