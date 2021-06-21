@@ -46,7 +46,24 @@ services:
     depends_on:
       - postgres-account
       - redis-account
+      - reverse-proxy
     command: reflex -r "\.go$$" -s -- sh -c "go run ./"
+  account-client:
+    build:
+      context: ./account-client
+    image: account-client
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.account-client.rule=Host(`calpal.test`) && PathPrefix(`/account`)"
+    volumes:
+      - ./account-client:/app
+      - /app/node_modules
+    depends_on:
+      - reverse-proxy
 volumes:
   pgdata_account:
   redisdata:

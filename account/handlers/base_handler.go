@@ -3,9 +3,9 @@ package handlers
 import (
 	"time"
 
-	"github.com/CalendarPal/calpal-api/account/middlewares"
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/middlewares"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 )
 

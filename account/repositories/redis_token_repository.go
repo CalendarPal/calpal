@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/go-redis/redis/v8"
 )
 

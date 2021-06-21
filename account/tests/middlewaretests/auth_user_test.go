@@ -2,10 +2,10 @@ package middlewaretests
 
 import (
 	"fmt"
-	"github.com/CalendarPal/calpal-api/account/middlewares"
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/tests/mocks"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/middlewares"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/tests/mocks"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"

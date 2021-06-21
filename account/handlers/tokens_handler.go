@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
-	"github.com/CalendarPal/calpal-api/account/utils/data"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/utils/data"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"

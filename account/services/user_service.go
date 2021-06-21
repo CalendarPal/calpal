@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/CalendarPal/calpal-api/account/auth"
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/auth"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/google/uuid"
 )
 

@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 	"log"
 
-	"github.com/CalendarPal/calpal-api/account/auth"
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/auth"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 )
 
 // TokenService Struct used for injecting an implementation of TokenRepository for

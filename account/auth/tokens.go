@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/CalendarPal/calpal-api/account/models"
+	"github.com/CalendarPal/calpal/account/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )

@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 )
 

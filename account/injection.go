@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/CalendarPal/calpal-api/account/handlers"
-	"github.com/CalendarPal/calpal-api/account/repositories"
-	"github.com/CalendarPal/calpal-api/account/services"
+	"github.com/CalendarPal/calpal/account/handlers"
+	"github.com/CalendarPal/calpal/account/repositories"
+	"github.com/CalendarPal/calpal/account/services"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )

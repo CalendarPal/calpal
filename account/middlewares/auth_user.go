@@ -4,8 +4,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/CalendarPal/calpal-api/account/models"
-	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
+	"github.com/CalendarPal/calpal/account/models"
+	"github.com/CalendarPal/calpal/account/utils/apperrors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )

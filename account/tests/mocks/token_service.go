@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 
-	"github.com/CalendarPal/calpal-api/account/models"
+	"github.com/CalendarPal/calpal/account/models"
 	"github.com/stretchr/testify/mock"
 )
 
