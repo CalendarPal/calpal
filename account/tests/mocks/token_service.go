@@ -13,7 +13,7 @@ type MockTokenService struct {
 	mock.Mock
 }
 
-// NewPairFromUser Mock of NewPairFromUser
+// NewPairFromUser Mock of models.TokenService NewPairFromUser
 func (m *MockTokenService) NewPairFromUser(ctx context.Context, u *models.User, prevTokenID string) (*models.TokenPair, error) {
 	ret := m.Called(ctx, u, prevTokenID)
 
@@ -32,7 +32,7 @@ func (m *MockTokenService) NewPairFromUser(ctx context.Context, u *models.User, 
 	return r0, r1
 }
 
-// Signout Mock of Signout
+// Signout Mock of models.TokenService Signout
 func (m *MockTokenService) Signout(ctx context.Context, uid uuid.UUID) error {
 	ret := m.Called(ctx, uid)
 
@@ -44,7 +44,7 @@ func (m *MockTokenService) Signout(ctx context.Context, uid uuid.UUID) error {
 	return r0
 }
 
-// ValidateIDToken Mock of ValidateIDToken
+// ValidateIDToken Mock of models.TokenService ValidateIDToken
 func (m *MockTokenService) ValidateIDToken(tokenString string) (*models.User, error) {
 	ret := m.Called(tokenString)
 
@@ -63,7 +63,7 @@ func (m *MockTokenService) ValidateIDToken(tokenString string) (*models.User, er
 	return r0, r1
 }
 
-// ValidateRefreshToken Mock of ValidateRefreshToken
+// ValidateRefreshToken Mock of models.TokenService ValidateRefreshToken
 func (m *MockTokenService) ValidateRefreshToken(refreshTokenString string) (*models.RefreshToken, error) {
 	ret := m.Called(refreshTokenString)
 

@@ -7,12 +7,12 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-// MockTokenRepository Mock type for model.TokenRepository
+// MockTokenRepository Mock type for models.TokenRepository
 type MockTokenRepository struct {
 	mock.Mock
 }
 
-// SetRefreshToken Mock of model.TokenRepository SetRefreshToken
+// SetRefreshToken Mock of models.TokenRepository SetRefreshToken
 func (m *MockTokenRepository) SetRefreshToken(ctx context.Context, userID string, tokenID string, expiresIn time.Duration) error {
 	ret := m.Called(ctx, userID, tokenID, expiresIn)
 
@@ -25,7 +25,7 @@ func (m *MockTokenRepository) SetRefreshToken(ctx context.Context, userID string
 	return r0
 }
 
-// DeleteRefreshToken Mock of model.TokenRepository DeleteRefreshToken
+// DeleteRefreshToken Mock of models.TokenRepository DeleteRefreshToken
 func (m *MockTokenRepository) DeleteRefreshToken(ctx context.Context, userID string, prevTokenID string) error {
 	ret := m.Called(ctx, userID, prevTokenID)
 
@@ -38,7 +38,7 @@ func (m *MockTokenRepository) DeleteRefreshToken(ctx context.Context, userID str
 	return r0
 }
 
-// DeleteUserRefreshTokens Mock of model.TokenRepository DeleteUserRefreshTokens
+// DeleteUserRefreshTokens Mock of models.TokenRepository DeleteUserRefreshTokens
 func (m *MockTokenRepository) DeleteUserRefreshTokens(ctx context.Context, userID string) error {
 	ret := m.Called(ctx, userID)
 

@@ -13,7 +13,7 @@ type MockUserRepository struct {
 	mock.Mock
 }
 
-// FindByID Mock of UserRepository FindByID
+// FindByID Mock of models.UserRepository FindByID
 func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*models.User, error) { // Args that will get returned in the tests when a function is called with a uid
 	ret := m.Called(ctx, uid)
 
@@ -32,7 +32,7 @@ func (m *MockUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*mode
 	return r0, r1
 }
 
-// Create Mock of UserRepository Create
+// Create Mock of models.UserRepository Create
 func (m *MockUserRepository) Create(ctx context.Context, u *models.User) error {
 	ret := m.Called(ctx, u)
 
@@ -44,7 +44,7 @@ func (m *MockUserRepository) Create(ctx context.Context, u *models.User) error {
 	return r0
 }
 
-// FindByEmail Mock of UserRepository FindByEmail
+// FindByEmail Mock of models.UserRepository FindByEmail
 func (m *MockUserRepository) FindByEmail(ctx context.Context, email string) (*models.User, error) {
 	ret := m.Called(ctx, email)
 
@@ -61,7 +61,7 @@ func (m *MockUserRepository) FindByEmail(ctx context.Context, email string) (*mo
 	return r0, r1
 }
 
-// Update Mock of UserRepository Update
+// Update Mock of models.UserRepository Update
 func (m *MockUserRepository) Update(ctx context.Context, u *models.User) error {
 	ret := m.Called(ctx, u)
 
@@ -71,4 +71,21 @@ func (m *MockUserRepository) Update(ctx context.Context, u *models.User) error {
 	}
 
 	return r0
+}
+
+// UpdateImage Mock of models.UserRepository UpdateImage
+func (m *MockUserRepository) UpdateImage(ctx context.Context, uid uuid.UUID, imageURL string) (*models.User, error) {
+	ret := m.Called(ctx, uid, imageURL)
+
+	var r0 *models.User
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(*models.User)
+	}
+
+	var r1 error
+	if ret.Get(1) != nil {
+		r1 = ret.Get(1).(error)
+	}
+
+	return r0, r1
 }

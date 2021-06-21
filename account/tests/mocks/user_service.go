@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"mime/multipart"
 
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/google/uuid"
@@ -13,7 +14,7 @@ type MockUserService struct {
 	mock.Mock
 }
 
-// Get Mock of UserService Get
+// Get Mock of models.UserService Get
 func (m *MockUserService) Get(ctx context.Context, uid uuid.UUID) (*models.User, error) { // Args that will get returned in the tests when a function is called with a uid
 	ret := m.Called(ctx, uid)
 
@@ -32,7 +33,7 @@ func (m *MockUserService) Get(ctx context.Context, uid uuid.UUID) (*models.User,
 	return r0, r1
 }
 
-// Signup Mock of UserService Signup
+// Signup Mock of models.UserService Signup
 func (m *MockUserService) Signup(ctx context.Context, u *models.User) error {
 	ret := m.Called(ctx, u)
 
@@ -44,7 +45,7 @@ func (m *MockUserService) Signup(ctx context.Context, u *models.User) error {
 	return r0
 }
 
-// Signin Mock of UserService Signin
+// Signin Mock of models.UserService Signin
 func (m *MockUserService) Signin(ctx context.Context, u *models.User) error {
 	ret := m.Called(ctx, u)
 
@@ -56,7 +57,7 @@ func (m *MockUserService) Signin(ctx context.Context, u *models.User) error {
 	return r0
 }
 
-// UpdateDetails Mock of UserService UpdateDetails
+// UpdateDetails Mock of models.UserService UpdateDetails
 func (m *MockUserService) UpdateDetails(ctx context.Context, u *models.User) error {
 	ret := m.Called(ctx, u)
 
@@ -66,4 +67,21 @@ func (m *MockUserService) UpdateDetails(ctx context.Context, u *models.User) err
 	}
 
 	return r0
+}
+
+// SetProfileImage Mock of models.UserService SetProfileImage
+func (m *MockUserService) SetProfileImage(ctx context.Context, uid uuid.UUID, imageFileHeader *multipart.FileHeader) (*models.User, error) {
+	ret := m.Called(ctx, uid, imageFileHeader)
+
+	var r0 *models.User
+	if ret.Get(0) != nil {
+		r0 = ret.Get(0).(*models.User)
+	}
+
+	var r1 error
+	if ret.Get(1) != nil {
+		r1 = ret.Get(1).(error)
+	}
+
+	return r0, r1
 }
