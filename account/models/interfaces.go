@@ -15,6 +15,7 @@ type UserService interface {
 	Signin(ctx context.Context, u *User) error
 	UpdateDetails(ctx context.Context, u *User) error
 	SetProfileImage(ctx context.Context, uid uuid.UUID, imageFileHeader *multipart.FileHeader) (*User, error)
+	ClearProfileImage(ctx context.Context, uid uuid.UUID) error
 }
 
 // TokenService defines methods the handler later expects to interact with to produce JWT's as string
@@ -43,5 +44,6 @@ type TokenRepository interface {
 
 // ImageRepository defines methods the service layer expects the repositories it interacts with to implement
 type ImageRepository interface {
+	DeleteProfile(ctx context.Context, objName string) error
 	UpdateProfile(ctx context.Context, objName string, imageFile multipart.File) (string, error)
 }

@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/CalendarPal/calpal-api/account/middlewares"
@@ -43,20 +42,17 @@ func NewHandler(c *Config) { // Create the handler
 		g.GET("/me", middlewares.AuthUser(h.TokenService), h.Me)
 		g.POST("/signout", middlewares.AuthUser(h.TokenService), h.Signout)
 		g.PUT("/details", middlewares.AuthUser(h.TokenService), h.Details)
-		g.POST("/image", middlewares.AuthUser(h.TokenService), h.Image)
+		g.POST("/image", middlewares.AuthUser(h.TokenService), h.UploadImage)
+		g.DELETE("/image", middlewares.AuthUser(h.TokenService), h.DeleteImage)
 	} else {
 		g.GET("/me", h.Me)
 		g.POST("/signout", h.Signout)
 		g.PUT("/details", h.Details)
-		g.POST("/image", h.Image)
+		g.POST("/image", h.UploadImage)
+		g.DELETE("/image", h.DeleteImage)
 	}
 	g.POST("/signup", h.Signup)
 	g.POST("/signin", h.Signin)
 	g.POST("/tokens", h.Tokens)
-	g.DELETE("/image", h.DeleteImage)
 }
-func (h *Handler) DeleteImage(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"this is": "deleteImage",
-	})
-}
+
