@@ -37,3 +37,7 @@ type TokenRepository interface {
 	DeleteRefreshToken(ctx context.Context, userID string, prevTokenID string) error
 	DeleteUserRefreshTokens(ctx context.Context, userID string) error
 }
+
+// ImageRepository defines methods the service layer expects the repositories it interacts with to implement
+type ImageRepository interface {
+}
