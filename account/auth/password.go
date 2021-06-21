@@ -28,7 +28,6 @@ func HashPassword(password string) (string, error) {
 }
 
 func ComparePasswords(storedPassword string, suppliedPassword string) (bool, error) {
-
 	pwsalt := strings.Split(storedPassword, ".")
 
 	// Check the supplied password salted from the hash
