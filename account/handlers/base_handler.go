@@ -14,6 +14,7 @@ import (
 type Handler struct {
 	UserService  models.UserService
 	TokenService models.TokenService
+	MaxBodyBytes int64
 }
 
 // Config Holds services that will be injected into the handler layer on handler initialization
@@ -23,6 +24,7 @@ type Config struct {
 	TokenService    models.TokenService
 	BaseURL         string
 	TimeoutDuration time.Duration
+	MaxBodyBytes    int64
 }
 
 // NewHandler Initializes the handler with the required injected services and the http routes
@@ -30,6 +32,7 @@ func NewHandler(c *Config) { // Create the handler
 	h := &Handler{
 		UserService:  c.UserService,
 		TokenService: c.TokenService,
+		MaxBodyBytes: c.MaxBodyBytes,
 	}
 
 	// Create the account group
@@ -40,25 +43,18 @@ func NewHandler(c *Config) { // Create the handler
 		g.GET("/me", middlewares.AuthUser(h.TokenService), h.Me)
 		g.POST("/signout", middlewares.AuthUser(h.TokenService), h.Signout)
 		g.PUT("/details", middlewares.AuthUser(h.TokenService), h.Details)
+		g.POST("/image", middlewares.AuthUser(h.TokenService), h.Image)
 	} else {
 		g.GET("/me", h.Me)
 		g.POST("/signout", h.Signout)
 		g.PUT("/details", h.Details)
+		g.POST("/image", h.Image)
 	}
-
 	g.POST("/signup", h.Signup)
 	g.POST("/signin", h.Signin)
 	g.POST("/tokens", h.Tokens)
-	g.POST("/image", h.Image)
 	g.DELETE("/image", h.DeleteImage)
 }
-
-func (h *Handler) Image(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"this is": "image",
-	})
-}
-
 func (h *Handler) DeleteImage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"this is": "deleteImage",
