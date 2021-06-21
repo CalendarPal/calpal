@@ -1,3 +1,4 @@
 .env.dev
 *.pem
 *.idea
+serviceAccount.json
