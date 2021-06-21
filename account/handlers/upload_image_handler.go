@@ -10,8 +10,8 @@ import (
 	"net/http"
 )
 
-// Image handler
-func (h *Handler) Image(c *gin.Context) {
+// UploadImage handler
+func (h *Handler) UploadImage(c *gin.Context) {
 	authUser := c.MustGet("user").(*models.User)
 
 	// Limit large request bodies

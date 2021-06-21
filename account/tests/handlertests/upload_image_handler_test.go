@@ -16,7 +16,7 @@ import (
 	"testing"
 )
 
-func TestImage(t *testing.T) {
+func TestUploadImage(t *testing.T) {
 	// Setup
 	gin.SetMode(gin.TestMode)
 
