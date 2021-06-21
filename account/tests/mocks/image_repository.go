@@ -13,7 +13,6 @@ type MockImageRepository struct {
 
 // UpdateProfile Mock of  models.ImageRepository UpdateProfile
 func (m *MockImageRepository) UpdateProfile(ctx context.Context, objName string, imageFile multipart.File) (string, error) {
-
 	ret := m.Called(ctx, objName, imageFile)
 
 	// The first value to return
