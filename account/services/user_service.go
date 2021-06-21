@@ -70,3 +70,14 @@ func (s *UserService) Signin(ctx context.Context, u *models.User) error {
 
 	return nil
 }
+
+// UpdateDetails Updates the user using the UserRepository
+func (s *UserService) UpdateDetails(ctx context.Context, u *models.User) error {
+	err := s.UserRepository.Update(ctx, u)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

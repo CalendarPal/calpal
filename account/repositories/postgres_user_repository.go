@@ -62,3 +62,26 @@ func (r *PostgresUserRepository) FindByEmail(ctx context.Context, email string) 
 
 	return user, nil
 }
+
+func (r *PostgresUserRepository) Update(ctx context.Context, u *models.User) error {
+	query := `
+		UPDATE users
+		SET name =:name, email=:email, website=:website, updated_at=CURRENT_TIMESTAMP
+		WHERE uid=:uid
+		RETURNING *;
+		`
+
+	nstmt, err := r.DB.PrepareNamedContext(ctx, query)
+
+	if err != nil {
+		log.Printf("Unable to prepare user update query: %v\n", err)
+		return apperrors.NewInternal()
+	}
+
+	if err := nstmt.GetContext(ctx, u, u); err != nil {
+		log.Printf("Failed to update details for user: %v\n", err)
+		return apperrors.NewInternal()
+	}
+
+	return nil
+}
