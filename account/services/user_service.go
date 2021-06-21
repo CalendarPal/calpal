@@ -12,18 +12,21 @@ import (
 
 // UserService Struct for injecting UserRepository for use in service methods
 type UserService struct {
-	UserRepository models.UserRepository
+	UserRepository  models.UserRepository
+	ImageRepository models.ImageRepository
 }
 
 // UserServiceConfig holds repositories that will be injected into the service layer
 type UserServiceConfig struct {
-	UserRepository models.UserRepository
+	UserRepository  models.UserRepository
+	ImageRepository models.ImageRepository
 }
 
 // NewUserService Initializes a UserService with its repositories layer dependencies
 func NewUserService(c *UserServiceConfig) models.UserService {
 	return &UserService{
-		UserRepository: c.UserRepository,
+		UserRepository:  c.UserRepository,
+		ImageRepository: c.ImageRepository,
 	}
 }
 
