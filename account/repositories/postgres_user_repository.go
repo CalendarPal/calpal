@@ -90,7 +90,7 @@ func (r *PostgresUserRepository) Update(ctx context.Context, u *models.User) err
 func (r *PostgresUserRepository) UpdateImage(ctx context.Context, uid uuid.UUID, imageURL string) (*models.User, error) {
 	query := `
 		UPDATE users 
-		SET image_url=$2
+		SET image_url=$2, updated_at=CURRENT_TIMESTAMP
 		WHERE uid=$1
 		RETURNING *;
 	`
