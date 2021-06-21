@@ -88,6 +88,7 @@ func (s *UserService) UpdateDetails(ctx context.Context, u *models.User) error {
 	return nil
 }
 
+// SetProfileImage Sets the user's profile image using the UserRepository
 func (s *UserService) SetProfileImage(ctx context.Context, uid uuid.UUID, imageFileHeader *multipart.FileHeader) (*models.User, error) {
 	u, err := s.UserRepository.FindByID(ctx, uid)
 
@@ -142,4 +143,35 @@ func objNameFromURL(imageURL string) (string, error) {
 
 	// Get "path" and "base" of url
 	return path.Base(urlPath.Path), nil
+}
+
+// ClearProfileImage Deletes the user's profile image using the UserRepository
+func (s *UserService) ClearProfileImage(ctx context.Context, uid uuid.UUID) error {
+	user, err := s.UserRepository.FindByID(ctx, uid)
+
+	if err != nil {
+		return err
+	}
+
+	if user.ImageURL == "" {
+		return nil
+	}
+
+	objName, err := objNameFromURL(user.ImageURL)
+	if err != nil {
+		return err
+	}
+
+	err = s.ImageRepository.DeleteProfile(ctx, objName)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.UserRepository.UpdateImage(ctx, uid, "")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -23,6 +23,19 @@ func NewImageRepository(cloudClient *storage.Client, bucketName string) models.I
 	}
 }
 
+func (r *cloudImageRepository) DeleteProfile(ctx context.Context, objName string) error {
+	bckt := r.Storage.Bucket(r.BucketName)
+
+	object := bckt.Object(objName)
+
+	if err := object.Delete(ctx); err != nil {
+		log.Printf("Failed to delete image object with ID: %s from the Google Cloud Storage\n", objName)
+		return apperrors.NewInternal()
+	}
+
+	return nil
+}
+
 func (r *cloudImageRepository) UpdateProfile(ctx context.Context, objName string, imageFile multipart.File) (string, error) {
 	bckt := r.Storage.Bucket(r.BucketName)
 
@@ -38,7 +51,7 @@ func (r *cloudImageRepository) UpdateProfile(ctx context.Context, objName string
 	}
 
 	if err := wc.Close(); err != nil {
-		return "", fmt.Errorf("Writer.Close: %v", err)
+		return "", fmt.Errorf("Writer.Close: %w", err)
 	}
 
 	imageURL := fmt.Sprintf(
