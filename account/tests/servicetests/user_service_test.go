@@ -3,16 +3,19 @@ package servicetests
 import (
 	"context"
 	"fmt"
-	"testing"
-
+	"github.com/CalendarPal/calpal-api/account/auth"
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/CalendarPal/calpal-api/account/services"
+	"github.com/CalendarPal/calpal-api/account/tests/fixtures"
 	"github.com/CalendarPal/calpal-api/account/tests/mocks"
 	"github.com/CalendarPal/calpal-api/account/utils/apperrors"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"testing"
 )
+
+const testImageURL = "http://imageurl.com/jdfkj34kljl"
 
 func TestGet(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
@@ -74,7 +77,7 @@ func TestSignup(t *testing.T) {
 		mockUserRepository.
 			On("Create", mock.AnythingOfType("*context.emptyCtx"), mockUser).
 			Run(func(args mock.Arguments) {
-				userArg := args.Get(1).(*models.User) // Arg 0 is context, Arg 1 is *User
+				userArg := args.Get(1).(*models.User) // arg 0 is context, arg 1 is *User
 				userArg.UID = uid
 			}).Return(nil)
 
@@ -112,4 +115,406 @@ func TestSignup(t *testing.T) {
 
 		mockUserRepository.AssertExpectations(t)
 	})
+}
+
+func TestSignin(t *testing.T) {
+	email := "bob@bob.com"
+	validPW := "howdyhoneighbor!"
+	hashedValidPW, _ := auth.HashPassword(validPW)
+	invalidPW := "howdyhodufus!"
+
+	mockUserRepository := new(mocks.MockUserRepository)
+	us := services.NewUserService(&services.UserServiceConfig{
+		UserRepository: mockUserRepository,
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		mockUser := &models.User{
+			Email:    email,
+			Password: validPW,
+		}
+
+		mockUserResp := &models.User{
+			UID:      uid,
+			Email:    email,
+			Password: hashedValidPW,
+		}
+
+		mockArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			email,
+		}
+
+		mockUserRepository.
+			On("FindByEmail", mockArgs...).Return(mockUserResp, nil)
+
+		ctx := context.TODO()
+		err := us.Signin(ctx, mockUser)
+
+		assert.NoError(t, err)
+		mockUserRepository.AssertCalled(t, "FindByEmail", mockArgs...)
+	})
+
+	t.Run("Invalid email/password combination", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		mockUser := &models.User{
+			Email:    email,
+			Password: invalidPW,
+		}
+
+		mockUserResp := &models.User{
+			UID:      uid,
+			Email:    email,
+			Password: hashedValidPW,
+		}
+
+		mockArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			email,
+		}
+
+		mockUserRepository.
+			On("FindByEmail", mockArgs...).Return(mockUserResp, nil)
+
+		ctx := context.TODO()
+		err := us.Signin(ctx, mockUser)
+
+		assert.Error(t, err)
+		assert.EqualError(t, err, "Invalid email and password combination")
+		mockUserRepository.AssertCalled(t, "FindByEmail", mockArgs...)
+	})
+}
+
+func TestUpdateDetails(t *testing.T) {
+	mockUserRepository := new(mocks.MockUserRepository)
+	us := services.NewUserService(&services.UserServiceConfig{
+		UserRepository: mockUserRepository,
+	})
+
+	t.Run("Success", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		mockUser := &models.User{
+			UID:     uid,
+			Email:   "new@bob.com",
+			Website: "https://jacobgoodwin.me",
+			Name:    "A New Bob!",
+		}
+
+		mockArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mockUser,
+		}
+
+		mockUserRepository.
+			On("Update", mockArgs...).Return(nil)
+
+		ctx := context.TODO()
+		err := us.UpdateDetails(ctx, mockUser)
+
+		assert.NoError(t, err)
+		mockUserRepository.AssertCalled(t, "Update", mockArgs...)
+	})
+
+	t.Run("Failure", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		mockUser := &models.User{
+			UID: uid,
+		}
+
+		mockArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mockUser,
+		}
+
+		mockError := apperrors.NewInternal()
+
+		mockUserRepository.
+			On("Update", mockArgs...).Return(mockError)
+
+		ctx := context.TODO()
+		err := us.UpdateDetails(ctx, mockUser)
+		assert.Error(t, err)
+
+		apperror, ok := err.(*apperrors.Error)
+		assert.True(t, ok)
+		assert.Equal(t, apperrors.Internal, apperror.Type)
+
+		mockUserRepository.AssertCalled(t, "Update", mockArgs...)
+	})
+}
+
+func TestSetProfileImage(t *testing.T) {
+	mockUserRepository := new(mocks.MockUserRepository)
+	mockImageRepository := new(mocks.MockImageRepository)
+
+	us := services.NewUserService(&services.UserServiceConfig{
+		UserRepository:  mockUserRepository,
+		ImageRepository: mockImageRepository,
+	})
+
+	t.Run("Successful new image", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		// does not have have imageURL
+		mockUser := &models.User{
+			UID:     uid,
+			Email:   "new@bob.com",
+			Website: "https://jacobgoodwin.me",
+			Name:    "A New Bob!",
+		}
+
+		findByIDArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			uid,
+		}
+		mockUserRepository.On("FindByID", findByIDArgs...).Return(mockUser, nil)
+
+		multipartImageFixture := fixtures.NewMultipartImage("image.png", "image/png")
+		defer multipartImageFixture.Close()
+		imageFileHeader := multipartImageFixture.GetFormFile()
+		imageFile, _ := imageFileHeader.Open()
+
+		updateProfileArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mock.AnythingOfType("string"),
+			imageFile,
+		}
+
+		imageURL := testImageURL
+
+		mockImageRepository.
+			On("UpdateProfile", updateProfileArgs...).
+			Return(imageURL, nil)
+
+		updateImageArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mockUser.UID,
+			imageURL,
+		}
+
+		mockUpdatedUser := &models.User{
+			UID:      uid,
+			Email:    "new@bob.com",
+			Website:  "https://jacobgoodwin.me",
+			Name:     "A New Bob!",
+			ImageURL: imageURL,
+		}
+
+		mockUserRepository.
+			On("UpdateImage", updateImageArgs...).
+			Return(mockUpdatedUser, nil)
+
+		ctx := context.TODO()
+
+		updatedUser, err := us.SetProfileImage(ctx, mockUser.UID, imageFileHeader)
+
+		assert.NoError(t, err)
+		assert.Equal(t, mockUpdatedUser, updatedUser)
+		mockUserRepository.AssertCalled(t, "FindByID", findByIDArgs...)
+		mockImageRepository.AssertCalled(t, "UpdateProfile", updateProfileArgs...)
+		mockUserRepository.AssertCalled(t, "UpdateImage", updateImageArgs...)
+	})
+
+	t.Run("Successful update image", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+		imageURL := testImageURL
+
+		// has imageURL
+		mockUser := &models.User{
+			UID:      uid,
+			Email:    "new@bob.com",
+			Website:  "https://jacobgoodwin.me",
+			Name:     "A New Bob!",
+			ImageURL: imageURL,
+		}
+
+		findByIDArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			uid,
+		}
+		mockUserRepository.On("FindByID", findByIDArgs...).Return(mockUser, nil)
+
+		multipartImageFixture := fixtures.NewMultipartImage("image.png", "image/png")
+		defer multipartImageFixture.Close()
+		imageFileHeader := multipartImageFixture.GetFormFile()
+		imageFile, _ := imageFileHeader.Open()
+
+		updateProfileArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mock.AnythingOfType("string"),
+			imageFile,
+		}
+
+		mockImageRepository.
+			On("UpdateProfile", updateProfileArgs...).
+			Return(imageURL, nil)
+
+		updateImageArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mockUser.UID,
+			imageURL,
+		}
+
+		mockUpdatedUser := &models.User{
+			UID:      uid,
+			Email:    "new@bob.com",
+			Website:  "https://jacobgoodwin.me",
+			Name:     "A New Bob!",
+			ImageURL: imageURL,
+		}
+
+		mockUserRepository.
+			On("UpdateImage", updateImageArgs...).
+			Return(mockUpdatedUser, nil)
+
+		ctx := context.TODO()
+
+		updatedUser, err := us.SetProfileImage(ctx, uid, imageFileHeader)
+
+		assert.NoError(t, err)
+		assert.Equal(t, mockUpdatedUser, updatedUser)
+		mockUserRepository.AssertCalled(t, "FindByID", findByIDArgs...)
+		mockImageRepository.AssertCalled(t, "UpdateProfile", updateProfileArgs...)
+		mockUserRepository.AssertCalled(t, "UpdateImage", updateImageArgs...)
+	})
+
+	t.Run("UserRepository FindByID Error", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+
+		findByIDArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			uid,
+		}
+		mockError := apperrors.NewInternal()
+		mockUserRepository.On("FindByID", findByIDArgs...).Return(nil, mockError)
+
+		multipartImageFixture := fixtures.NewMultipartImage("image.png", "image/png")
+		defer multipartImageFixture.Close()
+		imageFileHeader := multipartImageFixture.GetFormFile()
+
+		ctx := context.TODO()
+
+		updatedUser, err := us.SetProfileImage(ctx, uid, imageFileHeader)
+
+		assert.Error(t, err)
+		assert.Nil(t, updatedUser)
+		mockUserRepository.AssertCalled(t, "FindByID", findByIDArgs...)
+		mockImageRepository.AssertNotCalled(t, "UpdateProfile")
+		mockUserRepository.AssertNotCalled(t, "UpdateImage")
+	})
+
+	t.Run("ImageRepository Error", func(t *testing.T) {
+		mockUserRepository := new(mocks.MockUserRepository)
+		mockImageRepository := new(mocks.MockImageRepository)
+
+		us := services.NewUserService(&services.UserServiceConfig{
+			UserRepository:  mockUserRepository,
+			ImageRepository: mockImageRepository,
+		})
+
+		uid, _ := uuid.NewRandom()
+		imageURL := testImageURL
+
+		// has imageURL
+		mockUser := &models.User{
+			UID:      uid,
+			Email:    "new@bob.com",
+			Website:  "https://jacobgoodwin.me",
+			Name:     "A New Bob!",
+			ImageURL: imageURL,
+		}
+
+		findByIDArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			uid,
+		}
+		mockUserRepository.On("FindByID", findByIDArgs...).Return(mockUser, nil)
+
+		multipartImageFixture := fixtures.NewMultipartImage("image.png", "image/png")
+		defer multipartImageFixture.Close()
+		imageFileHeader := multipartImageFixture.GetFormFile()
+		imageFile, _ := imageFileHeader.Open()
+
+		updateProfileArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mock.AnythingOfType("string"),
+			imageFile,
+		}
+
+		mockError := apperrors.NewInternal()
+		mockImageRepository.
+			On("UpdateProfile", updateProfileArgs...).
+			Return(nil, mockError)
+
+		ctx := context.TODO()
+		updatedUser, err := us.SetProfileImage(ctx, uid, imageFileHeader)
+
+		assert.Nil(t, updatedUser)
+		assert.Error(t, err)
+		mockUserRepository.AssertCalled(t, "FindByID", findByIDArgs...)
+		mockImageRepository.AssertCalled(t, "UpdateProfile", updateProfileArgs...)
+		mockUserRepository.AssertNotCalled(t, "UpdateImage")
+	})
+
+	t.Run("UserRepository UpdateImage Error", func(t *testing.T) {
+		uid, _ := uuid.NewRandom()
+		imageURL := testImageURL
+
+		// has imageURL
+		mockUser := &models.User{
+			UID:      uid,
+			Email:    "new@bob.com",
+			Website:  "https://jacobgoodwin.me",
+			Name:     "A New Bob!",
+			ImageURL: imageURL,
+		}
+
+		findByIDArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			uid,
+		}
+		mockUserRepository.On("FindByID", findByIDArgs...).Return(mockUser, nil)
+
+		multipartImageFixture := fixtures.NewMultipartImage("image.png", "image/png")
+		defer multipartImageFixture.Close()
+		imageFileHeader := multipartImageFixture.GetFormFile()
+		imageFile, _ := imageFileHeader.Open()
+
+		updateProfileArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mock.AnythingOfType("string"),
+			imageFile,
+		}
+
+		mockImageRepository.
+			On("UpdateProfile", updateProfileArgs...).
+			Return(imageURL, nil)
+
+		updateImageArgs := mock.Arguments{
+			mock.AnythingOfType("*context.emptyCtx"),
+			mockUser.UID,
+			imageURL,
+		}
+
+		mockError := apperrors.NewInternal()
+		mockUserRepository.
+			On("UpdateImage", updateImageArgs...).
+			Return(nil, mockError)
+
+		ctx := context.TODO()
+
+		updatedUser, err := us.SetProfileImage(ctx, uid, imageFileHeader)
+
+		assert.Error(t, err)
+		assert.Nil(t, updatedUser)
+		mockImageRepository.AssertCalled(t, "UpdateProfile", updateProfileArgs...)
+		mockUserRepository.AssertCalled(t, "UpdateImage", updateImageArgs...)
+	})
+
+	// TODO - Create non image file for test
 }
