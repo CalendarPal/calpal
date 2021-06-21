@@ -11,7 +11,6 @@ import (
 
 // Me handler calls services to get the users details
 func (h *Handler) Me(c *gin.Context) {
-	// TODO: Add *models.User to context in middleware
 	user, exists := c.Get("user")
 
 	// This should never happen due to the middleware throwing an error but ill leave it here for extra safety

@@ -46,8 +46,6 @@ func (h *Handler) Signup(c *gin.Context) { // Variable to hold the incoming json
 	if err != nil {
 		log.Printf("Failed to create tokens for user: %v\n", err.Error())
 
-		// TODO: Create rollback logic to ensure the "created user" is cleared from the database
-
 		c.JSON(apperrors.Status(err), gin.H{
 			"error": err,
 		})

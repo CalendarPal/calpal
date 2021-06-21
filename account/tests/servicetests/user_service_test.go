@@ -3,6 +3,8 @@ package servicetests
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/CalendarPal/calpal-api/account/auth"
 	"github.com/CalendarPal/calpal-api/account/models"
 	"github.com/CalendarPal/calpal-api/account/services"
@@ -12,7 +14,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 const testImageURL = "http://imageurl.com/jdfkj34kljl"
@@ -515,6 +516,4 @@ func TestSetProfileImage(t *testing.T) {
 		mockImageRepository.AssertCalled(t, "UpdateProfile", updateProfileArgs...)
 		mockUserRepository.AssertCalled(t, "UpdateImage", updateImageArgs...)
 	})
-
-	// TODO - Create non image file for test
 }

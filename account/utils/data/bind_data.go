@@ -55,8 +55,6 @@ func BindData(c *gin.Context, req interface{}) bool {
 			return false
 		}
 
-		// TODO: Add code for validating max body size
-
 		// If validation errors cant be extracted, we return an internal server error as a fallback
 		fallBack := apperrors.NewInternal()
 

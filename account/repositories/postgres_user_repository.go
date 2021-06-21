@@ -42,7 +42,6 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, uid uuid.UUID) (*
 
 	query := "SELECT * FROM users WHERE uid=$1"
 
-	// TODO: Further error checking
 	if err := r.DB.GetContext(ctx, user, query, uid); err != nil {
 		return user, apperrors.NewNotFound("uid", uid.String())
 	}
