@@ -85,3 +85,24 @@ func (r *PostgresUserRepository) Update(ctx context.Context, u *models.User) err
 
 	return nil
 }
+
+// UpdateImage Update a user's image separately from other account details
+func (r *PostgresUserRepository) UpdateImage(ctx context.Context, uid uuid.UUID, imageURL string) (*models.User, error) {
+	query := `
+		UPDATE users 
+		SET image_url=$2
+		WHERE uid=$1
+		RETURNING *;
+	`
+
+	u := &models.User{}
+
+	err := r.DB.GetContext(ctx, u, query, uid, imageURL)
+
+	if err != nil {
+		log.Printf("Error updating image_url in database: %v\n", err)
+		return nil, apperrors.NewInternal()
+	}
+
+	return u, nil
+}

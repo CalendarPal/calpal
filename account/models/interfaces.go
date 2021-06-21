@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"mime/multipart"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ type UserService interface {
 	Signup(ctx context.Context, u *User) error
 	Signin(ctx context.Context, u *User) error
 	UpdateDetails(ctx context.Context, u *User) error
+	SetProfileImage(ctx context.Context, uid uuid.UUID, imageFileHeader *multipart.FileHeader) (*User, error)
 }
 
 // TokenService defines methods the handler later expects to interact with to produce JWT's as string
@@ -29,6 +31,7 @@ type UserRepository interface {
 	FindByEmail(ctx context.Context, email string) (*User, error)
 	Create(ctx context.Context, u *User) error
 	Update(ctx context.Context, u *User) error
+	UpdateImage(ctx context.Context, uid uuid.UUID, imageURL string) (*User, error)
 }
 
 // TokenRepository defines methods the service layer expects the repositories it interacts with to implement
@@ -40,4 +43,5 @@ type TokenRepository interface {
 
 // ImageRepository defines methods the service layer expects the repositories it interacts with to implement
 type ImageRepository interface {
+	UpdateProfile(ctx context.Context, objName string, imageFile multipart.File) (string, error)
 }

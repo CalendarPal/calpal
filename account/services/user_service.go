@@ -3,6 +3,9 @@ package services
 import (
 	"context"
 	"log"
+	"mime/multipart"
+	"net/url"
+	"path"
 
 	"github.com/CalendarPal/calpal-api/account/auth"
 	"github.com/CalendarPal/calpal-api/account/models"
@@ -83,4 +86,60 @@ func (s *UserService) UpdateDetails(ctx context.Context, u *models.User) error {
 	}
 
 	return nil
+}
+
+func (s *UserService) SetProfileImage(ctx context.Context, uid uuid.UUID, imageFileHeader *multipart.FileHeader) (*models.User, error) {
+	u, err := s.UserRepository.FindByID(ctx, uid)
+
+	if err != nil {
+		return nil, err
+	}
+
+	objName, err := objNameFromURL(u.ImageURL)
+
+	if err != nil {
+		return nil, err
+	}
+
+	imageFile, err := imageFileHeader.Open()
+	if err != nil {
+		log.Printf("Failed to open image file: %v\n", err)
+		return nil, apperrors.NewInternal()
+	}
+
+	// Upload user's image to ImageRepository
+	imageURL, err := s.ImageRepository.UpdateProfile(ctx, objName, imageFile)
+
+	if err != nil {
+		log.Printf("Unable to upload image to cloud provider: %v\n", err)
+		return nil, err
+	}
+
+	updatedUser, err := s.UserRepository.UpdateImage(ctx, u.UID, imageURL)
+
+	if err != nil {
+		log.Printf("Unable to update imageURL: %v\n", err)
+		return nil, err
+	}
+
+	return updatedUser, nil
+}
+
+func objNameFromURL(imageURL string) (string, error) {
+	// Creates an imageURL if user doesn't have one, otherwise, extract last part of URL to get cloud storage object name
+	if imageURL == "" {
+		objID, _ := uuid.NewRandom()
+		return objID.String(), nil
+	}
+
+	// Split off last part of URL (the image's storage object ID)
+	urlPath, err := url.Parse(imageURL)
+
+	if err != nil {
+		log.Printf("Failed to parse objectName from imageURL: %v\n", imageURL)
+		return "", apperrors.NewInternal()
+	}
+
+	// Get "path" and "base" of url
+	return path.Base(urlPath.Path), nil
 }
