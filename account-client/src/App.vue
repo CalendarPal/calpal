@@ -1,24 +1,35 @@
 <template>
-  <h1>Test App</h1>
-  <h3 v-if="errorCode">Error code: {{ errorCode }}</h3>
-  <h3 v-if="errorMessage">{{ errorMessage }}</h3>
+  <div class="text-4xl font-bold text-center my-12">CSS Works!</div>
+  <div class="text-xl text-center" v-if="errorCode">
+    Error code: {{ errorCode }}
+  </div>
+  <div class="text-center" v-if="errorMessage">{{ errorMessage }}</div>
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'App',
   setup() {
     const errorCode = ref(null);
     const errorMessage = ref(null);
+
     onMounted(async () => {
-      const response = await fetch('/api/account/me', {
-        method: 'GET',
-      });
-      const body = await response.json();
-      errorCode.value = response.status;
-      errorMessage.value = body.error.message;
+      try {
+        await axios.get('/api/account/me');
+        errorCode.value = null;
+        errorMessage.value = null;
+      } catch (error) {
+        if (error.response) {
+          errorCode.value = error.response.status;
+          errorMessage.value = error.response.data.error.message;
+        } else {
+          errorCode.value = 500;
+          errorMessage.value = 'Unknown request errors';
+        }
+      }
     });
     return {
       errorCode,
