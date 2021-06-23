@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 const state = reactive({
   currentUser: null,
   idToken: null,
-  isLoading: null,
+  isLoading: false,
   error: null,
 });
 
@@ -37,7 +37,6 @@ const initializeUser = async () => {
     return;
   }
 
-  // Refresh the tokens in local storage
   const { data, error } = await doRequest({
     url: '/api/account/tokens',
     method: 'post',
@@ -80,11 +79,11 @@ export const createAuthStore = (authStoreOptions) => {
   };
 };
 
-export function useAuth(useAuthConfig) {
+export function useAuth() {
   const store = inject(storeSymbol);
 
   if (!store) {
-    throw new Error('Auth store has not been instantiated');
+    throw new Error('Auth store has not been instantiated!');
   }
 
   const router = useRouter();
