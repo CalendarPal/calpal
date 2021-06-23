@@ -1,39 +1,18 @@
 <template>
-  <div class="text-4xl font-bold text-center my-12">CSS Works!</div>
-  <div class="text-xl text-center" v-if="errorCode">
-    Error code: {{ errorCode }}
-  </div>
-  <div class="text-center" v-if="errorMessage">{{ errorMessage }}</div>
+  <h1 class="text-4xl font-bol text-center">{{ currentUser }}</h1>
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from 'vue';
-import axios from 'axios';
+import { defineComponent } from 'vue';
+import { useAuth } from '../store/auth';
 
 export default defineComponent({
   name: 'Details',
   setup() {
-    const errorCode = ref(null);
-    const errorMessage = ref(null);
+    const { currentUser } = useAuth();
 
-    onMounted(async () => {
-      try {
-        await axios.get('/api/account/me');
-        errorCode.value = null;
-        errorMessage.value = null;
-      } catch (error) {
-        if (error.response) {
-          errorCode.value = error.response.status;
-          errorMessage.value = error.response.data.error.message;
-        } else {
-          errorCode.value = 500;
-          errorMessage.value = 'Unknown request errors';
-        }
-      }
-    });
     return {
-      errorCode,
-      errorMessage,
+      currentUser,
     };
   },
 });

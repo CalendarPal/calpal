@@ -10,8 +10,12 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { provideAuth } from './store/auth';
 
 export default defineComponent({
   name: 'App',
+  setup() {
+    provideAuth();
+  },
 });
 </script>
