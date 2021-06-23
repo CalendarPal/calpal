@@ -30,10 +30,20 @@ export const doRequest = async (reqOptions) => {
   };
 };
 
+const ID_TOKEN_KEY = '__calpalId';
+const REFRESH_TOKEN_KEY = '__calpalRf';
+
 // storeTokens Utility function for storing idToken and refreshToken
 export const storeTokens = (idToken, refreshToken) => {
-  localStorage.setItem('__calpalId', idToken);
-  localStorage.setItem('__calpalRf', refreshToken);
+  localStorage.setItem(ID_TOKEN_KEY, idToken);
+  localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+};
+
+export const getTokens = () => {
+  return [
+    localStorage.getItem(ID_TOKEN_KEY),
+    localStorage.getItem(REFRESH_TOKEN_KEY),
+  ];
 };
 
 // getTokenPayload Gets the token's payload/claims, returns null if invalid

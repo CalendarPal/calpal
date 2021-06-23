@@ -9,9 +9,7 @@ import { useAuth } from '../store/auth';
 export default defineComponent({
   name: 'Details',
   setup() {
-    const { currentUser } = useAuth({
-      requireAuthRoute: '/authenticate',
-    });
+    const { currentUser } = useAuth();
 
     return {
       currentUser,
