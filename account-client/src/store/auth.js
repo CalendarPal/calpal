@@ -19,7 +19,7 @@ const signup = async (email, password) =>
 
 const initializeUser = async () => {
   state.isLoading = true;
-  state, (error = null);
+  state.error = null;
 
   const [idToken, refreshToken] = getTokens();
 
