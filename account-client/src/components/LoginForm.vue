@@ -102,6 +102,8 @@
         class="btn btn-blue mx-1 flex items-center"
         :disabled="!formMeta.valid"
         @click="submitForm"
+        type="submit"
+        @submit="submitForm"
       >
         <span>{{ isLogin ? 'Login' : 'Sign Up' }}</span>
         <Loader
