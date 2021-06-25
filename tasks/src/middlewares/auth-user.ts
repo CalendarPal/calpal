@@ -24,7 +24,6 @@ declare global {
   }
 }
 
-// maybe this needs to be injected
 const pubKey = fs.readFileSync("src/rsa_public_dev.pem");
 
 export const authUser = (req: Request, res: Response, next: NextFunction) => {
@@ -39,8 +38,6 @@ export const authUser = (req: Request, res: Response, next: NextFunction) => {
   }
 
   try {
-    // can do the following since jwt.verify throws
-    // for invalid or unverified token
     const tokenPayload = jwt.verify(token, pubKey) as TokenClaims;
     req.currentUser = tokenPayload.user;
     console.log(req.currentUser);

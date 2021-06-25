@@ -2,15 +2,15 @@ import express from "express";
 
 import { requireAuth } from "../middlewares/require-auth";
 
-const wordRouter = express.Router();
+const taskRouter = express.Router();
 
-wordRouter.use(requireAuth);
+taskRouter.use(requireAuth);
 
-wordRouter.get("/", (req, res) => {
+taskRouter.get("/", (req, res) => {
   res.json({
     user: req.currentUser,
     reqBody: req.body,
   });
 });
 
-export { wordRouter };
+export { taskRouter };

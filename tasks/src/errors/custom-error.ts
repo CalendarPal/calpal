@@ -3,7 +3,7 @@ export abstract class CustomError extends Error {
 
   constructor(message: string) {
     super(message);
-    Object.setPrototypeOf(this, new.target.prototype); // this is for type matching/assertion
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 
   abstract serializeErrors(): {
