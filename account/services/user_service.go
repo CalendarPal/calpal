@@ -15,21 +15,24 @@ import (
 
 // UserService Struct for injecting UserRepository for use in service methods
 type UserService struct {
-	UserRepository  models.UserRepository
-	ImageRepository models.ImageRepository
+	UserRepository   models.UserRepository
+	ImageRepository  models.ImageRepository
+	EventsRepository models.EventsRepository
 }
 
 // UserServiceConfig holds repositories that will be injected into the service layer
 type UserServiceConfig struct {
-	UserRepository  models.UserRepository
-	ImageRepository models.ImageRepository
+	UserRepository   models.UserRepository
+	ImageRepository  models.ImageRepository
+	EventsRepository models.EventsRepository
 }
 
 // NewUserService Initializes a UserService with its repositories layer dependencies
 func NewUserService(c *UserServiceConfig) models.UserService {
 	return &UserService{
-		UserRepository:  c.UserRepository,
-		ImageRepository: c.ImageRepository,
+		UserRepository:   c.UserRepository,
+		ImageRepository:  c.ImageRepository,
+		EventsRepository: c.EventsRepository,
 	}
 }
 
@@ -49,6 +52,14 @@ func (s *UserService) Signup(ctx context.Context, u *models.User) error {
 	}
 
 	u.Password = pw
+
+	// Publish user created event
+	err = s.EventsRepository.PublishUserUpdated(ctx, u, true)
+
+	if err != nil {
+		return apperrors.NewInternal()
+	}
+
 	return s.UserRepository.Create(ctx, u)
 }
 
@@ -83,6 +94,13 @@ func (s *UserService) UpdateDetails(ctx context.Context, u *models.User) error {
 
 	if err != nil {
 		return err
+	}
+
+	// Publish user created event
+	err = s.EventsRepository.PublishUserUpdated(ctx, u, false)
+
+	if err != nil {
+		return apperrors.NewInternal()
 	}
 
 	return nil
@@ -121,6 +139,13 @@ func (s *UserService) SetProfileImage(ctx context.Context, uid uuid.UUID, imageF
 	if err != nil {
 		log.Printf("Unable to update imageURL: %v\n", err)
 		return nil, err
+	}
+
+	// Publish user created event
+	err = s.EventsRepository.PublishUserUpdated(ctx, u, false)
+
+	if err != nil {
+		return nil, apperrors.NewInternal()
 	}
 
 	return updatedUser, nil

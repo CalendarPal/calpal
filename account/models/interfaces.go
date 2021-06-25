@@ -47,3 +47,7 @@ type ImageRepository interface {
 	DeleteProfile(ctx context.Context, objName string) error
 	UpdateProfile(ctx context.Context, objName string, imageFile multipart.File) (string, error)
 }
+
+type EventsRepository interface {
+	PublishUserUpdated(ctx context.Context, u *User, isNewUser bool) error
+}

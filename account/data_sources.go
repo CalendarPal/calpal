@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"cloud.google.com/go/pubsub"
 	"cloud.google.com/go/storage"
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
@@ -17,6 +18,7 @@ type dataSources struct {
 	DB            *sqlx.DB
 	RedisClient   *redis.Client
 	StorageClient *storage.Client
+	PubSubClient  *pubsub.Client
 }
 
 // InitDS establishes connections to fields in dataSources
@@ -63,7 +65,7 @@ func initDS() (*dataSources, error) {
 		return nil, fmt.Errorf("error connecting to redis: %w", err)
 	}
 
-	// Initialize google storage client
+	// Initialize Google Storage client
 	log.Printf("Connecting to Cloud Storage\n")
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
@@ -74,10 +76,19 @@ func initDS() (*dataSources, error) {
 		return nil, fmt.Errorf("error creating cloud storage client: %w", err)
 	}
 
+	// Initialize Google PubSub client
+	log.Printf("Initializing Pubsub client\n")
+	ps, err := pubsub.NewClient(context.Background(), "calpal-317500")
+
+	if err != nil {
+		return nil, fmt.Errorf("error instantiating cloud pubsub client: %w", err)
+	}
+
 	return &dataSources{
 		DB:            db,
 		RedisClient:   rdb,
 		StorageClient: cloud,
+		PubSubClient:  ps,
 	}, nil
 }
 
@@ -89,6 +100,14 @@ func (d *dataSources) close() error {
 
 	if err := d.RedisClient.Close(); err != nil {
 		return fmt.Errorf("error closing Redis Client: %w", err)
+	}
+
+	if err := d.StorageClient.Close(); err != nil {
+		return fmt.Errorf("error closing Google Storage Client: %w", err)
+	}
+
+	if err := d.PubSubClient.Close(); err != nil {
+		return fmt.Errorf("error closing Google PubSub Client: %w", err)
 	}
 
 	return nil

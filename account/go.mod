@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	cloud.google.com/go v0.84.0 // indirect
+	cloud.google.com/go/pubsub v1.12.0
 	cloud.google.com/go/storage v1.15.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.2
