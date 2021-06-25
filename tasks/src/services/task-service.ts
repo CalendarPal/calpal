@@ -14,15 +14,15 @@ interface UserData {
 }
 
 export class TaskService {
-  private r: TaskRepository;
+  private tr: TaskRepository;
 
   constructor(r: TaskRepository) {
-    this.r = r;
+    this.tr = r;
   }
 
   async addTask(t: TaskData, u: UserData): Promise<Task> {
     const id = v4();
-    const createdTask = this.r.create({
+    const createdTask = this.tr.create({
       id,
       task: t.task,
       refUrl: t.refUrl ?? "",
@@ -33,5 +33,11 @@ export class TaskService {
     });
 
     return createdTask;
+  }
+
+  async getTasks(userId: string): Promise<Task[]> {
+    const tasks = await this.tr.getByUser(userId);
+
+    return tasks;
   }
 }

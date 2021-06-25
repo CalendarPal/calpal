@@ -1,9 +1,7 @@
 import { TaskRepository } from "../services/interfaces";
-import { Task } from "../models/task";
-import { CustomError } from "../errors/custom-error";
+import { Task, taskFromData } from "../models/task";
 import { Pool } from "pg";
 import { InternalError } from "../errors/internal-error";
-import { create } from "domain";
 export class PGTaskRepository implements TaskRepository {
   private client: Pool;
 
@@ -32,15 +30,30 @@ export class PGTaskRepository implements TaskRepository {
 
       const createdTask = queryRes.rows[0];
 
-      return {
-        id: createdTask.id,
-        email: createdTask.email,
-        emailReminder: createdTask.email_reminder,
-        refUrl: createdTask.ref_url,
-        startDate: createdTask.start_date,
-        userId: createdTask.userid,
-        task: createdTask.task,
-      };
+      return taskFromData(createdTask);
+    } catch (e) {
+      console.debug("Error inserting task into database: ", e);
+      throw new InternalError();
+    }
+  }
+
+  async getByUser(uid: string): Promise<Task[]> {
+    const text = `
+      SELECT * FROM tasks 
+      WHERE userid=$1 
+      ORDER BY lower(task)
+    `;
+    const values = [uid];
+
+    try {
+      const queryRes = await this.client.query({
+        text,
+        values,
+      });
+
+      const fetchedTasks = queryRes.rows;
+
+      return fetchedTasks.map((task) => taskFromData(task));
     } catch (e) {
       console.debug("Error inserting task into database: ", e);
       throw new InternalError();

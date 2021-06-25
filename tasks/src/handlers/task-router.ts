@@ -1,9 +1,9 @@
 import express, { Request, Response, Router, NextFunction } from "express";
 import { body } from "express-validator";
-
 import { requireAuth } from "../middlewares/require-auth";
 import { serviceContainer } from "../injection";
 import { validateRequest } from "../middlewares/validate-request";
+import { nextTick } from "process";
 
 export const createTaskRouter = (): Router => {
   const taskRouter = express.Router();
@@ -11,12 +11,18 @@ export const createTaskRouter = (): Router => {
 
   taskRouter.use(requireAuth);
 
-  taskRouter.get("/", (req: Request, res: Response) => {
-    res.json({
-      user: req.currentUser,
-      reqBody: req.body,
-    });
-  });
+  taskRouter.get(
+    "/",
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const taskList = await taskService.getTasks(req.currentUser!.uid);
+
+        res.status(200).json(taskList);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 
   taskRouter.post(
     "/",
@@ -26,7 +32,6 @@ export const createTaskRouter = (): Router => {
       body("emailReminder").optional().isBoolean().withMessage("boolean"),
     ],
     async (req: Request, res: Response, next: NextFunction) => {
-
       const { task, refUrl, emailReminder } = req.body;
 
       try {
