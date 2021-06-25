@@ -46,8 +46,8 @@ const startup = async () => {
 
   const app = createApp();
 
-  app.listen(process.env.PG_PORT, () => {
-    console.log(`Listening on port ${process.env.PG_PORT}`);
+  app.listen(process.env.WEB_PORT, () => {
+    console.log(`Listening on port ${process.env.WEB_PORT}`);
   });
 };
 

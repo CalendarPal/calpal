@@ -1,9 +1,9 @@
 import express, { Request, Response, Router, NextFunction } from "express";
-import { body, validationResult } from "express-validator";
+import { body } from "express-validator";
 
 import { requireAuth } from "../middlewares/require-auth";
-import { RequestValidationError } from "../errors/request-validation-error";
 import { serviceContainer } from "../injection";
+import { validateRequest } from "../middlewares/validate-request";
 
 export const createTaskRouter = (): Router => {
   const taskRouter = express.Router();
@@ -26,11 +26,6 @@ export const createTaskRouter = (): Router => {
       body("emailReminder").optional().isBoolean().withMessage("boolean"),
     ],
     async (req: Request, res: Response, next: NextFunction) => {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        throw new RequestValidationError(errors.array());
-      }
 
       const { task, refUrl, emailReminder } = req.body;
 

@@ -3,7 +3,7 @@ export interface Task {
   userId: string;
   email: string;
   task: string;
-  refUrl?: string;
+  refUrl: string;
   emailReminder: Boolean;
-  startDate?: string;
+  startDate: Date;
 }

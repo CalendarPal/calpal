@@ -1,16 +1,14 @@
+import { v4 } from "uuid";
 import { TaskRepository } from "./interfaces";
-import { CustomError } from "../errors/custom-error";
 import { Task } from "../models/task";
-import { NotAuthorizedError } from "../errors/not-authorized-error";
-import { nextTick } from "process";
 
-interface TaskInput {
+interface TaskData {
   task: string;
   refUrl?: string;
-  emailReminder: boolean;
+  emailReminder?: boolean;
 }
 
-interface UserInput {
+interface UserData {
   id: string;
   email: string;
 }
@@ -22,13 +20,18 @@ export class TaskService {
     this.r = r;
   }
 
-  async addTask(task: TaskInput, user: UserInput): Promise<Task> {
-    return {
-      id: "abc123",
-      email: "bob@bob.com",
-      emailReminder: false,
-      userId: "123",
-      task: "A task",
-    };
+  async addTask(t: TaskData, u: UserData): Promise<Task> {
+    const id = v4();
+    const createdTask = this.r.create({
+      id,
+      task: t.task,
+      refUrl: t.refUrl ?? "",
+      emailReminder: t.emailReminder ?? false,
+      email: u.email,
+      userId: u.id,
+      startDate: new Date(),
+    });
+
+    return createdTask;
   }
 }
