@@ -28,6 +28,15 @@ services:
       - "6379:6379"
     volumes:
       - "redisdata:/data"
+  postgres-tasks:
+    image: "postgres:alpine"
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5433:5432"
+    volumes:
+      - "pgdata_tasks:/var/lib/postgresql/data"
+    command: ["postgres", "-c", "log_statement=all"]
   account:
     build:
       context: ./account
@@ -64,6 +73,24 @@ services:
       - /app/node_modules
     depends_on:
       - reverse-proxy
+  tasks:
+    build:
+      context: ./tasks
+      target: builder
+    image: tasks
+    expose:
+      - "8080"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tasks.rule=Host(`calpal.test`) && PathPrefix(`/api/tasks`)"
+    volumes:
+      - ./tasks:/app
+    depends_on:
+      - postgres-tasks
+    environment:
+      - NODE_ENV=development
+    command: ["npm", "run", "dev"]
 volumes:
   pgdata_account:
+  pgdata_tasks:
   redisdata:
