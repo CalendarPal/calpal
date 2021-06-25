@@ -1,15 +1,28 @@
-import express, { json } from "express";
+import express, { json, Express } from "express";
+
 import { authUser } from "./middlewares/auth-user";
+
+import { createTaskRouter } from "./handlers/task-router";
 import { errorHandler } from "./middlewares/error-handler";
-import { taskRouter } from "./handlers/routes";
+import { NotFoundError } from "./errors/not-found-error";
 
-const app = express();
+// we use get app, otherwise our dependency injection
+// will no be ready as app is imported at the top of the file
+const createApp = (): Express => {
+  const app = express();
 
-app.use(json());
-app.use(authUser);
+  app.use(json());
+  app.use(authUser);
 
-app.use("/api/tasks", taskRouter);
+  app.use("/api/tasks", createTaskRouter());
 
-app.use(errorHandler);
+  app.all("*", async () => {
+    throw new NotFoundError();
+  });
 
-export default app;
+  app.use(errorHandler);
+
+  return app;
+};
+
+export default createApp;
