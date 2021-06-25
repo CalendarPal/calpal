@@ -11,14 +11,14 @@ export class PGTaskRepository implements TaskRepository {
 
   async create(t: Task): Promise<Task> {
     const text = `
-        INSERT INTO tasks (id, userId, email, task, ref_url, email_reminder, start_date) 
+        INSERT INTO tasks (id, userId, task, description, ref_url, email_reminder, start_date) 
         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
       `;
     const values = [
       t.id,
       t.userId,
-      t.email,
       t.task,
+      t.description,
       t.refUrl,
       t.emailReminder,
       t.startDate,
@@ -91,17 +91,48 @@ export class PGTaskRepository implements TaskRepository {
     }
   }
   async update(t: Task): Promise<Task> {
-    throw new Error("Method not implemented.");
+    const text = `
+        UPDATE tasks 
+        SET task=$1,
+        SET description=$2,
+        SET ref_url=$3,
+        SET email_reminder=$4,
+        SET start_date=$5
+        WHERE id=$6
+        RETURNING *;
+      `;
+    const values = [
+      w.task,
+      w.description,
+      w.refUrl,
+      w.emailReminder,
+      w.startDate,
+      w.id,
+    ];
+
+    try {
+      const queryRes = await this.client.query({
+        text,
+        values,
+      });
+
+      const updatedTask = queryRes.rows[0];
+
+      return taskFromData(updatedTask);
+    } catch (e) {
+      console.debug("Error updating task in database: ", e);
+      throw new InternalError();
+    }
   }
 }
 
 const taskFromData = (dataObj: any): Task => ({
   id: dataObj.id,
-  email: dataObj.email,
   emailReminder: dataObj.email_reminder,
   refUrl: dataObj.ref_url,
   startDate: dataObj.start_date,
   userId: dataObj.userid,
+  email: dataObj.email,
   task: dataObj.task,
   description: dataObj.description,
 });

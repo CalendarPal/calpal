@@ -2,15 +2,22 @@ import { v4 } from "uuid";
 import { TaskRepository } from "./interfaces";
 import { Task } from "../models/task";
 
-interface TaskData {
+interface CreateData {
   task: string;
   description: string;
   refUrl?: string;
   emailReminder?: boolean;
+  startDate?: Date;
+  uid: string;
+  email: string;
 }
 
-interface UserData {
-  id: string;
+interface UpdateData {
+  task: string;
+  description: string;
+  refUrl: string;
+  emailReminder: boolean;
+  startDate: Date;
   email: string;
 }
 
@@ -21,7 +28,7 @@ export class TaskService {
     this.tr = r;
   }
 
-  async addTask(t: TaskData, u: UserData): Promise<Task> {
+  async addTask(t: CreateData): Promise<Task> {
     const id = v4();
     const createdTask = this.tr.create({
       id,
@@ -29,9 +36,9 @@ export class TaskService {
       description: t.description,
       refUrl: t.refUrl ?? "",
       emailReminder: t.emailReminder ?? false,
-      email: u.email,
-      userId: u.id,
+      userId: t.uid,
       startDate: new Date(),
+      email: t.email,
     });
 
     return createdTask;
@@ -47,5 +54,20 @@ export class TaskService {
     const deletedIds = await this.tr.deleteByIds(taskIds);
 
     return deletedIds;
+  }
+
+  async updateTask(taskId: string, t: UpdateData): Promise<Task> {
+    const updatedTask = this.wr.update({
+      id: taskId,
+      task: t.task,
+      description: t.description,
+      refUrl: t.refUrl,
+      emailReminder: t.emailReminder,
+      userId: "",
+      startDate: t.startDate,
+      email: t.email,
+    });
+
+    return updatedTask;
   }
 }
