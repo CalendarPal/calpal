@@ -3,6 +3,7 @@ import path from "path";
 import { initDS, DataSources } from "./data";
 import { serviceContainer } from "./injection";
 import createApp from "./app";
+import { UserUpdatesListener } from "./events/user-updates-listener";
 
 const startup = async () => {
   /*
@@ -49,6 +50,14 @@ const startup = async () => {
   app.listen(process.env.WEB_PORT, () => {
     console.log(`Listening on port ${process.env.WEB_PORT}`);
   });
+
+  new UserUpdatesListener({
+    userService: serviceContainer.services.userService,
+    pubSub: ds.pubSubClient,
+  }).listen();
+
+  process.on("SIGINT", () => ds.pubSubClient.close());
+  process.on("SIGTERM", () => ds.pubSubClient.close());
 };
 
 startup();

@@ -1,8 +1,10 @@
 import console from "console";
 import { Pool } from "pg";
+import { PubSub } from "@google-cloud/pubsub";
 
 export interface DataSources {
   db: Pool;
+  pubSubClient: PubSub;
 }
 
 export const initDS = async (): Promise<DataSources> => {
@@ -22,7 +24,10 @@ export const initDS = async (): Promise<DataSources> => {
     throw new Error(`Unable to connect to postgres. Reason: ${err}`);
   }
 
+  const pubSubClient = new PubSub();
+
   return {
     db,
+    pubSubClient,
   };
 };

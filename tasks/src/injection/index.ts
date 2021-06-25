@@ -1,9 +1,12 @@
 import { DataSources } from "../data";
 import { TaskService } from "../services/task-service";
 import { PGTaskRepository } from "../repositories/pg-task-repository";
+import { UserService } from "../services/user-service";
+import { PGUserRepository } from "../repositories/pg-user-repository";
 
 export interface Services {
   taskService: TaskService;
+  userService: UserService;
 }
 
 class ServiceContainer {
@@ -14,8 +17,12 @@ class ServiceContainer {
     const taskRepository = new PGTaskRepository(dataSources.db);
     const taskService = new TaskService(taskRepository);
 
+    const userRepository = new PGUserRepository(dataSources.db);
+    const userService = new UserService(userRepository);
+
     this._services = {
       taskService,
+      userService,
     };
   }
 

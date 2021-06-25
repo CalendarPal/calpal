@@ -38,7 +38,6 @@ export class TaskService {
       emailReminder: t.emailReminder ?? false,
       userId: t.uid,
       startDate: new Date(),
-      email: t.email,
     });
 
     return createdTask;
@@ -57,7 +56,7 @@ export class TaskService {
   }
 
   async updateTask(taskId: string, t: UpdateData): Promise<Task> {
-    const updatedTask = this.wr.update({
+    const updatedTask = this.tr.update({
       id: taskId,
       task: t.task,
       description: t.description,
@@ -65,7 +64,6 @@ export class TaskService {
       emailReminder: t.emailReminder,
       userId: "",
       startDate: t.startDate,
-      email: t.email,
     });
 
     return updatedTask;

@@ -102,12 +102,12 @@ export class PGTaskRepository implements TaskRepository {
         RETURNING *;
       `;
     const values = [
-      w.task,
-      w.description,
-      w.refUrl,
-      w.emailReminder,
-      w.startDate,
-      w.id,
+      t.task,
+      t.description,
+      t.refUrl,
+      t.emailReminder,
+      t.startDate,
+      t.id,
     ];
 
     try {
@@ -131,8 +131,7 @@ const taskFromData = (dataObj: any): Task => ({
   emailReminder: dataObj.email_reminder,
   refUrl: dataObj.ref_url,
   startDate: dataObj.start_date,
-  userId: dataObj.userid,
-  email: dataObj.email,
+  userId: dataObj.user_id,
   task: dataObj.task,
   description: dataObj.description,
 });
