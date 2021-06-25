@@ -1,8 +1,11 @@
 import express, { Request, Response, Router, NextFunction } from "express";
 import { body, check } from "express-validator";
+
 import { requireAuth } from "../middlewares/require-auth";
 import { serviceContainer } from "../injection";
 import { validateRequest } from "../middlewares/validate-request";
+import { RequestValidationError } from "../errors/request-validation-error";
+import { BadRequestError } from "../errors/bad-request-error";
 
 export const createTaskRouter = (): Router => {
   const taskRouter = express.Router();
@@ -31,6 +34,7 @@ export const createTaskRouter = (): Router => {
       body("refUrl").optional().isURL().trim().withMessage("url"),
       body("emailReminder").optional().isBoolean().withMessage("boolean"),
     ],
+    validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const { task, refUrl, emailReminder, description } = req.body;
 
@@ -51,6 +55,9 @@ export const createTaskRouter = (): Router => {
     }
   );
 
+  // using a post request with list of posts
+  // not sure if this is totally RESTful, but what the hell is?
+  // https://stackoverflow.com/questions/21863326/delete-multiple-records-using-rest/30933909
   taskRouter.post(
     "/delete",
     [
@@ -74,31 +81,60 @@ export const createTaskRouter = (): Router => {
     "/:id",
     [
       body("task")
-        .optional()
-        .notEmpty()
+        .isString()
+        .isLength({ min: 1 })
         .trim()
-        .withMessage("must be non-empty string or null"),
+        .withMessage("required"),
       body("description")
-        .optional()
-        .notEmpty()
+        .exists({ checkNull: true })
+        .isString()
         .trim()
-        .withMessage("must be non-empty string or null"),
-      body("refUrl").optional().isURL().trim().withMessage("url"),
-      body("emailReminder").optional().isBoolean().withMessage("boolean"),
-      body("startDate").optional().isDate().withMessage("data"),
+        .withMessage("required"),
+      body("refUrl")
+        .exists({ checkNull: true })
+        .if(body("refUrl").notEmpty())
+        .isURL()
+        .trim()
+        .withMessage("url"),
+      body("emailReminder")
+        .exists({ checkNull: true })
+        .isBoolean()
+        .withMessage("boolean"),
+      body("startDate")
+        .exists({ checkNull: true })
+        .notEmpty()
+        .withMessage("date"),
     ],
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
-      const { task, refUrl, emailReminder, description, startDate } = req.body;
+      const {
+        task,
+        refUrl,
+        emailReminder,
+        description,
+        startDate: strDate,
+      } = req.body;
+
+      // parse date
+      let startDate: Date;
+      try {
+        startDate = new Date(strDate as string);
+      } catch (err) {
+        console.error("Invalid date string!", err);
+        throw new BadRequestError(
+          "startDate must be a string that can be parsed as a date"
+        );
+      }
 
       try {
-        const updated = await taskService.updateTask(req.params.id, {
+        const updated = await taskService.updateTask({
+          id: req.params.id,
+          uid: req.currentUser!.uid,
           task,
           description,
           refUrl,
           emailReminder,
           startDate,
-          email: req.currentUser!.email,
         });
 
         res.status(200).json(updated);

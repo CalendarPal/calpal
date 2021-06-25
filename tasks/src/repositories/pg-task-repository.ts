@@ -94,11 +94,11 @@ export class PGTaskRepository implements TaskRepository {
     const text = `
         UPDATE tasks 
         SET task=$1,
-        SET description=$2,
-        SET ref_url=$3,
-        SET email_reminder=$4,
-        SET start_date=$5
-        WHERE id=$6
+        description=$2,
+        ref_url=$3,
+        email_reminder=$4,
+        start_date=$5
+        WHERE id=$6 AND user_id=$7
         RETURNING *;
       `;
     const values = [
@@ -108,6 +108,7 @@ export class PGTaskRepository implements TaskRepository {
       t.emailReminder,
       t.startDate,
       t.id,
+      t.userId,
     ];
 
     try {

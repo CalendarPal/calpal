@@ -1,31 +1,40 @@
-import { PubSub, SubscriptionOptions } from "@google-cloud/pubsub";
+import { PubSub } from "@google-cloud/pubsub";
 import { UserService } from "../services/user-service";
+import { DecodedMessage, PubSubListener } from "./pub-sub-listener";
 
-export interface UserUpdatesListenerOptions {
-  userService: UserService;
-  pubSub: PubSub;
-}
-
-interface UserUpdatesMessage {
+interface UserUpdatesData {
   uid: string;
   email: string;
 }
 
-export class UserUpdatesListener {
+interface UserUpdatesListenerOptions {
+  userService: UserService;
+  pubSub: PubSub;
+}
+
+export class UserUpdatesListener extends PubSubListener<UserUpdatesData> {
+  readonly topicName = "events";
+
   private userService: UserService;
-  private pubSub: PubSub;
-  subscriberName = "events-sub";
 
   constructor(options: UserUpdatesListenerOptions) {
+    super(options.pubSub);
     this.userService = options.userService;
-    this.pubSub = options.pubSub;
   }
 
-  listen(options?: SubscriptionOptions) {
-    const subscription = this.pubSub.subscription(this.subscriberName, options);
-
-    subscription.on("message", (msg) => {
-      console.log(`${this.subscriberName} received a message: ${msg}`);
-    });
+  async onMessage(msg: DecodedMessage<UserUpdatesData>): Promise<void> {
+    try {
+      await this.userService.createOrUpdateUser({
+        id: msg.data.uid,
+        email: msg.data.email,
+      });
+    } catch (err) {
+      console.error(
+        `Error creating or updating user for userId: ${msg.data.uid}`,
+        err
+      );
+      msg.nack();
+    }
+    msg.ack();
   }
 }

@@ -13,12 +13,13 @@ interface CreateData {
 }
 
 interface UpdateData {
+  id: string;
   task: string;
+  uid: string;
   description: string;
   refUrl: string;
   emailReminder: boolean;
   startDate: Date;
-  email: string;
 }
 
 export class TaskService {
@@ -55,14 +56,14 @@ export class TaskService {
     return deletedIds;
   }
 
-  async updateTask(taskId: string, t: UpdateData): Promise<Task> {
+  async updateTask(t: UpdateData): Promise<Task> {
     const updatedTask = this.tr.update({
-      id: taskId,
+      id: t.id,
       task: t.task,
       description: t.description,
       refUrl: t.refUrl,
       emailReminder: t.emailReminder,
-      userId: "",
+      userId: t.uid,
       startDate: t.startDate,
     });
 
