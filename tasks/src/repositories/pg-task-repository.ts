@@ -11,7 +11,7 @@ export class PGTaskRepository implements TaskRepository {
 
   async create(t: Task): Promise<Task> {
     const text = `
-        INSERT INTO tasks (id, userId, task, description, ref_url, email_reminder, start_date) 
+        INSERT INTO tasks (id, user_id, task, description, ref_url, email_reminder, start_date) 
         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
       `;
     const values = [
@@ -42,7 +42,7 @@ export class PGTaskRepository implements TaskRepository {
   async getByUser(uid: string): Promise<Task[]> {
     const text = `
       SELECT * FROM tasks 
-      WHERE userid=$1 
+      WHERE user_id=$1 
       ORDER BY lower(task);
     `;
     const values = [uid];
