@@ -1,7 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS tasks (
   id uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-  userId uuid NOT NULL,
+  userid uuid NOT NULL,
   email VARCHAR NOT NULL,
   task VARCHAR NOT NULL,
   ref_url VARCHAR NOT NULL DEFAULT '',

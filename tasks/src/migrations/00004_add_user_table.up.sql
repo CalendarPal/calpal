@@ -7,4 +7,4 @@ ALTER TABLE
 ALTER TABLE
   tasks
 ADD
-  CONSTRAINT constraint_user_id_fk FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+  CONSTRAINT constraint_user_id_fk FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;
