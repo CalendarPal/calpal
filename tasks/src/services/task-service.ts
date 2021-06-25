@@ -4,6 +4,7 @@ import { Task } from "../models/task";
 
 interface TaskData {
   task: string;
+  description: string;
   refUrl?: string;
   emailReminder?: boolean;
 }
@@ -25,6 +26,7 @@ export class TaskService {
     const createdTask = this.tr.create({
       id,
       task: t.task,
+      description: t.description,
       refUrl: t.refUrl ?? "",
       emailReminder: t.emailReminder ?? false,
       email: u.email,
@@ -39,5 +41,11 @@ export class TaskService {
     const tasks = await this.tr.getByUser(userId);
 
     return tasks;
+  }
+
+  async deleteTasks(taskIds: string[]): Promise<string[]> {
+    const deletedIds = await this.tr.deleteByIds(taskIds);
+
+    return deletedIds;
   }
 }
