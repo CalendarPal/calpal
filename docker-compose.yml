@@ -104,6 +104,21 @@ services:
     environment:
       - NODE_ENV=development
     command: ["npm", "run", "dev"]
+  tasks-client:
+    build:
+      context: ./tasks-client
+    image: tasks-client
+    stdin_open: true
+    expose:
+      - "3000"
+    ports:
+      - "3003:3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tasks-client.rule=Host(`calpal.test`)"
+    volumes:
+      - ./tasks-client:/app
+      - /app/node_modules
 volumes:
   pgdata_account:
   pgdata_tasks:
