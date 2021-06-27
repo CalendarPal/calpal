@@ -18,11 +18,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onTaskSelected }) => {
       <TaskListItem {...task} />
     </div>
   ));
-  return (
-    <div className="mt-6">
-      <div className="columns is-multiline">{taskList}</div>
-    </div>
-  );
+  return <>{taskList}</>;
 };
 
 export default TaskList;

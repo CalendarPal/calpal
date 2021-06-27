@@ -1,4 +1,5 @@
 import React from "react";
+import InfiniteScroll from "react-infinite-scroller";
 import { useInfiniteQuery } from "react-query";
 import Loader from "../components/ui/Loader";
 import TaskCard from "../components/TaskCard";
@@ -8,28 +9,20 @@ import { useAuth } from "../store/auth";
 const Overview: React.FC = () => {
   const idToken = useAuth((state) => state.idToken);
 
-  const {
-    data,
-    isLoading,
-    error,
-    canFetchMore,
-    fetchMore,
-    isFetchingMore,
-  } = useInfiniteQuery<FetchTaskData, Error>(
-    ["tasks", { limit: 2, idToken }],
-    fetchTasks,
-    {
-      getFetchMore: (lastGroup, allGroups) => {
-        const { page, pages } = lastGroup;
+  const { data, isLoading, error, canFetchMore, fetchMore } = useInfiniteQuery<
+    FetchTaskData,
+    Error
+  >(["tasks", { limit: 4, idToken }], fetchTasks, {
+    getFetchMore: (lastGroup, allGroups) => {
+      const { page, pages } = lastGroup;
 
-        if (page >= pages) {
-          return undefined;
-        }
+      if (page >= pages) {
+        return undefined;
+      }
 
-        return page + 1;
-      },
-    }
-  );
+      return page + 1;
+    },
+  });
 
   const taskList =
     data &&
@@ -49,17 +42,14 @@ const Overview: React.FC = () => {
 
       {isLoading && <Loader radius={200} />}
       {error && <p>{error.message}</p>}
-      {taskList}
-      {isFetchingMore && <Loader color="red" />}
-      {canFetchMore && (
-        <button
-          onClick={() => {
-            fetchMore();
-          }}
-          className="button is-primary"
-        >
-          Fetch more!
-        </button>
+      {taskList && (
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={() => fetchMore()}
+          hasMore={canFetchMore}
+          loader={<Loader key={0} color="red" />}
+          children={taskList}
+        />
       )}
     </>
   );

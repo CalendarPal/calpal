@@ -3,6 +3,7 @@ import { useInfiniteQuery } from "react-query";
 import EditTaskForm from "../components/EditTaskForm";
 import Loader from "../components/ui/Loader";
 import TaskList from "../components/TaskList";
+import InfiniteScroll from "react-infinite-scroller";
 import { FetchTaskData, fetchTasks, Task } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
 
@@ -20,9 +21,8 @@ const Edit: React.FC = () => {
     isError,
     canFetchMore,
     fetchMore,
-    isFetchingMore,
   } = useInfiniteQuery<FetchTaskData, Error>(
-    ["tasks", { isFibo: false, limit: 4, idToken }],
+    ["tasks", { limit: 4, idToken }],
     fetchTasks,
     {
       getFetchMore: (lastGroup, allGroups) => {
@@ -39,9 +39,9 @@ const Edit: React.FC = () => {
 
   const taskList =
     data &&
-    data.map(
-      (group, i) =>
-        group.tasks && (
+    data.map((group, i) => (
+      <React.Fragment key={i}>
+        {group.tasks && (
           <TaskList
             key={i}
             tasks={group.tasks}
@@ -50,8 +50,9 @@ const Edit: React.FC = () => {
               setEditIsOpen(true);
             }}
           />
-        )
-    );
+        )}
+      </React.Fragment>
+    ));
 
   return (
     <>
@@ -67,17 +68,16 @@ const Edit: React.FC = () => {
 
       {isLoading && <Loader radius={200} />}
       {isError && <p>{error?.message}</p>}
-      {taskList}
-      {isFetchingMore && <Loader color="red" />}
-      {canFetchMore && (
-        <button
-          onClick={() => {
-            fetchMore();
-          }}
-          className="button is-primary mt-6"
-        >
-          Fetch more!
-        </button>
+      {isError && <p>{error?.message}</p>}
+      {taskList && (
+        <InfiniteScroll
+          className="columns is-multiline mt-6"
+          pageStart={0}
+          loadMore={() => fetchMore()}
+          hasMore={canFetchMore}
+          loader={<Loader key={0} color="red" />}
+          children={taskList}
+        />
       )}
       <EditTaskForm
         isOpen={createIsOpen}
