@@ -116,18 +116,28 @@ export function useAuth() {
   const store = inject(storeSymbol);
 
   if (!store) {
-    throw new Error('Auth store has not been instantiated!');
+    throw new Error('Auth store has not been instantiated');
   }
 
   const router = useRouter();
 
   watchEffect(() => {
+    const isLoginOnly = new URL(location.href).searchParams.has('loginOnly');
+
     if (store.currentUser.value && store.onAuthRoute) {
-      router.push(store.onAuthRoute);
+      if (isLoginOnly) {
+        window.close();
+      } else {
+        router.push(store.onAuthRoute);
+      }
     }
 
     if (!store.currentUser.value && store.requireAuthRoute) {
-      router.push(store.requireAuthRoute);
+      if (isLoginOnly) {
+        router.push(store.requireAuthRoute + '?loginOnly');
+      } else {
+        router.push(store.requireAuthRoute);
+      }
     }
   });
 
