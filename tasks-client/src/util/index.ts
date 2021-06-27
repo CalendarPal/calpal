@@ -6,6 +6,11 @@ export const storeTokens = (idToken: string, refreshToken: string) => {
   localStorage.setItem("__calpalRf", refreshToken);
 };
 
+export const deleteTokens = () => {
+  localStorage.removeItem("__calpalId");
+  localStorage.removeItem("__calpalRf");
+};
+
 interface TokenClaims {
   exp: number;
   iat: number;
