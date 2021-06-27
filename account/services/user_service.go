@@ -200,3 +200,13 @@ func (s *UserService) ClearProfileImage(ctx context.Context, uid uuid.UUID) erro
 
 	return nil
 }
+
+// TODO: Add email verification to the sign up implementation
+
+// TODO: Add functionality that allows the user to delete their own account
+// 		(this would need to delete data across the account database, the tasks database,
+// 		the redis database, and the google cloud image storage)
+
+// TODO: Improve the logic/implementation of the update user details functionality
+// 		(e.g move updating core high priority details such as email or password to
+// 		its own separate endpoint/handler)
