@@ -1,29 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
 import jwt_decode from "jwt-decode";
-
-// Handling axios responses
-export const doRequest = async <T>(reqOptions: AxiosRequestConfig) => {
-  let error: Error | undefined;
-  let data: T | undefined;
-
-  try {
-    const response = await axios.request<T>(reqOptions);
-    data = response.data;
-  } catch (e) {
-    if (e.response) {
-      error = e.response.data.error;
-    } else if (e.request) {
-      error = e.request;
-    } else {
-      error = e;
-    }
-  }
-
-  return {
-    data,
-    error,
-  };
-};
 
 // storeTokens Utility function for storing idToken and refreshToken
 export const storeTokens = (idToken: string, refreshToken: string) => {
@@ -68,4 +43,14 @@ export const getTokenPayload = <T extends TokenClaims>(
   }
 
   return tokenClaims;
+};
+
+export const daysSinceCreation = (creationDate: string) => {
+  const startDate = new Date(creationDate);
+  const today = new Date();
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  const msDiff = today.getTime() - startDate.getTime();
+
+  return Math.floor(msDiff / msPerDay);
 };

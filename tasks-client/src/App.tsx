@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
+import { ReactQueryDevtools } from "react-query-devtools";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.scss";
+import Navbar from "./components/Navbar";
 import Loader from "./components/ui/Loader";
 import AuthRoute from "./routes/AuthRoute";
 import { useAuth } from "./store/auth";
@@ -18,56 +20,6 @@ const App: React.FC = () => {
     getUser(true);
     setBeginUserLoad(true);
   }, [getUser]);
-
-  const placeHolderImage = (
-    <div
-      style={{
-        height: 48,
-        width: 48,
-        backgroundColor: "hsl(0, 0%, 86%)",
-        borderRadius: 24,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          textAlign: "center",
-          fontSize: 20,
-          fontWeight: "bold",
-        }}
-      >
-        {currentUser?.name ? currentUser.name[0].toUpperCase() : "U"}
-      </div>
-    </div>
-  );
-
-  const navigationMenu = currentUser ? (
-    <div className="navbar-menu">
-      <div className="navbar-start">
-        <Link to="/" className="navbar-item">
-          Overview
-        </Link>
-        <Link to="/edit" className="navbar-item">
-          Edit
-        </Link>
-      </div>
-      <div className="navbar-end">
-        <div className="navbar-item">
-          <a href="/account" target="_blank">
-            <figure className="image">
-              {currentUser.imageUrl ? (
-                <img src={currentUser.imageUrl} alt="Profile" />
-              ) : (
-                placeHolderImage
-              )}
-            </figure>
-          </a>
-        </div>
-      </div>
-    </div>
-  ) : undefined;
 
   const routes =
     beginUserLoad && !isLoading ? (
@@ -90,20 +42,18 @@ const App: React.FC = () => {
     ) : undefined;
 
   return (
-    <BrowserRouter>
-      <nav className="navbar is-info" role="navigation">
-        <div className="navbar-brand">
-          <div className="navbar-item"></div>
-        </div>
-        {navigationMenu}
-      </nav>
-      <section className="section">
-        <div className="container">
-          {isLoading || (!beginUserLoad && <Loader radius={200} />)}
-          {routes}
-        </div>
-      </section>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Navbar currentUser={currentUser} />
+        <section className="section">
+          <div className="container">
+            {isLoading || (!beginUserLoad && <Loader radius={200} />)}
+            {routes}
+          </div>
+        </section>
+      </BrowserRouter>
+      <ReactQueryDevtools />
+    </>
   );
 };
 
