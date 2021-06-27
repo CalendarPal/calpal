@@ -52,8 +52,15 @@ export const createTaskRouter = (): Router => {
     [
       body("task").notEmpty().trim().withMessage("required"),
       body("description").notEmpty().trim().withMessage("required"),
-      body("refUrl").optional().isURL().trim().withMessage("url"),
-      body("emailReminder").optional().isBoolean().withMessage("boolean"),
+      body("refUrl")
+        .optional({ checkFalsy: true })
+        .isURL()
+        .trim()
+        .withMessage("url"),
+      body("emailReminder")
+        .optional({ nullable: true })
+        .isBoolean()
+        .withMessage("boolean"),
     ],
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
@@ -76,9 +83,6 @@ export const createTaskRouter = (): Router => {
     }
   );
 
-  // using a post request with list of posts
-  // not sure if this is totally RESTful, but what the hell is?
-  // https://stackoverflow.com/questions/21863326/delete-multiple-records-using-rest/30933909
   taskRouter.post(
     "/delete",
     [
@@ -118,7 +122,7 @@ export const createTaskRouter = (): Router => {
         .trim()
         .withMessage("url"),
       body("emailReminder")
-        .exists({ checkNull: true })
+        .optional({ nullable: true })
         .isBoolean()
         .withMessage("boolean"),
       body("startDate")

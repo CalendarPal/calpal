@@ -1,20 +1,29 @@
 import { useFormik } from "formik";
 import React from "react";
+import { queryCache, useMutation } from "react-query";
+import updateTask from "../data/updateTask";
 import { Task } from "../data/fetchTasks";
+import { useAuth } from "../store/auth";
 
 type EditTaskFormProps = {
   isOpen: boolean;
   initialTask?: Task;
   onClose(): void;
-  onFormSubmitted(values: any): void;
 };
 
 const EditTaskForm: React.FC<EditTaskFormProps> = ({
   isOpen,
   initialTask,
   onClose,
-  onFormSubmitted,
 }) => {
+  const { idToken } = useAuth();
+  const [mutate, { isLoading }] = useMutation(updateTask, {
+    onSuccess: async (data) => {
+      console.log(data);
+      queryCache.invalidateQueries("tasks");
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       task: initialTask?.task || "",
@@ -23,7 +32,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       startDate: initialTask?.startDate.substr(0, 10) || "",
     },
     onSubmit: (values) => {
-      onFormSubmitted(values);
+      mutate({ ...values, id: initialTask?.id, idToken });
     },
     enableReinitialize: true,
   });
@@ -105,7 +114,10 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
             )}
           </section>
           <footer className="modal-card-foot">
-            <button type="submit" className="button is-info">
+            <button
+              type="submit"
+              className={`button is-info${isLoading ? " is-loading" : ""}`}
+            >
               Save changes
             </button>
           </footer>

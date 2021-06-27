@@ -52,9 +52,6 @@ const Edit: React.FC = () => {
         onClose={() => {
           setCreateIsOpen(false);
         }}
-        onFormSubmitted={(values) => {
-          console.log(values);
-        }}
       />
       <EditTaskForm
         isOpen={editIsOpen}
@@ -62,9 +59,6 @@ const Edit: React.FC = () => {
         onClose={() => {
           setEditIsOpen(false);
           setSelectedTask(undefined);
-        }}
-        onFormSubmitted={(values) => {
-          console.log(values);
         }}
       />
     </>
