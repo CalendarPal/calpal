@@ -1,4 +1,10 @@
-import express, { json, Express } from "express";
+import express, {
+  json,
+  Express,
+  Request,
+  Response,
+  NextFunction,
+} from "express";
 
 import { authUser } from "./middlewares/auth-user";
 
@@ -16,7 +22,7 @@ const createApp = (): Express => {
 
   app.use("/api/tasks", createTaskRouter());
 
-  app.all("*", async () => {
+  app.all("/api/tasks/*", () => {
     throw new NotFoundError();
   });
 
