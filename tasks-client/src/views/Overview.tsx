@@ -9,12 +9,12 @@ const Overview: React.FC = () => {
   const idToken = useAuth((state) => state.idToken);
 
   const { isLoading, isError, data, error } = useQuery<FetchTaskData, Error>(
-    ["tasks", { page: 1, limit: 10, idToken }],
+    ["tasks", [1, 12, idToken]],
     (context) =>
       fetchTasks(context.queryKey[0] as string, {
-        page: 1 as number,
-        limit: 10 as number,
-        idToken,
+        page: context.queryKey[1][0],
+        limit: context.queryKey[1][1],
+        idToken: context.queryKey[1][2],
       })
   );
 

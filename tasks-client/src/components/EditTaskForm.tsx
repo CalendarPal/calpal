@@ -5,6 +5,7 @@ import updateTask from "../data/updateTask";
 import { Task } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
 import * as Yup from "yup";
+import deleteTask from "../data/deleteTask";
 
 type EditTaskFormProps = {
   isOpen: boolean;
@@ -22,7 +23,18 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
-  const [mutate, { isLoading }] = useMutation(updateTask, {
+  const [mutateUpdate, { isLoading: isUpdating }] = useMutation(updateTask, {
+    onSuccess: async () => {
+      setErrorMessage(undefined);
+      queryCache.invalidateQueries("tasks");
+      onClose();
+    },
+    onError: async (error: Error) => {
+      setErrorMessage(error.message);
+    },
+  });
+
+  const [mutateDelete, { isLoading: isDeleting }] = useMutation(deleteTask, {
     onSuccess: async () => {
       setErrorMessage(undefined);
       queryCache.invalidateQueries("tasks");
@@ -47,7 +59,7 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       startDate: Yup.date(),
     }),
     onSubmit: (values) => {
-      mutate({ ...values, id: initialTask?.id, idToken });
+      mutateUpdate({ ...values, id: initialTask?.id, idToken });
     },
     enableReinitialize: true,
   });
@@ -156,14 +168,26 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
               </p>
             )}
           </section>
-          <footer className="modal-card-foot">
+          <footer
+            className="modal-card-foot"
+            style={{ justifyContent: "space-between" }}
+          >
             <button
               type="submit"
-              className={`button is-info${isLoading ? " is-loading" : ""}`}
+              className={`button is-info${isUpdating ? " is-loading" : ""}`}
               disabled={!formik.isValid || !formik.dirty}
             >
               Save changes
             </button>
+            {initialTask && (
+              <button
+                onClick={() => mutateDelete({ id: initialTask.id, idToken })}
+                type="button"
+                className={`button is-danger${isDeleting ? " is-loading" : ""}`}
+              >
+                Delete?
+              </button>
+            )}
           </footer>
         </form>
       </div>

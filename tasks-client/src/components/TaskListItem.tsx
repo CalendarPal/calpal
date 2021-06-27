@@ -10,10 +10,20 @@ const TaskListItem: React.FC<Task> = (props) => {
   const day = creationDate.getDate();
 
   const refUrl = props.refUrl ? (
-    <a href={props.refUrl} target="_blank" rel="noopener noreferrer">
-      Reference
-    </a>
+    <>
+      <div
+        onClick={(event) => openRefUrl(event)}
+        style={{ textDecoration: "underline" }}
+      >
+        Reference
+      </div>
+    </>
   ) : undefined;
+
+  const openRefUrl = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    event.stopPropagation();
+    window.open(props.refUrl);
+  };
 
   return (
     <div
