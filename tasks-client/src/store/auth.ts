@@ -20,7 +20,7 @@ type AuthState = {
   idToken?: string;
   isLoading: boolean;
   error?: Error;
-  getUser: () => Promise<void>;
+  getUser: (forceRefresh: boolean) => Promise<void>;
 };
 
 export const useAuth = create<AuthState>((set) => {
@@ -29,11 +29,15 @@ export const useAuth = create<AuthState>((set) => {
     idToken: "",
     isLoading: false,
     error: undefined,
-    getUser: () => getUser(set),
+    getUser: (forceRefresh: boolean = false) => getUser({ set, forceRefresh }),
   };
 });
 
-const getUser = async (set: SetState<AuthState>) => {
+const getUser = async (options: {
+  set: SetState<AuthState>;
+  forceRefresh: boolean;
+}) => {
+  const { set, forceRefresh } = options;
   set({
     isLoading: true,
     error: undefined,
@@ -42,7 +46,7 @@ const getUser = async (set: SetState<AuthState>) => {
   const idToken = localStorage.getItem("__calpalId") ?? undefined;
   const idTokenClaims = getTokenPayload<IdTokenClaims>(idToken);
 
-  if (idTokenClaims) {
+  if (idTokenClaims && !forceRefresh) {
     set({
       idToken: idToken,
       currentUser: idTokenClaims.user,
