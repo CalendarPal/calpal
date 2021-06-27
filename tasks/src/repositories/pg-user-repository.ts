@@ -32,7 +32,7 @@ export class PGUserRepository implements UserRepository {
 
       return userFromData(createdUser);
     } catch (e) {
-      console.debug("Error inserting word into database: ", e);
+      console.debug("Error inserting task into database: ", e);
       throw new InternalError();
     }
   }

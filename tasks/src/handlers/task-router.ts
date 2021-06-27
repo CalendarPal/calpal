@@ -121,10 +121,7 @@ export const createTaskRouter = (): Router => {
         .isURL()
         .trim()
         .withMessage("url"),
-      body("emailReminder")
-        .optional({ nullable: true })
-        .isBoolean()
-        .withMessage("boolean"),
+      body("emailReminder").optional().isBoolean().withMessage("boolean"),
       body("startDate")
         .exists({ checkNull: true })
         .notEmpty()

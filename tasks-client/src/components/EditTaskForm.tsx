@@ -1,9 +1,10 @@
 import { useFormik } from "formik";
-import React from "react";
-import { queryCache, useMutation } from "react-query";
+import React, { useState } from "react";
+import { useMutation, useQueryCache } from "react-query";
 import updateTask from "../data/updateTask";
 import { Task } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
+import * as Yup from "yup";
 
 type EditTaskFormProps = {
   isOpen: boolean;
@@ -17,10 +18,18 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
   onClose,
 }) => {
   const { idToken } = useAuth();
+  const queryCache = useQueryCache();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
   const [mutate, { isLoading }] = useMutation(updateTask, {
-    onSuccess: async (data) => {
-      console.log(data);
+    onSuccess: async () => {
+      setErrorMessage(undefined);
       queryCache.invalidateQueries("tasks");
+      onClose();
+    },
+    onError: async (error: Error) => {
+      setErrorMessage(error.message);
     },
   });
 
@@ -31,6 +40,12 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       refUrl: initialTask?.refUrl || "",
       startDate: initialTask?.startDate.substr(0, 10) || "",
     },
+    validationSchema: Yup.object({
+      task: Yup.string().required("A non-empty task is required"),
+      description: Yup.string().required("A non-empty description is required"),
+      refUrl: Yup.string().url("Must be a valid URL or empty"),
+      startDate: Yup.date(),
+    }),
     onSubmit: (values) => {
       mutate({ ...values, id: initialTask?.id, idToken });
     },
@@ -42,10 +57,13 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       <div className="modal-card">
         <header className="modal-card-head">
           <p className="modal-card-title">
-            {initialTask ? "Modify Task" : "Create Task"}
+            {initialTask ? "Update Task" : "Create Task"}
           </p>
           <button
-            onClick={onClose}
+            onClick={() => {
+              formik.resetForm();
+              onClose();
+            }}
             className="delete"
             aria-label="close"
           ></button>
@@ -67,6 +85,11 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                   value={formik.values.task}
                 />
               </div>
+              {formik.touched.task && formik.errors.task && (
+                <p className="has-text-centered has-text-danger">
+                  {formik.errors.task}
+                </p>
+              )}
             </div>
             <div className="field">
               <label className="label">Description</label>
@@ -81,6 +104,11 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                   value={formik.values.description}
                 />
               </div>
+              {formik.touched.description && formik.errors.description && (
+                <p className="has-text-centered has-text-danger">
+                  {formik.errors.description}
+                </p>
+              )}
             </div>
             <div className="field">
               <label className="label">Reference URL</label>
@@ -95,6 +123,11 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                   value={formik.values.refUrl}
                 />
               </div>
+              {formik.touched.refUrl && formik.errors.refUrl && (
+                <p className="has-text-centered has-text-danger">
+                  {formik.errors.refUrl}
+                </p>
+              )}
             </div>
             {initialTask && (
               <div className="field">
@@ -110,13 +143,24 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                     value={formik.values.startDate}
                   />
                 </div>
+                {formik.touched.startDate && formik.errors.startDate && (
+                  <p className="has-text-centered has-text-danger">
+                    {formik.errors.startDate}
+                  </p>
+                )}
               </div>
+            )}
+            {errorMessage && (
+              <p className="has-text-danger has-text-centered is-5">
+                {errorMessage}
+              </p>
             )}
           </section>
           <footer className="modal-card-foot">
             <button
               type="submit"
               className={`button is-info${isLoading ? " is-loading" : ""}`}
+              disabled={!formik.isValid || !formik.dirty}
             >
               Save changes
             </button>
