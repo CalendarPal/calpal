@@ -1,4 +1,4 @@
-import { TaskRepository } from "../services/interfaces";
+import { TaskListResponse, TaskRepository } from "../services/interfaces";
 import { Task } from "../models/task";
 import { Pool } from "pg";
 import { InternalError } from "../errors/internal-error";
@@ -39,13 +39,27 @@ export class PGTaskRepository implements TaskRepository {
     }
   }
 
-  async getByUser(uid: string): Promise<Task[]> {
+  async getByUser(options: {
+    uid: string;
+    limit: number;
+    offset: number;
+  }): Promise<TaskListResponse> {
     const text = `
-      SELECT * FROM tasks 
-      WHERE user_id=$1 
-      ORDER BY lower(task);
+      WITH cte AS (
+        SELECT *
+        FROM tasks
+        WHERE user_id=$1 
+      )
+      
+      SELECT * FROM (
+        TABLE cte
+        ORDER BY lower(task)
+        LIMIT $2
+        OFFSET $3
+      ) sub
+      RIGHT JOIN (SELECT count(*) FROM cte) c(count) ON true;
     `;
-    const values = [uid];
+    const values = [options.uid, options.limit, options.offset];
 
     try {
       const queryRes = await this.client.query({
@@ -54,8 +68,20 @@ export class PGTaskRepository implements TaskRepository {
       });
 
       const fetchedTasks = queryRes.rows;
+      const count = fetchedTasks[0].count;
 
-      return fetchedTasks.map((task) => taskFromData(task));
+      if (!fetchedTasks[0].id) {
+        return {
+          count,
+          tasks: [],
+        };
+      }
+
+      const tasks = fetchedTasks.map((task) => taskFromData(task));
+      return {
+        count,
+        tasks,
+      };
     } catch (e) {
       console.debug("Error retrieving tasks for user: ", e);
       throw new InternalError();

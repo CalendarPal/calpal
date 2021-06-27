@@ -1,10 +1,9 @@
 import express, { Request, Response, Router, NextFunction } from "express";
-import { body, check } from "express-validator";
+import { body, query } from "express-validator";
 
 import { requireAuth } from "../middlewares/require-auth";
 import { serviceContainer } from "../injection";
 import { validateRequest } from "../middlewares/validate-request";
-import { RequestValidationError } from "../errors/request-validation-error";
 import { BadRequestError } from "../errors/bad-request-error";
 
 export const createTaskRouter = (): Router => {
@@ -15,9 +14,31 @@ export const createTaskRouter = (): Router => {
 
   taskRouter.get(
     "/",
+    [
+      query("page")
+        .optional({ nullable: true })
+        .isInt()
+        .withMessage("Must be null or an integer"),
+      query("limit")
+        .optional({ nullable: true })
+        .isInt({ max: 100 })
+        .withMessage("Must be null or an integer less than or equal to 100"),
+    ],
+    validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
+      const limit = req.query["limit"]
+        ? parseInt(req.query["limit"] as string)
+        : undefined;
+      const page = req.query["page"]
+        ? parseInt(req.query["page"] as string)
+        : undefined;
+
       try {
-        const taskList = await taskService.getTasks(req.currentUser!.uid);
+        const taskList = await taskService.getTasks({
+          userId: req.currentUser!.uid,
+          limit,
+          page,
+        });
 
         res.status(200).json(taskList);
       } catch (err) {

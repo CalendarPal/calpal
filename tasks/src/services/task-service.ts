@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { TaskRepository } from "./interfaces";
+import { TaskListResponse, TaskRepository } from "./interfaces";
 import { Task } from "../models/task";
 
 interface CreateData {
@@ -44,10 +44,20 @@ export class TaskService {
     return createdTask;
   }
 
-  async getTasks(userId: string): Promise<Task[]> {
-    const tasks = await this.tr.getByUser(userId);
+  async getTasks(options: { userId: string; limit?: number; page?: number }) {
+    const page = options.page ?? 1;
+    const limit = options.limit ?? 10;
+    const offset = (page - 1) * limit;
 
-    return tasks;
+    const taskResponse = await this.tr.getByUser({
+      uid: options.userId,
+      limit,
+      offset,
+    });
+
+    const pages = Math.ceil(taskResponse.count / limit);
+
+    return { ...taskResponse, page, pages, limit };
   }
 
   async deleteTasks(taskIds: string[]): Promise<string[]> {
