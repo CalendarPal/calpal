@@ -1,7 +1,6 @@
 import { doRequest } from "./doRequest";
 
 export interface FetchTaskArgs {
-  page: number;
   limit: number;
   idToken?: string;
 }
@@ -26,13 +25,14 @@ export interface Task {
 
 export const fetchTasks = async (
   key: string,
-  args: FetchTaskArgs
+  args: FetchTaskArgs,
+  page: number = 1
 ): Promise<FetchTaskData> => {
   const { data, error } = await doRequest<FetchTaskData>({
     method: "get",
     url: "/api/tasks",
     params: {
-      page: args.page,
+      page: page,
       limit: args.limit,
     },
     headers: {

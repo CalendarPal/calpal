@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import EditTaskForm from "../components/EditTaskForm";
 import Loader from "../components/ui/Loader";
 import TaskList from "../components/TaskList";
@@ -13,24 +13,45 @@ const Edit: React.FC = () => {
 
   const idToken = useAuth((state) => state.idToken);
 
-  const { isLoading, isError, data, error } = useQuery<FetchTaskData, Error>(
-    ["tasks", [1, 12, idToken]],
-    (context) =>
-      fetchTasks(context.queryKey[0] as string, {
-        page: context.queryKey[1][0],
-        limit: context.queryKey[1][1],
-        idToken: context.queryKey[1][2],
-      })
+  const {
+    data,
+    isLoading,
+    error,
+    isError,
+    canFetchMore,
+    fetchMore,
+    isFetchingMore,
+  } = useInfiniteQuery<FetchTaskData, Error>(
+    ["tasks", { isFibo: false, limit: 4, idToken }],
+    fetchTasks,
+    {
+      getFetchMore: (lastGroup, allGroups) => {
+        const { page, pages } = lastGroup;
+
+        if (page >= pages) {
+          return undefined;
+        }
+
+        return page + 1;
+      },
+    }
   );
-  const taskList = data?.tasks ? (
-    <TaskList
-      tasks={data.tasks}
-      onTaskSelected={(task) => {
-        setSelectedTask(task);
-        setEditIsOpen(true);
-      }}
-    />
-  ) : undefined;
+
+  const taskList =
+    data &&
+    data.map(
+      (group, i) =>
+        group.tasks && (
+          <TaskList
+            key={i}
+            tasks={group.tasks}
+            onTaskSelected={(task) => {
+              setSelectedTask(task);
+              setEditIsOpen(true);
+            }}
+          />
+        )
+    );
 
   return (
     <>
@@ -47,6 +68,17 @@ const Edit: React.FC = () => {
       {isLoading && <Loader radius={200} />}
       {isError && <p>{error?.message}</p>}
       {taskList}
+      {isFetchingMore && <Loader color="red" />}
+      {canFetchMore && (
+        <button
+          onClick={() => {
+            fetchMore();
+          }}
+          className="button is-primary mt-6"
+        >
+          Fetch more!
+        </button>
+      )}
       <EditTaskForm
         isOpen={createIsOpen}
         onClose={() => {
