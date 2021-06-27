@@ -1,5 +1,5 @@
 {
-  "name": "task-api",
+  "name": "tasks-api",
   "version": "0.0.0",
   "description": "Express application for storing and managing user's upcoming tasks",
   "main": "index.ts",
