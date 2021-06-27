@@ -50,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
           </button>
         </div>
         <div className="navbar-item">
-          <a href="/account" target="_blank">
+          <a href="/account/" target="_blank">
             <figure className="image">
               {currentUser.imageUrl ? (
                 <img

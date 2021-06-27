@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import App from "./App";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
+const queryCache = new QueryCache({
+  defaultConfig: {
     queries: {
       staleTime: 1000,
       retry: 1,
@@ -15,9 +15,9 @@ const queryClient = new QueryClient({
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <ReactQueryCacheProvider queryCache={queryCache}>
       <App />
-    </QueryClientProvider>
+    </ReactQueryCacheProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -36,9 +36,6 @@ const Overview: React.FC = () => {
   return (
     <>
       <h1 className="title is-3">Today's Tasks</h1>
-      <div className="buttons is-centered">
-        <button className="button is-info">Create Task</button>
-      </div>
 
       {isLoading && <Loader radius={200} />}
       {error && <p>{error.message}</p>}
