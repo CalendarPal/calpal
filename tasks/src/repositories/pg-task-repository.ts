@@ -68,7 +68,7 @@ export class PGTaskRepository implements TaskRepository {
       });
 
       const fetchedTasks = queryRes.rows;
-      const count = fetchedTasks[0].count;
+      const count = parseInt(fetchedTasks[0].count);
 
       if (!fetchedTasks[0].id) {
         return {
