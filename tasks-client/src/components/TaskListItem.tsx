@@ -1,13 +1,18 @@
 import React from "react";
 import { Task } from "../data/fetchTasks";
-import { daysSinceCreation } from "../util";
+import { daysSinceCreation, daysUntilCompletion } from "../util";
 
 const TaskListItem: React.FC<Task> = (props) => {
   const creationDate = new Date(props.startDate);
+  const completionDate = new Date(props.goalDate);
   const daysSinceCreated = daysSinceCreation(props.startDate);
-  const year = creationDate.getFullYear();
-  const month = creationDate.getMonth();
-  const day = creationDate.getDate();
+  const daysUntilGoal = daysUntilCompletion(props.goalDate);
+  const createdYear = creationDate.getFullYear();
+  const createdMonth = creationDate.getMonth() + 1;
+  const createdDay = creationDate.getDate();
+  const goalYear = completionDate.getFullYear();
+  const goalMonth = completionDate.getMonth() + 1;
+  const goalDay = completionDate.getDate();
 
   const refUrl = props.refUrl ? (
     <>
@@ -42,10 +47,13 @@ const TaskListItem: React.FC<Task> = (props) => {
       <div style={{ marginTop: 24 }}>
         <div>{refUrl}</div>
         <div className="has-text-weight-semibold">
-          Creation Date: {`${year}-${month}-${day}`}
+          Creation Date: {`${createdYear}-${createdMonth}-${createdDay}`}
         </div>
         <div className="has-text-weight-semibold">
-          Days since creation: {daysSinceCreated}
+          Goal Date: {`${goalYear}-${goalMonth}-${goalDay}`}
+        </div>
+        <div className="has-text-weight-semibold">
+          Days until goal: {daysUntilGoal}
         </div>
       </div>
     </div>

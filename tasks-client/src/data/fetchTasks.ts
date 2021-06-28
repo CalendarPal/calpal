@@ -21,6 +21,7 @@ export interface Task {
   refUrl: string;
   emailReminder: Boolean;
   startDate: string;
+  goalDate: string;
 }
 
 export const fetchTasks = async (

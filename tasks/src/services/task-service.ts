@@ -8,6 +8,7 @@ interface CreateData {
   refUrl?: string;
   emailReminder?: boolean;
   startDate?: Date;
+  goalDate?: Date;
   uid: string;
   email: string;
 }
@@ -20,6 +21,7 @@ interface UpdateData {
   refUrl: string;
   emailReminder: boolean;
   startDate: Date;
+  goalDate: Date;
 }
 
 export class TaskService {
@@ -39,6 +41,7 @@ export class TaskService {
       emailReminder: t.emailReminder ?? false,
       userId: t.uid,
       startDate: new Date(),
+      goalDate: new Date(),
     });
 
     return createdTask;
@@ -75,6 +78,7 @@ export class TaskService {
       emailReminder: t.emailReminder,
       userId: t.uid,
       startDate: t.startDate,
+      goalDate: t.goalDate,
     });
 
     return updatedTask;

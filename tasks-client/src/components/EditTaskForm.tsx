@@ -50,13 +50,13 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       task: initialTask?.task || "",
       description: initialTask?.description || "",
       refUrl: initialTask?.refUrl || "",
-      startDate: initialTask?.startDate.substr(0, 10) || "",
+      goalDate: initialTask?.goalDate.substr(0, 10) || "",
     },
     validationSchema: Yup.object({
       task: Yup.string().required("A non-empty task is required"),
       description: Yup.string().required("A non-empty description is required"),
       refUrl: Yup.string().url("Must be a valid URL or empty"),
-      startDate: Yup.date(),
+      goalDate: Yup.date(),
     }),
     onSubmit: (values) => {
       mutateUpdate({ ...values, id: initialTask?.id, idToken });
@@ -143,21 +143,21 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
             </div>
             {initialTask && (
               <div className="field">
-                <label className="label">Change Start Date</label>
+                <label className="label">Change Goal Date</label>
                 <div className="control">
                   <input
-                    id="startDate"
-                    name="startDate"
+                    id="goalDate"
+                    name="goalDate"
                     className="input is-rounded"
                     type="date"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    value={formik.values.startDate}
+                    value={formik.values.goalDate}
                   />
                 </div>
-                {formik.touched.startDate && formik.errors.startDate && (
+                {formik.touched.goalDate && formik.errors.goalDate && (
                   <p className="has-text-centered has-text-danger">
-                    {formik.errors.startDate}
+                    {formik.errors.goalDate}
                   </p>
                 )}
               </div>

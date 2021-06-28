@@ -6,6 +6,7 @@ export interface Task {
   refUrl: string;
   emailReminder: Boolean;
   startDate: Date;
+  goalDate: Date;
 }
 
 // TODO: Create a project/category model (?), allowing users to group like minded tasks together (e.g "English Class")

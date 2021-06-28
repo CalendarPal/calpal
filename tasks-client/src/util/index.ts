@@ -59,3 +59,13 @@ export const daysSinceCreation = (creationDate: string) => {
 
   return Math.floor(msDiff / msPerDay);
 };
+
+export const daysUntilCompletion = (completionDate: string) => {
+  const goalDate = new Date(completionDate);
+  const today = new Date();
+  const msPerDay = 24 * 60 * 60 * 1000;
+
+  const msDiff = goalDate.getTime() - today.getTime();
+
+  return Math.floor(msDiff / msPerDay);
+};

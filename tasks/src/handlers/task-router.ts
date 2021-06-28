@@ -122,7 +122,7 @@ export const createTaskRouter = (): Router => {
         .trim()
         .withMessage("url"),
       body("emailReminder").optional().isBoolean().withMessage("boolean"),
-      body("startDate")
+      body("goalDate")
         .exists({ checkNull: true })
         .notEmpty()
         .withMessage("date"),
@@ -135,12 +135,15 @@ export const createTaskRouter = (): Router => {
         emailReminder,
         description,
         startDate: strDate,
+        goalDate: glDate,
       } = req.body;
 
       // parse date
       let startDate: Date;
+      let goalDate: Date;
       try {
         startDate = new Date(strDate as string);
+        goalDate = new Date(glDate as string);
       } catch (err) {
         console.error("Invalid date string!", err);
         throw new BadRequestError(
@@ -157,6 +160,7 @@ export const createTaskRouter = (): Router => {
           refUrl,
           emailReminder,
           startDate,
+          goalDate,
         });
 
         res.status(200).json(updated);

@@ -11,8 +11,8 @@ export class PGTaskRepository implements TaskRepository {
 
   async create(t: Task): Promise<Task> {
     const text = `
-        INSERT INTO tasks (id, user_id, task, description, ref_url, email_reminder, start_date) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *
+        INSERT INTO tasks (id, user_id, task, description, ref_url, email_reminder, start_date, goal_date) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *
       `;
     const values = [
       t.id,
@@ -22,6 +22,7 @@ export class PGTaskRepository implements TaskRepository {
       t.refUrl,
       t.emailReminder,
       t.startDate,
+      t.goalDate,
     ];
 
     try {
@@ -123,7 +124,7 @@ export class PGTaskRepository implements TaskRepository {
         description=$2,
         ref_url=$3,
         email_reminder=$4,
-        start_date=$5
+        goal_date=$5
         WHERE id=$6 AND user_id=$7
         RETURNING *;
       `;
@@ -132,7 +133,7 @@ export class PGTaskRepository implements TaskRepository {
       t.description,
       t.refUrl,
       t.emailReminder,
-      t.startDate,
+      t.goalDate,
       t.id,
       t.userId,
     ];
@@ -158,6 +159,7 @@ const taskFromData = (dataObj: any): Task => ({
   emailReminder: dataObj.email_reminder,
   refUrl: dataObj.ref_url,
   startDate: dataObj.start_date,
+  goalDate: dataObj.goal_date,
   userId: dataObj.user_id,
   task: dataObj.task,
   description: dataObj.description,

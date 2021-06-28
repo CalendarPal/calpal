@@ -9,6 +9,7 @@ type UpdateTaskInput = {
   description: string;
   refUrl: string;
   startDate?: string;
+  goalDate?: string;
 };
 
 const updateTask = async ({
@@ -18,6 +19,7 @@ const updateTask = async ({
   description,
   refUrl,
   startDate,
+  goalDate,
 }: UpdateTaskInput) => {
   const url = id ? `/api/tasks/${id}` : `/api/tasks`;
   const method = id ? "put" : "post";
@@ -27,6 +29,7 @@ const updateTask = async ({
         description,
         refUrl,
         startDate,
+        goalDate,
       }
     : { task, description, refUrl };
 

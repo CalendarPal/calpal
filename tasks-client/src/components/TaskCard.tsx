@@ -1,11 +1,12 @@
 import React from "react";
 import { Task } from "../data/fetchTasks";
-import { daysSinceCreation } from "../util";
+import { daysSinceCreation, daysUntilCompletion } from "../util";
 
 type TaskCardProps = Task;
 
 const TaskCard: React.FC<TaskCardProps> = (props) => {
-  const days = daysSinceCreation(props.startDate);
+  // const days = daysSinceCreation(props.startDate);
+  const days = daysUntilCompletion(props.goalDate);
 
   return (
     <div className="box">
