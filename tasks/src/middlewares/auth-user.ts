@@ -40,7 +40,6 @@ export const authUser = (req: Request, res: Response, next: NextFunction) => {
   try {
     const tokenPayload = jwt.verify(token, pubKey) as TokenClaims;
     req.currentUser = tokenPayload.user;
-    // console.log(req.currentUser);
   } catch (err) {
     console.log("Invalid or unverified token...");
     console.log(err);
