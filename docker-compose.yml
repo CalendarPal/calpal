@@ -96,7 +96,7 @@ services:
       - "8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tasks.rule=Host(`calpal.test`) && PathPrefix(`/api/tasks`)"
+      - "traefik.http.routers.tasks.rule=Host(`calpal.test`)"
     volumes:
       - ./tasks:/app
     depends_on:

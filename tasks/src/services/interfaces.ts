@@ -3,7 +3,7 @@ import { Task } from "../models/task";
 import { User } from "../models/user";
 
 export interface ProjectListResponse {
-  tasks: Task[];
+  projects: Project[];
   count: number;
 }
 

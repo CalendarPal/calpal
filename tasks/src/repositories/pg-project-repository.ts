@@ -14,7 +14,7 @@ export class PGProjectRepository implements ProjectRepository {
         INSERT INTO projects (id, user_id, project) 
         VALUES ($1, $2, $3) RETURNING *
       `;
-    const values = [t.id, t.userId, t.project];
+    const values = [p.id, p.userId, p.project];
 
     try {
       const queryRes = await this.client.query({
@@ -117,7 +117,7 @@ export class PGProjectRepository implements ProjectRepository {
         WHERE id=$2 AND user_id=$3
         RETURNING *;
       `;
-    const values = [t.project, t.id, t.userId];
+    const values = [p.project, p.id, p.userId];
 
     try {
       const queryRes = await this.client.query({

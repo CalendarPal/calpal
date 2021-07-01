@@ -21,9 +21,6 @@ export class ProjectService {
   }
 
   async addProject(p: CreateData): Promise<Project> {
-    const todayDate = new Date();
-    const tommorrowDate = new Date();
-    tommorrowDate.setDate(tommorrowDate.getDate() + 1);
     const id = v4();
     const createdProject = this.pr.create({
       id,

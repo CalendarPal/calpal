@@ -1,5 +1,5 @@
 import { DataSources } from "../data";
-import { ProjectService } from "../service/project-service";
+import { ProjectService } from "../services/project-service";
 import { PGProjectRepository } from "../repositories/pg-project-repository";
 import { TaskService } from "../services/task-service";
 import { PGTaskRepository } from "../repositories/pg-task-repository";

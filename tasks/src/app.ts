@@ -8,6 +8,7 @@ import express, {
 
 import { authUser } from "./middlewares/auth-user";
 
+import { createProjectRouter } from "./handlers/project-router";
 import { createTaskRouter } from "./handlers/task-router";
 import { errorHandler } from "./middlewares/error-handler";
 import { NotFoundError } from "./errors/not-found-error";
@@ -20,7 +21,12 @@ const createApp = (): Express => {
   app.use(json());
   app.use(authUser);
 
+  app.use("/api/projects", createProjectRouter());
   app.use("/api/tasks", createTaskRouter());
+
+  app.all("/api/projects/*", () => {
+    throw new NotFoundError();
+  });
 
   app.all("/api/tasks/*", () => {
     throw new NotFoundError();
