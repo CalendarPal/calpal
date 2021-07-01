@@ -56,7 +56,7 @@ const Edit: React.FC = () => {
 
   return (
     <>
-      <h1 className="title is-3">Your Task List</h1>
+      <h1 className="title is-3">Tasks List</h1>
       <div className="buttons is-centered">
         <button
           onClick={() => setCreateIsOpen(true)}

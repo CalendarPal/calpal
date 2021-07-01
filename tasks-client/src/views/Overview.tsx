@@ -35,7 +35,7 @@ const Overview: React.FC = () => {
     ));
   return (
     <>
-      <h1 className="title is-3">Today's Tasks</h1>
+      <h1 className="title is-3">Current Tasks</h1>
 
       {isLoading && <Loader radius={200} />}
       {error && <p>{error.message}</p>}
