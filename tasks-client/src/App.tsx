@@ -3,6 +3,7 @@ import { ReactQueryDevtools } from "react-query-devtools";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import Navbar from "./components/Navbar";
+// import Sidebar from "./components/Sidebar";
 import Loader from "./components/ui/Loader";
 import AuthRoute from "./routes/AuthRoute";
 import { useAuth } from "./store/auth";
@@ -41,11 +42,15 @@ const App: React.FC = () => {
       </Switch>
     ) : undefined;
 
+  // const sidebar = currentUser ? (
+  //   <Sidebar currentUser={currentUser} />
+  // ) : undefined;
+
   return (
     <>
       <BrowserRouter>
-        <Navbar currentUser={currentUser} />
-        <section className="section">
+        <section className="section" style={{ padding: 0 }}>
+          <Navbar currentUser={currentUser} />
           <div className="container">
             {isLoading || (!beginUserLoad && <Loader radius={200} />)}
             {routes}

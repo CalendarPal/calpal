@@ -1,7 +1,33 @@
+@import "~bulma/bulma.sass";
+
+.is-sidebar-menu {
+  padding: 2.5rem;
+  background: $grey-dark;
+  li {
+    a {
+      color: $white;
+    }
+  }
+}
+.columns {
+  &.is-fullheight {
+    min-height: calc(100vh - (#{$navbar-height} - 0.75rem));
+    max-height: calc(100vh - (#{$navbar-height} - 0.75rem));
+    height: calc(100vh - (#{$navbar-height} - 0.75rem));
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    .column {
+      overflow-y: auto;
+    }
+  }
+}
+.is-main-content {
+  background: $grey-lighter;
+}
+
 $navbar-height: 4.5rem;
 $tablet: 768px;
-
-@import "~bulma/bulma.sass";
 
 .navbar-item {
   img {
