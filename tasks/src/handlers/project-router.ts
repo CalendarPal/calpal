@@ -26,7 +26,6 @@ export const createProjectRouter = (): Router => {
     ],
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
-      console.log("projectRouter");
       const limit = req.query["limit"]
         ? parseInt(req.query["limit"] as string)
         : undefined;
