@@ -7,7 +7,7 @@ PORT = 5433
 
 # docker command to run migrations
 # MIGRATE = docker run --rm --name migrateTmp -v $(MPATH):/migrations --network host migrate/migrate
-N = 4
+N = 5
 
 migrate-create:
 	@echo "---Creating migration files---"
