@@ -32,6 +32,9 @@ export class TaskService {
   }
 
   async addTask(t: CreateData): Promise<Task> {
+    const todayDate = new Date();
+    const tommorrowDate = new Date();
+    tommorrowDate.setDate(tommorrowDate.getDate() + 1);
     const id = v4();
     const createdTask = this.tr.create({
       id,
@@ -40,8 +43,8 @@ export class TaskService {
       refUrl: t.refUrl ?? "",
       emailReminder: t.emailReminder ?? false,
       userId: t.uid,
-      startDate: new Date(),
-      goalDate: new Date(),
+      startDate: todayDate,
+      goalDate: tommorrowDate,
     });
 
     return createdTask;
