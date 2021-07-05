@@ -172,13 +172,6 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
             className="modal-card-foot"
             style={{ justifyContent: "space-between" }}
           >
-            <button
-              type="submit"
-              className={`button is-info${isUpdating ? " is-loading" : ""}`}
-              disabled={!formik.isValid || !formik.dirty}
-            >
-              Save changes
-            </button>
             {initialTask && (
               <button
                 onClick={() => mutateDelete({ id: initialTask.id, idToken })}
@@ -188,6 +181,13 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                 Delete?
               </button>
             )}
+            <button
+              type="submit"
+              className={`button is-info${isUpdating ? " is-loading" : ""}`}
+              disabled={!formik.isValid || !formik.dirty}
+            >
+              Save changes
+            </button>
           </footer>
         </form>
       </div>
