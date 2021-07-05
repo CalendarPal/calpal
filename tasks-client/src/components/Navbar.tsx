@@ -131,7 +131,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                     )}
                   </figure>
                   <div className="navbar-dropdown is-right">
-                    <div className="navbar-item">Profile</div>
+                    <a href="/account/" target="_blank">
+                      <div className="navbar-item">Profile</div>
+                    </a>
                     <div className="navbar-item">Settings</div>
                     <hr className="navbar-divider" />
                     <div className="navbar-item">
