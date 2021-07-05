@@ -36,65 +36,15 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
     </div>
   );
 
-  // const navigationMenu = currentUser ? (
-  //   <div className={`navbar-menu${isNavbarOpen ? " is-active" : ""}`}>
-  //     <div className="navbar-start">
-  //       <Link to="/" className="navbar-item">
-  //         Your Day
-  //       </Link>
-  //       <Link to="/edit" className="navbar-item">
-  //         Your List
-  //       </Link>
-  //     </div>
-  //     <div className="navbar-end">
-  //       <div className="navbar-item">
-  //         <button onClick={() => signOut()} type="button" className="button">
-  //           Sign Out
-  //         </button>
-  //       </div>
-  //       <div className="navbar-item">
-  //         <a href="/account/" target="_blank">
-  //           <figure className="image">
-  //             {currentUser.imageUrl ? (
-  //               <img
-  //                 src={currentUser.imageUrl}
-  //                 alt="Profile"
-  //                 style={{ width: "auto" }}
-  //               />
-  //             ) : (
-  //               placeHolderImage
-  //             )}
-  //           </figure>
-  //         </a>
-  //       </div>
-  //     </div>
-  //   </div>
-  // ) : undefined;
-
-  // return (
-  //   <nav className="navbar is-info" role="navigation">
-  //     <div className="navbar-brand">
-  //       <div className="navbar-item"></div>
-  //       <div
-  //         role="button"
-  //         className={`navbar-burger burger${isNavbarOpen ? " is-active" : ""}`}
-  //         aria-label="menu"
-  //         aria-expanded="false"
-  //         onClick={() => setNavbarOpen(!isNavbarOpen)}
-  //       >
-  //         <span aria-hidden="true"></span>
-  //         <span aria-hidden="true"></span>
-  //         <span aria-hidden="true"></span>
-  //       </div>
-  //     </div>
-
-  //     {navigationMenu}
-  //   </nav>
-  // );
   const navigationMenu = currentUser ? (
     <>
-      <nav className="navbar ">
+      <nav className="navbar is-fixed-top box-shadow-y">
         <div className="navbar-brand">
+          <div className="navbar-burger burger toggler">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <a className="navbar-item" href="http://calpal.test">
             <img
               src="https://media.discordapp.net/attachments/471231303317192735/860169767533281300/CalPal_betaLogo.jpg"
@@ -119,29 +69,29 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             href="https://github.com/ReeceDonovan"
             target="_blank"
           >
-            <span className="icon" style={{ color: "#55acee;" }}>
+            <span className="icon" style={{ color: "#55acee" }}>
               <i className="fa fa-twitter"></i>
             </span>
           </a>
 
-          <div className="navbar-burger burger" data-target="navMenubd-example">
+          <div className="navbar-burger burger nav-toggler">
             <span></span>
             <span></span>
             <span></span>
           </div>
         </div>
 
-        <div id="navMenubd-example" className="navbar-menu">
+        <div className="navbar-menu">
           <div className="navbar-start">
-            <a className="navbar-item " href="http://bulma.io/expo/">
-              Dashboard
-            </a>
-            <a className="navbar-item " href="http://bulma.io/expo/">
+            <Link to="/" className="navbar-item">
+              Home
+            </Link>
+            <Link to="/" className="navbar-item">
               Your Tasks
-            </a>
-            <a className="navbar-item " href="http://bulma.io/love/">
+            </Link>
+            <Link to="/" className="navbar-item">
               Your Projects
-            </a>
+            </Link>
           </div>
 
           <div className="navbar-end">
@@ -149,8 +99,9 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
               className="navbar-item is-hidden-desktop-only"
               href="https://github.com/ReeceDonovan"
               target="_blank"
+              rel="noreferrer"
             >
-              <span className="icon" style={{ color: "#333;" }}>
+              <span className="icon" style={{ color: "#333" }}>
                 <i className="fa fa-github"></i>
               </span>
             </a>
@@ -167,20 +118,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                     <span>Create</span>
                   </a>
                 </p>
-                <p className="control" style={{ paddingTop: "5px" }}>
-                  <a
-                    className="bd-tw-button button"
-                    target="_blank"
-                    onClick={() => signOut()}
-                  >
-                    <span className="icon">
-                      <i className="fas fa-sign-out-alt"></i>
-                    </span>
-                    <span>Sign Out</span>
-                  </a>
-                </p>
-                <a href="/account/" target="_blank">
-                  <figure className="image">
+                <div className="navbar-item has-dropdown is-hoverable">
+                  <figure className="image navbar-link">
                     {currentUser.imageUrl ? (
                       <img
                         src={currentUser.imageUrl}
@@ -191,59 +130,87 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                       placeHolderImage
                     )}
                   </figure>
-                </a>
+                  <div className="navbar-dropdown is-right">
+                    <div className="navbar-item">Profile</div>
+                    <div className="navbar-item">Settings</div>
+                    <hr className="navbar-divider" />
+                    <div className="navbar-item">
+                      <p className="control" style={{ paddingTop: "5px" }}>
+                        <a
+                          className="bd-tw-button button"
+                          target="_blank"
+                          onClick={() => signOut()}
+                          href="#signout"
+                        >
+                          <span className="icon">
+                            <i className="fas fa-sign-out-alt"></i>
+                          </span>
+                          <span>Sign Out</span>
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </nav>
 
-      <div
-        className="column is-2 is-sidebar-menu is-hidden-mobile"
-        style={{ position: "absolute", minHeight: "100%" }}
-      >
-        <aside className="menu">
-          <p className="menu-label">General</p>
-          <ul className="menu-list">
-            <li>
-              <a className="is-active">Dashboard</a>
-            </li>
-            <li>
-              <a>All Tasks</a>
-            </li>
-          </ul>
-          <p className="menu-label">Projects</p>
-          <ul className="menu-list">
-            <li>
-              <a>Manage Your Projects</a>
-              <ul>
-                <li>
-                  <a>Project #1</a>
-                </li>
-                <li>
-                  <a>Project #2</a>
-                </li>
-                <li>
-                  <a>Project #3</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <p className="menu-label">Miscellaneous</p>
-          <ul className="menu-list">
-            <li>
-              <a>About</a>
-            </li>
-            <li>
-              <a>Contact</a>
-            </li>
-          </ul>
-        </aside>
+      <div className="columns is-variable is-0">
+        <div>
+          <div className="menu-container px-1 has-background-white">
+            <div className="menu-wrapper py-1 is-sidebar-menu">
+              <aside className="menu">
+                <p className="menu-label has-text-lighter">General</p>
+                <ul className="menu-list">
+                  <li>
+                    <Link to="/" className="is-active">
+                      <i className="fas fa-tachometer-alt icon"></i>
+                      Dashboard
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/edit">All Tasks</Link>
+                  </li>
+                </ul>
+                <p className="menu-label">Projects</p>
+                <ul className="menu-list">
+                  <li>
+                    <a>Manage Your Projects</a>
+                    <ul>
+                      <li>
+                        <a>Project #1</a>
+                      </li>
+                      <li>
+                        <a>Project #2</a>
+                      </li>
+                      <li>
+                        <a>Project #3</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+                <p className="menu-label">Miscellaneous</p>
+                <ul className="menu-list">
+                  <li>
+                    <a>About</a>
+                  </li>
+                  <li>
+                    <a>Contact</a>
+                  </li>
+                </ul>
+              </aside>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   ) : undefined;
 
   return <>{navigationMenu}</>;
 };
+
+
 
 export default Navbar;

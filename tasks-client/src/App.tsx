@@ -42,20 +42,14 @@ const App: React.FC = () => {
       </Switch>
     ) : undefined;
 
-  // const sidebar = currentUser ? (
-  //   <Sidebar currentUser={currentUser} />
-  // ) : undefined;
-
   return (
     <>
       <BrowserRouter>
-        <section className="section" style={{ padding: 0 }}>
-          <Navbar currentUser={currentUser} />
-          <div className="container">
-            {isLoading || (!beginUserLoad && <Loader radius={200} />)}
-            {routes}
-          </div>
-        </section>
+        <Navbar currentUser={currentUser} />
+        <div className="column is-10-desktop is-offset-2-desktop is-9-tablet is-offset-3-tablet is-12-mobile">
+          {isLoading || (!beginUserLoad && <Loader radius={200} />)}
+          {routes}
+        </div>
       </BrowserRouter>
       <ReactQueryDevtools />
     </>
