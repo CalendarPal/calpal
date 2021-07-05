@@ -90,6 +90,56 @@ export class PGTaskRepository implements TaskRepository {
     }
   }
 
+  async getByProject(options: {
+    uid: string;
+    pid: string;
+    limit: number;
+    offset: number;
+  }): Promise<TaskListResponse> {
+    const text = `
+      WITH cte AS (
+        SELECT *
+        FROM tasks
+        WHERE project_id=$1 and user_id=$2
+      )
+      
+      SELECT * FROM (
+        TABLE cte
+        ORDER BY lower(task)
+        LIMIT $3
+        OFFSET $4
+      ) sub
+      RIGHT JOIN (SELECT count(*) FROM cte) c(count) ON true;
+    `;
+    const values = [options.pid, options.uid, options.limit, options.offset];
+
+    try {
+      const queryRes = await this.client.query({
+        text,
+        values,
+      });
+
+      const fetchedTasks = queryRes.rows;
+      const count = parseInt(fetchedTasks[0].count);
+
+      if (!fetchedTasks[0].id) {
+        return {
+          count,
+          tasks: [],
+        };
+      }
+
+      const tasks = fetchedTasks.map((task) => taskFromData(task));
+      return {
+        count,
+        tasks,
+      };
+    } catch (e) {
+      console.debug("Error retrieving tasks for user: ", e);
+      throw new InternalError();
+    }
+  }
+
   // returns list of deleted tasks
   async deleteByIds(taskIds: string[]): Promise<string[]> {
     // generate $1, $2, ..., $len(taskIds)

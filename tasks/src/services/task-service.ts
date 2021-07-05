@@ -75,6 +75,28 @@ export class TaskService {
     return deletedIds;
   }
 
+  async getTasksByProject(options: {
+    userId: string;
+    projectId: string;
+    limit?: number;
+    page?: number;
+  }) {
+    const page = options.page ?? 1;
+    const limit = options.limit ?? 10;
+    const offset = (page - 1) * limit;
+
+    const taskResponse = await this.tr.getByProject({
+      uid: options.userId,
+      pid: options.projectId,
+      limit,
+      offset,
+    });
+
+    const pages = Math.ceil(taskResponse.count / limit);
+
+    return { ...taskResponse, page, pages, limit };
+  }
+
   async updateTask(t: UpdateData): Promise<Task> {
     const updatedTask = this.tr.update({
       id: t.id,

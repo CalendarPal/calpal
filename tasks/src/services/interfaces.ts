@@ -30,6 +30,12 @@ export interface TaskRepository {
     limit: number;
     offset: number;
   }): Promise<TaskListResponse>;
+  getByProject(options: {
+    uid: string;
+    pid: string;
+    limit: number;
+    offset: number;
+  }): Promise<TaskListResponse>;
   deleteByIds(taskId: string[]): Promise<string[]>;
   update(t: Task): Promise<Task>;
 }

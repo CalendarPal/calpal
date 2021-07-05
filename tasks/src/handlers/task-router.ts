@@ -47,6 +47,42 @@ export const createTaskRouter = (): Router => {
     }
   );
 
+  taskRouter.get(
+    "/:pid",
+    [
+      query("page")
+        .optional({ nullable: true })
+        .isInt()
+        .withMessage("Must be null or an integer"),
+      query("limit")
+        .optional({ nullable: true })
+        .isInt({ max: 100 })
+        .withMessage("Must be null or an integer less than or equal to 100"),
+    ],
+    validateRequest,
+    async (req: Request, res: Response, next: NextFunction) => {
+      const limit = req.query["limit"]
+        ? parseInt(req.query["limit"] as string)
+        : undefined;
+      const page = req.query["page"]
+        ? parseInt(req.query["page"] as string)
+        : undefined;
+
+      try {
+        const taskList = await taskService.getTasksByProject({
+          userId: req.currentUser!.uid,
+          projectId: req.params.pid,
+          limit,
+          page,
+        });
+
+        res.status(200).json(taskList);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+
   taskRouter.post(
     "/",
     [
