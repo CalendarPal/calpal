@@ -11,6 +11,7 @@ interface CreateData {
   goalDate?: Date;
   uid: string;
   email: string;
+  projectId?: string;
 }
 
 interface UpdateData {
@@ -22,6 +23,7 @@ interface UpdateData {
   emailReminder: boolean;
   startDate: Date;
   goalDate: Date;
+  projectId: string;
 }
 
 export class TaskService {
@@ -45,6 +47,7 @@ export class TaskService {
       userId: t.uid,
       startDate: todayDate,
       goalDate: tommorrowDate,
+      projectId: t.projectId ?? "00000000-0000-0000-0000-000000000000",
     });
 
     return createdTask;
@@ -82,6 +85,7 @@ export class TaskService {
       userId: t.uid,
       startDate: t.startDate,
       goalDate: t.goalDate,
+      projectId: t.projectId,
     });
 
     return updatedTask;

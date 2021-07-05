@@ -61,10 +61,14 @@ export const createTaskRouter = (): Router => {
         .optional({ nullable: true })
         .isBoolean()
         .withMessage("boolean"),
+      body("projectId")
+        .optional()
+        .isUUID()
+        .withMessage("UUID to attached project (if any)"),
     ],
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
-      const { task, refUrl, emailReminder, description } = req.body;
+      const { task, refUrl, emailReminder, description, projectId } = req.body;
 
       try {
         const created = await taskService.addTask({
@@ -74,6 +78,7 @@ export const createTaskRouter = (): Router => {
           emailReminder,
           email: req.currentUser!.email,
           uid: req.currentUser!.uid,
+          projectId,
         });
 
         res.status(201).json(created);
@@ -126,21 +131,29 @@ export const createTaskRouter = (): Router => {
         .exists({ checkNull: true })
         .notEmpty()
         .withMessage("date"),
+      body("projectId")
+        .optional()
+        .isUUID()
+        .withMessage("UUID to attached project (if any)"),
     ],
     validateRequest,
     async (req: Request, res: Response, next: NextFunction) => {
       const {
         task,
         refUrl,
-        emailReminder,
+        emailReminder: eReminder,
         description,
         startDate: strDate,
         goalDate: glDate,
+        projectId: pId,
       } = req.body;
 
       // parse date
       let startDate: Date;
       let goalDate: Date;
+      let projectId =
+        pId != null ? pId : "00000000-0000-0000-0000-000000000000";
+      let emailReminder = eReminder != null ? eReminder : false;
       try {
         startDate = new Date(strDate as string);
         goalDate = new Date(glDate as string);
@@ -161,6 +174,7 @@ export const createTaskRouter = (): Router => {
           emailReminder,
           startDate,
           goalDate,
+          projectId,
         });
 
         res.status(200).json(updated);
