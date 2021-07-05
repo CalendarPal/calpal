@@ -60,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             target="_blank"
           >
             <span className="icon" style={{ color: "#333" }}>
-              <i className="fab fa-github fa-7x"></i>
+              <i className="fab fa-github"></i>
             </span>
           </a>
 
@@ -102,7 +102,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
               rel="noreferrer"
             >
               <span className="icon" style={{ color: "#333" }}>
-                <i className="fa fa-github"></i>
+                <i className="fa fa-github fa-2x"></i>
               </span>
             </a>
             <div className="navbar-item">
@@ -210,7 +210,5 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
 
   return <>{navigationMenu}</>;
 };
-
-
 
 export default Navbar;
