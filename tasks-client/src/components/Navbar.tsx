@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth, User } from "../store/auth";
 import Loader from "../components/ui/Loader";
 import { useInfiniteQuery } from "react-query";
@@ -11,7 +11,8 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const { signOut } = useAuth();
-  const [isNavbarOpen, setNavbarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const placeHolderImage = (
     <div
       style={{
@@ -40,7 +41,10 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
     <>
       <nav className="navbar is-fixed-top box-shadow-y">
         <div className="navbar-brand">
-          <div className="navbar-burger burger toggler">
+          <div
+            className="navbar-burger burger toggler"
+            onClick={() => setSidebarOpen(!isSidebarOpen)}
+          >
             <span></span>
             <span></span>
             <span></span>
@@ -74,24 +78,29 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
             </span>
           </a>
 
-          <div className="navbar-burger burger nav-toggler">
+          <div
+            className={`navbar-burger burger nav-toggler ${
+              isDropdownOpen ? "is-active" : ""
+            }`}
+            onClick={() => setDropdownOpen(!isDropdownOpen)}
+          >
             <span></span>
             <span></span>
             <span></span>
           </div>
         </div>
 
-        <div className="navbar-menu">
+        <div className={`navbar-menu ${isDropdownOpen ? "is-active" : ""}`}>
           <div className="navbar-start">
-            <Link to="/" className="navbar-item">
+            <NavLink to="/" className="navbar-item">
               Home
-            </Link>
-            <Link to="/" className="navbar-item">
+            </NavLink>
+            <NavLink to="/" className="navbar-item">
               Your Tasks
-            </Link>
-            <Link to="/" className="navbar-item">
+            </NavLink>
+            <NavLink to="/" className="navbar-item">
               Your Projects
-            </Link>
+            </NavLink>
           </div>
 
           <div className="navbar-end">
@@ -161,19 +170,25 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
 
       <div className="columns is-variable is-0">
         <div>
-          <div className="menu-container px-1 has-background-white">
+          <div
+            className={`menu-container px-1 has-background-white ${
+              isSidebarOpen ? "active" : "inactive"
+            }`}
+          >
             <div className="menu-wrapper py-1 is-sidebar-menu">
               <aside className="menu">
                 <p className="menu-label has-text-lighter">General</p>
                 <ul className="menu-list">
                   <li>
-                    <Link to="/" className="is-active">
+                    <NavLink exact to="/" activeClassName="is-active">
                       <i className="fas fa-tachometer-alt icon"></i>
                       Dashboard
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/edit">All Tasks</Link>
+                    <NavLink exact to="/edit" activeClassName="is-active">
+                      All Tasks
+                    </NavLink>
                   </li>
                 </ul>
                 <p className="menu-label">Projects</p>
