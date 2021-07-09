@@ -4,6 +4,12 @@ import { useAuth, User } from "../store/auth";
 import Loader from "../components/ui/Loader";
 import { useInfiniteQuery } from "react-query";
 import InfiniteScroll from "react-infinite-scroller";
+import ProjectList from "../components/ProjectList";
+import {
+  FetchProjectData,
+  fetchProjects,
+  Project,
+} from "../data/fetchProjects";
 
 type NavbarProps = {
   currentUser?: User;
@@ -13,6 +19,43 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const { signOut } = useAuth();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | undefined>(
+    undefined
+  );
+
+  const idToken = useAuth((state) => state.idToken);
+
+  const { data, isLoading, error, canFetchMore, fetchMore } = useInfiniteQuery<
+    FetchProjectData,
+    Error
+  >(["projects", { limit: 4, idToken }], fetchProjects, {
+    getFetchMore: (lastGroup, allGroups) => {
+      const { page, pages } = lastGroup;
+
+      if (page >= pages) {
+        return undefined;
+      }
+
+      return page + 1;
+    },
+  });
+
+  const projectList =
+    data &&
+    data.map((group, i) => (
+      <React.Fragment key={i}>
+        {group.projects && (
+          <ProjectList
+            key={i}
+            projects={group.projects}
+            onProjectSelected={(project) => {
+              setSelectedProject(project);
+            }}
+          />
+        )}
+      </React.Fragment>
+    ));
+
   const placeHolderImage = (
     <div
       style={{
@@ -56,8 +99,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
               width="auto"
               height="auto"
             />
+            <h1 className="title">CalPal</h1>
           </a>
-
           <a
             className="navbar-item is-hidden-desktop"
             href="https://github.com/ReeceDonovan"
@@ -91,18 +134,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
         </div>
 
         <div className={`navbar-menu ${isDropdownOpen ? "is-active" : ""}`}>
-          <div className="navbar-start">
-            <NavLink to="/" className="navbar-item">
-              Home
-            </NavLink>
-            <NavLink to="/" className="navbar-item">
-              Your Tasks
-            </NavLink>
-            <NavLink to="/" className="navbar-item">
-              Your Projects
-            </NavLink>
-          </div>
-
           <div className="navbar-end">
             <a
               className="navbar-item is-hidden-desktop-only"
@@ -195,17 +226,17 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                 <ul className="menu-list">
                   <li>
                     <a>Manage Your Projects</a>
-                    <ul>
-                      <li>
-                        <a>Project #1</a>
-                      </li>
-                      <li>
-                        <a>Project #2</a>
-                      </li>
-                      <li>
-                        <a>Project #3</a>
-                      </li>
-                    </ul>
+                    {isLoading && <Loader radius={200} />}
+                    {error && <p>{error.message}</p>}
+                    {projectList && (
+                      <InfiniteScroll
+                        pageStart={0}
+                        loadMore={() => fetchMore()}
+                        hasMore={canFetchMore}
+                        loader={<Loader key={0} color="red" />}
+                        children={projectList}
+                      />
+                    )}
                   </li>
                 </ul>
                 <p className="menu-label">Miscellaneous</p>

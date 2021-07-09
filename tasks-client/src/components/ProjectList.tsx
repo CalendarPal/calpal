@@ -12,16 +12,20 @@ const ProjectList: React.FC<ProjectListProps> = ({
   onProjectSelected,
 }) => {
   const projectList = projects.map((project) => (
-    <div
+    <li
       key={project.id}
       onClick={() => onProjectSelected(project)}
-      className="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen"
+      className="is-link"
       style={{ cursor: "pointer" }}
     >
       <ProjectListItem {...project} />
-    </div>
+    </li>
   ));
-  return <>{projectList}</>;
+  return (
+    <>
+      <ul>{projectList}</ul>
+    </>
+  );
 };
 
 export default ProjectList;

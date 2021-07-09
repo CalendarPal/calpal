@@ -1,23 +1,35 @@
 import React from "react";
 import { Project } from "../data/fetchProjects";
+import { NavLink } from "react-router-dom";
 
 const ProjectListItem: React.FC<Project> = (props) => {
+  const location = {
+    pathname: `/projects`,
+    state: {
+      projectId: props.id,
+      projectName: props.project,
+      userId: props.userId,
+    },
+  };
+
   return (
-    <div
-      className="notification is-link"
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+    <NavLink
+      exact
+      to={location}
+      isActive={(match, location) => {
+        if (!match) {
+          return false;
+        }
+
+        return (
+          location.state &&
+          (location.state as any).projectName === props.project
+        );
       }}
+      activeClassName="is-active"
     >
-      <div>
-        <div className="is-capitalized has-text-weight-bold">
-          {props.project}
-        </div>
-      </div>
-    </div>
+      {props.project}
+    </NavLink>
   );
 };
 

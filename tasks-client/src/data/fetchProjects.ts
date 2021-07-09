@@ -24,10 +24,6 @@ export const fetchProjects = async (
   args: FetchProjectArgs,
   page: number = 1
 ): Promise<FetchProjectData> => {
-  // if (args.idToken === "") {
-  //   const temp = new FetchProjectData();
-  //   return temp;
-  // }
   const { data, error } = await doRequest<FetchProjectData>({
     method: "get",
     url: "/api/projects",
@@ -47,6 +43,6 @@ export const fetchProjects = async (
   if (!data) {
     throw new Error("Unknown error");
   }
-  console.log(data);
+  // console.log(data);
   return data;
 };
