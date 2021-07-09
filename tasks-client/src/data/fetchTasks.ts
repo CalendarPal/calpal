@@ -22,6 +22,7 @@ export interface Task {
   emailReminder: Boolean;
   startDate: string;
   goalDate: string;
+  projectId: string;
 }
 
 export const fetchTasks = async (
