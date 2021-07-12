@@ -7,7 +7,7 @@ import TaskCard from "../components/TaskCard";
 import { FetchTaskData, fetchTasks } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
 
-const ProjectView: React.FC = (props) => {
+const ProjectView: React.FC = () => {
   const location = useLocation();
   const idToken = useAuth((state) => state.idToken);
 

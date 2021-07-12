@@ -57,15 +57,6 @@ const Edit: React.FC = () => {
   return (
     <>
       <h1 className="title is-3">Tasks List</h1>
-      <div className="buttons is-centered">
-        <button
-          onClick={() => setCreateIsOpen(true)}
-          className="button is-info"
-        >
-          Create Task
-        </button>
-      </div>
-
       {isLoading && <Loader radius={200} />}
       {isError && <p>{error?.message}</p>}
       {isError && <p>{error?.message}</p>}
@@ -79,6 +70,14 @@ const Edit: React.FC = () => {
           children={taskList}
         />
       )}
+      <div className="buttons is-centered">
+        <button
+          onClick={() => setCreateIsOpen(true)}
+          className="button is-info"
+        >
+          Create Task
+        </button>
+      </div>
       <EditTaskForm
         isOpen={createIsOpen}
         onClose={() => {

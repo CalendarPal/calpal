@@ -1,4 +1,5 @@
-import { useFormik } from "formik";
+import { useFormik, Field } from "formik";
+import { useInfiniteQuery } from "react-query";
 import React, { useState } from "react";
 import { useMutation, useQueryCache } from "react-query";
 import updateTask from "../data/updateTask";
@@ -6,6 +7,12 @@ import { Task } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
 import * as Yup from "yup";
 import deleteTask from "../data/deleteTask";
+import {
+  FetchProjectData,
+  fetchProjects,
+  Project,
+} from "../data/fetchProjects";
+import CustomSelect from "./CustomSelect";
 
 type EditTaskFormProps = {
   isOpen: boolean;
@@ -23,6 +30,22 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined
   );
+
+  const { data, isLoading, error, canFetchMore, fetchMore } = useInfiniteQuery<
+    FetchProjectData,
+    Error
+  >(["projects", { limit: 99, idToken }], fetchProjects, {
+    getFetchMore: (lastGroup, allGroups) => {
+      const { page, pages } = lastGroup;
+
+      if (page >= pages) {
+        return undefined;
+      }
+
+      return page + 1;
+    },
+  });
+
   const [mutateUpdate, { isLoading: isUpdating }] = useMutation(updateTask, {
     onSuccess: async () => {
       setErrorMessage(undefined);
@@ -51,18 +74,30 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
       description: initialTask?.description || "",
       refUrl: initialTask?.refUrl || "",
       goalDate: initialTask?.goalDate.substr(0, 10) || "",
+      projectId: initialTask?.projectId || "",
     },
     validationSchema: Yup.object({
       task: Yup.string().required("A non-empty task is required"),
       description: Yup.string().required("A non-empty description is required"),
       refUrl: Yup.string().url("Must be a valid URL or empty"),
       goalDate: Yup.date(),
+      projectId: Yup.string().required("A non-empty project is required"),
     }),
     onSubmit: (values) => {
       mutateUpdate({ ...values, id: initialTask?.id, idToken });
     },
     enableReinitialize: true,
   });
+  const projectList =
+    data &&
+    data.map(
+      (group, i) =>
+        group.projects &&
+        group.projects.map((project) => ({
+          label: project.project,
+          value: project.id,
+        }))
+    );
   return (
     <div className={`modal${isOpen ? " is-active" : ""}`}>
       <div className="modal-background"></div>
@@ -141,6 +176,11 @@ const EditTaskForm: React.FC<EditTaskFormProps> = ({
                 </p>
               )}
             </div>
+            <Field
+              name="permissions[]"
+              component={CustomSelect}
+              options={projectList!}
+            />
             {initialTask && (
               <div className="field">
                 <label className="label">Change Goal Date</label>
