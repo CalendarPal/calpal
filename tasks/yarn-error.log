@@ -1,0 +1,58 @@
+Arguments: 
+  /usr/bin/node /usr/bin/yarn add @mikro-orm/cli @mikro-orn/core @mikro-orm/migrations @mikro-orm/postgresql pg
+
+PATH: 
+  /root/tools/ctags/bin:/root/tools/nvim/bin:/root/tools/ctags/bin:/root/tools/ripgrep:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/mnt/c/Program Files/Python39/Scripts/:/mnt/c/Program Files/Python39/:/mnt/c/Program Files (x86)/Razer Chroma SDK/bin:/mnt/c/Program Files/Razer Chroma SDK/bin:/mnt/c/Program Files (x86)/Razer/ChromaBroadcast/bin:/mnt/c/Program Files/Razer/ChromaBroadcast/bin:/mnt/c/Program Files/Java/jdk-15.0.2/bin:/mnt/c/Program Files (x86)/VMware/VMware Player/bin/:/mnt/c/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Microsoft SQL Server/130/Tools/Binn/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/nodejs/:/mnt/c/Program Files/Calibre2/:/mnt/c/Windows/system32/config/systemprofile/AppData/Local/Microsoft/WindowsApps:/mnt/c/Program Files/Gource/cmd:/mnt/c/mingw-w64/x86_64-8.1.0-win32-seh-rt_v6-rev0/mingw64/bin:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/Go/bin:/mnt/d/nvim:/mnt/d/nvim/Neovim/bin:/mnt/c/Users/reece/AppData/Local/nvim:/mnt/d/MiscPrograms/Migrate:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:/mnt/c/Users/reece/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/reece/spicetify-cli:/mnt/c/Users/reece/AppData/Roaming/npm:/mnt/c/Program Files (x86)/Nmap:/mnt/c/Users/reece/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/reece/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Program Files/JetBrains/DataGrip 2020.1/bin:/mnt/c/Program Files/JetBrains/IntelliJ IDEA 2020.3.2/bin:/mnt/c/Program Files (x86)/GitHub CLI/:/mnt/c/Users/reece/go/bin:/mnt/c/Program Files/JetBrains/GoLand 2021.1.3/bin:/mnt/c/Users/reece/AppData/Local/gitkraken/bin:/snap/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  15.14.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/@mikro-orn%2fcore: Not found
+      at Request.params.callback [as _callback] (/usr/lib/node_modules/yarn/lib/cli.js:66988:18)
+      at Request.self.callback (/usr/lib/node_modules/yarn/lib/cli.js:140662:22)
+      at Request.emit (node:events:369:20)
+      at Request.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:141634:10)
+      at Request.emit (node:events:369:20)
+      at IncomingMessage.<anonymous> (/usr/lib/node_modules/yarn/lib/cli.js:141556:12)
+      at Object.onceWrapper (node:events:475:28)
+      at IncomingMessage.emit (node:events:381:22)
+      at endReadableNT (node:internal/streams/readable:1307:12)
+      at processTicksAndRejections (node:internal/process/task_queues:81:21)
+
+npm manifest: 
+  {
+    "name": "tasks-api",
+    "version": "0.0.0",
+    "description": "",
+    "main": "index.ts",
+    "scripts": {
+      "build": "rm -rf dist && tsc",
+      "start": "node dist/index.js",
+      "dev": "nodemon dist/index.js",
+      "dev2": "nodemon --exec ts-node src/index.ts --watch dist",
+      "watch": "tsc -w"
+    },
+    "keywords": [],
+    "author": "Reece Donovan",
+    "license": "ISC",
+    "devDependencies": {
+      "@types/node": "^14.14.37",
+      "nodemon": "^2.0.7",
+      "ts-node": "^10.0.0",
+      "ts-node-dev": "^1.1.6",
+      "typescript": "^4.2.3"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
