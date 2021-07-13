@@ -5,27 +5,27 @@ export class Task {
   @PrimaryKey()
   id!: number;
 
-  @Property()
+  @Property({ type: "text" })
   title!: string;
 
-  @Property()
-  description!: string;
+  // @Property({ type: "text" })
+  // description!: string;
 
-  @Property()
-  emailReminder!: boolean;
+  // @Property({ type: "boolean" })
+  // emailReminder = false;
 
-  @Property()
-  userId!: string;
+  // @Property({ type: "text" })
+  // userId!: string;
 
-  @Property()
+  @Property({ type: "date" })
   startDate = new Date();
 
-  @Property()
+  @Property({ type: "date" })
   goalDate = new Date(Date.now() + 3600 * 1000 * 24);
 
-  @Property()
+  @Property({ type: "date" })
   createdAt = new Date();
 
-  @Property({ onUpdate: () => new Date() })
+  @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt = new Date();
 }
