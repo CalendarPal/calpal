@@ -23,6 +23,7 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "strict": true,
+    "skipDefaultLibCheck": true
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.tsx", "./src/**/*.ts"]

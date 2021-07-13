@@ -94,9 +94,12 @@ services:
     image: tasks
     expose:
       - "8080"
+      - "4000"
+    ports:
+      - "4000:4000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tasks.rule=Host(`calpal.test`) && PathPrefix(`/api/tasks`) || PathPrefix(`/api/projects`)"
+      - "traefik.http.routers.tasks.rule=Host(`calpal.test`) && PathPrefix(`/api/tasks`) || PathPrefix(`/graph`)"
     volumes:
       - ./tasks:/app
     depends_on:
