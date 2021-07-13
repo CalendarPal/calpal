@@ -1,7 +1,6 @@
 import { MikroORM } from "@mikro-orm/core";
-import { __prod__ } from "./constants";
-import { Task } from "./entities/Task";
-import microConfig from "./mikro-orm.config";
+import { Task } from "./database/models/Task";
+import microConfig from "./configs/mikro-orm.config";
 
 const main = async () => {
   const orm = await MikroORM.init(microConfig);
