@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { MikroORM } from "@mikro-orm/core";
 // import { Task } from "./database/models/Task";
 import microConfig from "./configs/mikro-orm.config";

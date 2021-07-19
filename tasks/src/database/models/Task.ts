@@ -8,7 +8,7 @@ export class Task {
   @PrimaryKey()
   id!: number;
 
-  @Field()
+  @Field(() => String)
   @Property({ type: "text" })
   title!: string;
 
@@ -21,19 +21,19 @@ export class Task {
   // @Property({ type: "text" })
   // userId!: string;
 
-  @Field()
+  @Field(() => String)
   @Property({ type: "date" })
   startDate = new Date();
 
-  @Field()
+  @Field(() => String)
   @Property({ type: "date" })
   goalDate = new Date(Date.now() + 3600 * 1000 * 24);
 
-  @Field()
+  @Field(() => String)
   @Property({ type: "date" })
   createdAt = new Date();
 
-  @Field()
+  @Field(() => String)
   @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt = new Date();
 }
