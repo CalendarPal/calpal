@@ -60,6 +60,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
       </React.Fragment>
     ));
 
+  if (data) {
+    localStorage.setItem(
+      "projectData",
+      JSON.stringify(data.map((group, i) => group.projects).flat())
+    );
+  }
+
   const placeHolderImage = (
     <div
       style={{
