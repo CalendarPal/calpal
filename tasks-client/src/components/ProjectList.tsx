@@ -21,11 +21,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
       <ProjectListItem {...project} />
     </li>
   ));
-  return (
-    <>
-      <ul>{projectList}</ul>
-    </>
-  );
+  return <>{projectList}</>;
 };
 
 export default ProjectList;

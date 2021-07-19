@@ -10,6 +10,8 @@ import {
   fetchProjects,
   Project,
 } from "../data/fetchProjects";
+import EditTaskForm from "./EditTaskForm";
+import EditProjectForm from "./EditProjectForm";
 
 type NavbarProps = {
   currentUser?: User;
@@ -17,6 +19,8 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
   const { signOut } = useAuth();
+  const [createTaskIsOpen, setCreateTaskIsOpen] = useState(false);
+  const [createProjectIsOpen, setCreateProjectIsOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | undefined>(
@@ -146,17 +150,61 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
               </span>
             </a>
             <div className="navbar-item">
-              <div className="field is-grouped">
-                <p className="control" style={{ paddingTop: "5px" }}>
+              <div className="field is-grouped" style={{ width: "15em" }}>
+                <p
+                  className="navbar-item control has-dropdown is-hoverable"
+                  style={{ paddingTop: "5px", width: "10em" }}
+                >
                   <a
                     className="button is-primary"
-                    href="https://github.com/ReeceDonovan"
+                    href="#create"
+                    rel="noreferrer"
+                    style={{ width: "inherit" }}
                   >
                     <span className="icon">
                       <i className="fa fa-download"></i>
                     </span>
                     <span>Create</span>
                   </a>
+                  <div
+                    className="navbar-dropdown is-right"
+                    style={{
+                      // display: "flex",
+                      // flexDirection: "column",
+                      // justifyContent: "center",
+                      alignItems: "center",
+                      padding: "0.375rem 1rem",
+                    }}
+                  >
+                    <button
+                      onClick={() => setCreateTaskIsOpen(true)}
+                      className="navbar-item button is-inverted is-primary"
+                      style={{ margin: "auto" }}
+                    >
+                      Create Task
+                    </button>
+
+                    <hr className="navbar-divider" />
+                    <button
+                      onClick={() => setCreateProjectIsOpen(true)}
+                      className="navbar-item button is-inverted is-primary"
+                      style={{ margin: "auto" }}
+                    >
+                      Create Project
+                    </button>
+                  </div>
+                  <EditTaskForm
+                    isOpen={createTaskIsOpen}
+                    onClose={() => {
+                      setCreateTaskIsOpen(false);
+                    }}
+                  />
+                  <EditProjectForm
+                    isOpen={createProjectIsOpen}
+                    onClose={() => {
+                      setCreateProjectIsOpen(false);
+                    }}
+                  />
                 </p>
                 <div className="navbar-item has-dropdown is-hoverable">
                   <figure className="image navbar-link">
@@ -226,17 +274,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser }) => {
                 <ul className="menu-list">
                   <li>
                     <a>Manage Your Projects</a>
-                    {isLoading && <Loader radius={200} />}
-                    {error && <p>{error.message}</p>}
-                    {projectList && (
-                      <InfiniteScroll
-                        pageStart={0}
-                        loadMore={() => fetchMore()}
-                        hasMore={canFetchMore}
-                        loader={<Loader key={0} color="red" />}
-                        children={projectList}
-                      />
-                    )}
+                    <ul>
+                      {isLoading && <Loader radius={200} />}
+                      {error && <p>{error.message}</p>}
+                      {projectList && (
+                        <InfiniteScroll
+                          pageStart={0}
+                          loadMore={() => fetchMore()}
+                          hasMore={canFetchMore}
+                          loader={<Loader key={0} color="red" />}
+                          children={projectList}
+                        />
+                      )}
+                    </ul>
                   </li>
                 </ul>
                 <p className="menu-label">Miscellaneous</p>
