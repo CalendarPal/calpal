@@ -24,6 +24,8 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
         ) : undefined}
         <p className="mt-4">{props.description}</p>
       </div>
+      <hr style={{ margin: "1em 0" }} />
+      <button className="button is-inverted is-primary">Edit</button>
     </div>
   );
 };

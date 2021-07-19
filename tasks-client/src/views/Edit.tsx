@@ -70,20 +70,6 @@ const Edit: React.FC = () => {
           children={taskList}
         />
       )}
-      <div className="buttons is-centered">
-        <button
-          onClick={() => setCreateIsOpen(true)}
-          className="button is-info"
-        >
-          Create Task
-        </button>
-      </div>
-      <EditTaskForm
-        isOpen={createIsOpen}
-        onClose={() => {
-          setCreateIsOpen(false);
-        }}
-      />
       <EditTaskForm
         isOpen={editIsOpen}
         initialTask={selectedTask}
