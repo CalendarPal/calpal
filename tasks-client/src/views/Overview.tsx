@@ -5,6 +5,7 @@ import Loader from "../components/ui/Loader";
 import TaskCard from "../components/TaskCard";
 import { FetchTaskData, fetchTasks } from "../data/fetchTasks";
 import { useAuth } from "../store/auth";
+import { Project } from "../data/fetchProjects";
 
 const Overview: React.FC = () => {
   const idToken = useAuth((state) => state.idToken);
@@ -34,24 +35,34 @@ const Overview: React.FC = () => {
       </React.Fragment>
     ));
 
+  const projectList = localStorage.getItem("projectData");
+
+  const projectCards =
+    projectList &&
+    JSON.parse(projectList).map((project: Project, i: number) => (
+      <div className="column">
+        <div
+          className={`card ${
+            [
+              "has-background-primary has-text-white",
+              "has-background-warning has-text-black",
+              "has-background-info has-text-white",
+              "has-background-danger has-text-white",
+            ][i % 4]
+          }`}
+        >
+          <div className="card-header">
+            <div className="card-header-title has-text-white">
+              X Active Tasks
+            </div>
+          </div>
+          <div className="card-content">
+            <p className="is-size-3">{project.project}</p>
+          </div>
+        </div>
+      </div>
+    ));
   return (
-    // <div className="p-1">
-    //   <div className="columns is-variable is-desktop">
-    //     <div className="column">
-    //       <h1 className="title">Dashboard</h1>
-    //     </div>
-    //   </div>
-    //   {isLoading && <Loader radius={200} />}
-    //   {error && <p>{error.message}</p>}
-    //   {taskList && (
-    //     <InfiniteScroll
-    //       pageStart={0}
-    //       loadMore={() => fetchMore()}
-    //       hasMore={canFetchMore}
-    //       loader={<Loader key={0} color="red" />}
-    //       children={taskList}
-    //     />
-    //   )}
     <div className="p-1">
       <div className="columns is-variable is-desktop">
         <div className="column">
@@ -59,56 +70,7 @@ const Overview: React.FC = () => {
         </div>
       </div>
 
-      <div className="columns is-variable is-desktop">
-        {/* <div className="column">
-          <div className="card has-background-primary has-text-white">
-            <div className="card-header">
-              <div className="card-header-title has-text-white">
-                3 Active Tasks
-              </div>
-            </div>
-            <div className="card-content">
-              <p className="is-size-3">CS2506 - Operating Systems II</p>
-            </div>
-          </div>
-        </div>
-        <div className="column">
-          <div className="card has-background-warning has-text-black">
-            <div className="card-header">
-              <div className="card-header-title has-text-black is-uppercase">
-                1 Active Task
-              </div>
-            </div>
-            <div className="card-content">
-              <p className="is-size-3">CS2502 - Logic Design</p>
-            </div>
-          </div>
-        </div>
-        <div className="column">
-          <div className="card has-background-info has-text-white">
-            <div className="card-header">
-              <div className="card-header-title has-text-white is-uppercase">
-                4 Active Tasks
-              </div>
-            </div>
-            <div className="card-content">
-              <p className="is-size-3">CS2515 - Algorithms II</p>
-            </div>
-          </div>
-        </div>
-        <div className="column">
-          <div className="card has-background-danger has-text-white">
-            <div className="card-header">
-              <div className="card-header-title has-text-white">
-                No Active Tasks
-              </div>
-            </div>
-            <div className="card-content">
-              <p className="is-size-3">CS2514 - Intro to Java</p>
-            </div>
-          </div>
-        </div> */}
-      </div>
+      <div className="columns is-variable is-desktop">{projectCards}</div>
       {isLoading && <Loader radius={200} />}
       {error && <p>{error.message}</p>}
       {taskList && (
