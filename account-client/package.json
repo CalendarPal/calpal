@@ -7,11 +7,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@vee-validate/rules": "^4.1.20",
+    "@vee-validate/rules": "^4.4.7",
     "axios": "^0.21.1",
     "cropperjs": "^1.5.12",
     "jwt-decode": "^3.1.2",
-    "vee-validate": "^4.4.5",
+    "vee-validate": "^4.4.7",
     "vue": "^3.1.1",
     "vue-router": "^4.0.9"
   },
@@ -24,6 +24,6 @@
     "postcss": "^8.3.5",
     "prettier": "^2.3.1",
     "tailwindcss": "^2.2.2",
-    "vite": "^2.3.7"
+    "vite": "^2.4.3"
   }
 }
