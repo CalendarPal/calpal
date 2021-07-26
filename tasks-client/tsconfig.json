@@ -2,6 +2,9 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "baseUrl": ".",
+    // "paths": {
+    //   "@/*": ["src/*"]
+    // },
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
@@ -22,6 +25,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true
   },
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "build",
