@@ -139,4 +139,6 @@ const projectFromData = (dataObj: any): Project => ({
   id: dataObj.id,
   userId: dataObj.user_id,
   project: dataObj.project,
+  taskCount: dataObj.taskCount,
+  tasks: dataObj.tasks,
 });
