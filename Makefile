@@ -1,7 +1,7 @@
 .PHONY: keypair migrate-create migrate-up migrate-down migrate-force
 
 PWD = $(shell pwd)
-ACCTPATH = $(PWD)/account
+ACCTPATH = $(PWD)/account-server
 MPATH = $(ACCTPATH)/migrations
 PORT = 5432
 
@@ -19,10 +19,10 @@ migrate-create:
 	migrate create -ext sql -dir $(MPATH) -seq -digits 5 $(NAME)
 
 migrate-up:
-	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/postgres?sslmode=disable up $(N)
+	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/calpal_account?sslmode=disable up $(N)
 
 migrate-down:
-	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/postgres?sslmode=disable down $(N)
+	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/calpal_account?sslmode=disable down $(N)
 
 migrate-force:
-	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/postgres?sslmode=disable force $(VERSION)
+	migrate -source file://$(MPATH) -database postgres://postgres:password@localhost:$(PORT)/calpal_account?sslmode=disable force $(VERSION)
