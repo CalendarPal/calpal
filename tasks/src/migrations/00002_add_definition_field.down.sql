@@ -1,2 +1,0 @@
-ALTER TABLE
-  IF EXISTS tasks DROP COLUMN IF EXISTS description;
