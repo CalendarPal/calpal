@@ -1,6 +1,7 @@
-import { Entity as TOEntity, Column, Index } from "typeorm";
+import { Entity as TOEntity, Column, Index, OneToMany } from "typeorm";
 
 import Entity from "./Entity";
+import Task from "./Task";
 
 @TOEntity("users")
 export default class User extends Entity {
@@ -12,11 +13,11 @@ export default class User extends Entity {
   @Index()
   @Column({ unique: true })
   email: string;
+  
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
 
   // For Future
-
-  // @OneToMany(() => Task, (task) => task.user)
-  // tasks: Task[];
 
   // @OneToMany(() => Project, (project) => project.user)
   // projects: Project[];
