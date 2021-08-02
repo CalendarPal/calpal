@@ -29,7 +29,11 @@ export class UserUpdatesListener extends PubSubListener<UserUpdatesData> {
         user.createdAt = msg.data.createdAt;
         await user.save();
       } else {
-        user = new User({ id: uid, email });
+        user = new User({
+          id: uid,
+          email: email,
+          createdAt: msg.data.createdAt,
+        });
         await user.save();
       }
     } catch (err) {
