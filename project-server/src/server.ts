@@ -1,15 +1,13 @@
 import "reflect-metadata";
-import express from "express";
 import { createConnection } from "typeorm";
-import morgan from "morgan";
 import { initDS, DataSources } from "./data";
 import path from "path";
 import dotenv from "dotenv";
 
-import { authUser } from "./middleware/auth-user";
 import { UserUpdatesListener } from "./events/user-updates-listener";
+import createApp from "./app";
 
-import projectRoutes from "./routes/projects";
+
 
 const startup = async () => {
   /*
@@ -39,15 +37,7 @@ const startup = async () => {
 
   console.info("Successfully initialized data sources!");
 
-  const app = express();
-
-  app.use(authUser);
-  app.use(express.json());
-  app.use(morgan("dev"));
-
-  app.get("/api", (_, res) => res.send("Hello World"));
-  app.use("/api/projects", projectRoutes);
-
+  const app = createApp();
   app.listen(8080, async () => {
     console.log("Server was ccreated at http://localhost:8080");
 
