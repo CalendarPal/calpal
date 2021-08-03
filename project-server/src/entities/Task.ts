@@ -9,9 +9,11 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 
 import Entity from "./Entity";
+import Note from "./Notes";
 import Project from "./Project";
 import User from "./User";
 
@@ -58,6 +60,9 @@ export default class Task extends Entity {
   @ManyToOne(() => Project, (project) => project.user)
   @JoinColumn({ name: "projectId" })
   project: Project;
+
+  @OneToMany(() => Note, (note) => note.task)
+  notes: Note[];
 
   @BeforeInsert()
   async genId() {

@@ -30,6 +30,7 @@ export default class Project extends Entity {
   @Column({ type: "uuid" })
   userId: string;
 
+  @Index()
   @Column()
   title: string;
 
@@ -48,3 +49,5 @@ export default class Project extends Entity {
     this.id = randomUUID();
   }
 }
+
+// TODO: Add ability to collaborate on projects, e.g ManyToMany user relation. Then change task and notes queries to check for multiple authenticated users of the current project
