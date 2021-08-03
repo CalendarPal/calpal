@@ -22,9 +22,9 @@ func NewUserRepository(db *sqlx.DB) models.UserRepository {
 }
 
 func (r *PostgresUserRepository) Create(ctx context.Context, u *models.User) error {
-	query := "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *"
+	query := "INSERT INTO users (uid, email, password) VALUES ($1, $2, $3) RETURNING *"
 
-	if err := r.DB.GetContext(ctx, u, query, u.Email, u.Password); err != nil {
+	if err := r.DB.GetContext(ctx, u, query, u.UID, u.Email, u.Password); err != nil {
 		// Checks the unique constraint
 		if err, ok := err.(*pq.Error); ok && err.Code.Name() == "unique_violation" {
 			log.Printf("Could not create a user with email: %v. Reason: %v\n", u.Email, err.Code.Name())

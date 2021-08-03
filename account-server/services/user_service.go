@@ -53,6 +53,14 @@ func (s *UserService) Signup(ctx context.Context, u *models.User) error {
 
 	u.Password = pw
 
+	userId, err := uuid.NewRandom()
+	if err != nil {
+		log.Printf("Could not create a new user UUID with email: %v. Reason: %v\n", u.Email, err)
+		return apperrors.NewInternal()
+	}
+
+	u.UID = userId
+
 	// Publish user created event
 	err = s.EventsRepository.PublishUserUpdated(ctx, u, true)
 

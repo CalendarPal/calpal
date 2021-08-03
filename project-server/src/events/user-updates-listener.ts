@@ -1,11 +1,12 @@
-import { PubSub } from '@google-cloud/pubsub';
+import { PubSub } from "@google-cloud/pubsub";
 
-import User from '../entities/User';
-import { DecodedMessage, PubSubListener } from './pub-sub-listener';
+import User from "../entities/User";
+import { DecodedMessage, PubSubListener } from "./pub-sub-listener";
 
 interface UserUpdatesData {
   uid: string;
   email: string;
+  name: string;
   createdAt: Date;
 }
 
@@ -21,19 +22,26 @@ export class UserUpdatesListener extends PubSubListener<UserUpdatesData> {
   }
 
   async onMessage(msg: DecodedMessage<UserUpdatesData>): Promise<void> {
-    const { uid, email } = msg.data;
+    const {
+      uid: uid,
+      email: email,
+      name: name,
+      createdAt: createdAt,
+    } = msg.data;
     console.log(msg.data);
     try {
       let user = await User.findOne({ id: uid });
-      if (user) {
-        user.email = msg.data.email;
-        user.createdAt = msg.data.createdAt;
+      console.log(typeof user);
+      if (typeof user !== "undefined") {
+        user.email = email;
+        user.name = name;
+        user.createdAt = createdAt;
         await user.save();
       } else {
         user = new User({
           id: uid,
           email: email,
-          createdAt: msg.data.createdAt,
+          name: name,
         });
         await user.save();
       }
