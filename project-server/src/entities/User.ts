@@ -1,4 +1,5 @@
 import { Exclude } from "class-transformer";
+import { IsEmail } from "class-validator";
 import { Column, Entity as TOEntity, Index, OneToMany } from "typeorm";
 
 import Entity from "./Entity";
@@ -14,6 +15,7 @@ export default class User extends Entity {
 
   @Index()
   @Exclude()
+  @IsEmail()
   @Column({ unique: true, update: true })
   email: string;
 

@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { Express } from "express";
 import morgan from "morgan";
 
@@ -12,6 +13,13 @@ const createApp = (): Express => {
   app.use(express.json());
   app.use(authUser);
   app.use(morgan("dev"));
+  app.use(
+    cors({
+      credentials: true,
+      origin: "http://calpal.test",
+      optionsSuccessStatus: 200,
+    })
+  );
 
   app.get("/api", (_, res) => res.send("Hello World"));
   app.use("/api/tasks", taskRoutes);
