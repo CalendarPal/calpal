@@ -13,7 +13,7 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <Fragment>
       <Navbar />
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </Fragment>
   );
 }

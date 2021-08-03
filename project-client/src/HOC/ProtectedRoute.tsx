@@ -11,7 +11,7 @@ const ProtectedRoute = (ProtectedComponent: React.FC) => {
       const currentUser = useAuth((state) => state.currentUser!);
 
       useEffect(() => {
-        getUser(true);
+        getUser(false);
         setBeginUserLoad(true);
       }, [getUser]);
 

@@ -1,6 +1,6 @@
 <template>
   <div class="px-4">
-    <h1 class="text-xl text-center font-semibold mb-2">
+    <h1 class="mb-2 text-xl font-semibold text-center">
       {{ isLogin ? 'Login' : 'Sign Up' }}
     </h1>
     <input
@@ -9,17 +9,7 @@
       @input="emailField.handleChange"
       @blur="emailField.handleBlur"
       :value="emailField.value"
-      class="
-        px-4
-        my-2
-        min-w-full
-        mx-auto
-        border border-gray-500
-        rounded-full
-        focus:outline-none
-        focus:ring-1
-        focus:border-blue-300
-      "
+      class="min-w-full px-4 mx-auto my-2 border border-gray-500 rounded-full focus:outline-none focus:ring-1 focus:border-blue-300"
     />
     <p
       class="text-center text-red-500"
@@ -40,17 +30,7 @@
       "
       @blur="passwordField.handleBlur"
       :value="passwordField.value"
-      class="
-        px-4
-        my-2
-        min-w-full
-        mx-auto
-        border border-gray-500
-        rounded-full
-        focus:outline-none
-        focus:ring-1
-        focus:border-blue-300
-      "
+      class="min-w-full px-4 mx-auto my-2 border border-gray-500 rounded-full focus:outline-none focus:ring-1 focus:border-blue-300"
     />
     <p
       class="text-center text-red-500"
@@ -71,17 +51,7 @@
         @input="confirmPasswordField.handleChange"
         @blur="confirmPasswordField.handleBlur"
         :value="confirmPasswordField.value"
-        class="
-          px-4
-          my-2
-          min-w-full
-          mx-auto
-          border border-gray-500
-          rounded-full
-          focus:outline-none
-          focus:ring-1
-          focus:border-blue-300
-        "
+        class="min-w-full px-4 mx-auto my-2 border border-gray-500 rounded-full focus:outline-none focus:ring-1 focus:border-blue-300"
       />
       <p
         :style="{
@@ -99,7 +69,7 @@
 
     <div class="flex justify-center mt-4">
       <button
-        class="btn btn-blue mx-1 flex items-center"
+        class="flex items-center mx-1 btn btn-blue"
         :disabled="!formMeta.valid"
         @click="submitForm"
         type="submit"
@@ -108,7 +78,7 @@
         <span>{{ isLogin ? 'Login' : 'Sign Up' }}</span>
         <Loader
           v-if="isSubmitting"
-          class="animate-spin stroke-current text-white ml-2"
+          class="ml-2 text-white stroke-current animate-spin"
           :height="16"
         />
       </button>
