@@ -1,25 +1,13 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { body } from "express-validator";
-import Task from "../entities/Task";
 
-import { validateRequest } from "../middleware/validate-request";
+import Task from "../entities/Task";
 import { requireAuth } from "../middleware/require-auth";
 import user from "../middleware/store-user";
-
-// const createTask = (req: Request, res: Response) => {
-//   const { title, description, project } = req.body;
-
-//   const user = req.currentUser;
-
-//   if (title.trim() === "") {
-//     res.status(400)
-//   }
-// };
+import { validateRequest } from "../middleware/validate-request";
 
 const router = Router();
 router.use(requireAuth);
-
-// router.post("/", createTask);
 
 router.post(
   "/",

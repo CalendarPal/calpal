@@ -1,7 +1,7 @@
-import { Entity as TOEntity, Column, Index, OneToMany } from "typeorm";
+import { Column, Entity as TOEntity, Index, OneToMany } from 'typeorm';
 
-import Entity from "./Entity";
-import Task from "./Task";
+import Entity from './Entity';
+import Task from './Task';
 
 @TOEntity("users")
 export default class User extends Entity {

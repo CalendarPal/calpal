@@ -1,7 +1,8 @@
-import * as fs from "fs";
-import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { NotAuthorizedError } from "../errors/not-authorized-error";
+import { NextFunction, Request, Response } from 'express';
+import * as fs from 'fs';
+import jwt from 'jsonwebtoken';
+
+import { NotAuthorizedError } from '../errors/not-authorized-error';
 
 interface TokenClaims {
   user: UserClaims;

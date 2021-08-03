@@ -1,6 +1,7 @@
-import { PubSub } from "@google-cloud/pubsub";
-import User from "../entities/User";
-import { DecodedMessage, PubSubListener } from "./pub-sub-listener";
+import { PubSub } from '@google-cloud/pubsub';
+
+import User from '../entities/User';
+import { DecodedMessage, PubSubListener } from './pub-sub-listener';
 
 interface UserUpdatesData {
   uid: string;

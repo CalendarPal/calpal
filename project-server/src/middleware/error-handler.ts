@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
-import { CustomError } from "../errors/custom-error";
+import { Request, Response } from 'express';
+
+import { CustomError } from '../errors/custom-error';
 
 export const errorHandler = (err: Error, _: Request, res: Response) => {
   console.error(err);

@@ -1,10 +1,6 @@
-import {
-  CreateSubscriptionOptions,
-  Message,
-  PubSub,
-  Subscription,
-} from "@google-cloud/pubsub";
-import { InternalError } from "../errors/internal-error";
+import { CreateSubscriptionOptions, Message, PubSub, Subscription } from '@google-cloud/pubsub';
+
+import { InternalError } from '../errors/internal-error';
 
 export interface DecodedMessage<T> {
   type: string;

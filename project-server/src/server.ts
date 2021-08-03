@@ -1,11 +1,12 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import { initDS, DataSources } from "./data";
-import path from "path";
-import dotenv from "dotenv";
+import 'reflect-metadata';
 
-import { UserUpdatesListener } from "./events/user-updates-listener";
-import createApp from "./app";
+import dotenv from 'dotenv';
+import path from 'path';
+import { createConnection } from 'typeorm';
+
+import createApp from './app';
+import { DataSources, initDS } from './data';
+import { UserUpdatesListener } from './events/user-updates-listener';
 
 
 
