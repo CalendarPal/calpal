@@ -47,6 +47,7 @@ export default class Task extends Entity {
   goalDate: Date;
 
   @Index()
+  @Exclude()
   @Column()
   projectId: string;
 

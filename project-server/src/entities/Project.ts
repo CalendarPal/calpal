@@ -43,34 +43,6 @@ export default class Project extends Entity {
   @OneToMany(() => Task, (task) => task.project)
   tasks: Task[];
 
-  // @Column()
-  // title: string;
-
-  // @Column({ type: "text" })
-  // description: string;
-
-  // @Index()
-  // @Column({ type: "timestamptz", default: () => "NOW()" })
-  // startDate: Date;
-
-  // @Index()
-  // @Column({
-  //   type: "timestamptz",
-  //   default: () => "NOW() + INTERVAL '24 HOURS'",
-  // })
-  // goalDate: Date;
-
-  // @Index()
-  // @Column()
-  // projectId: string;
-
-  // For Future
-
-  // @OneToMany(() => Project, (project) => project.user)
-  // projects: Project[];
-
-  // Unsure if this is needed
-
   @BeforeInsert()
   async genId() {
     this.id = randomUUID();
