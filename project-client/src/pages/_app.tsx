@@ -1,7 +1,21 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
+import "../styles/tailwind.css";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+import Axios from "axios";
+import { AppProps } from "next/app";
+import { Fragment } from "react";
+
+import Navbar from "../components/Navbar";
+
+Axios.defaults.baseURL = "http://calpal.test/api";
+Axios.defaults.withCredentials = true;
+
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <Fragment>
+      <Navbar />
+      <Component {...pageProps} />;
+    </Fragment>
+  );
 }
-export default MyApp;
+
+export default App;
