@@ -1,7 +1,9 @@
-import { Column, Entity as TOEntity, Index, OneToMany } from 'typeorm';
+import { Exclude } from "class-transformer";
+import { Column, Entity as TOEntity, Index, OneToMany } from "typeorm";
 
-import Entity from './Entity';
-import Task from './Task';
+import Entity from "./Entity";
+import Project from "./Project";
+import Task from "./Task";
 
 @TOEntity("users")
 export default class User extends Entity {
@@ -11,21 +13,16 @@ export default class User extends Entity {
   }
 
   @Index()
-  @Column({ unique: true })
+  @Exclude()
+  @Column({ unique: true, update: true })
   email: string;
-  
+
+  @Column()
+  name: string;
+
   @OneToMany(() => Task, (task) => task.user)
   tasks: Task[];
 
-  // For Future
-
-  // @OneToMany(() => Project, (project) => project.user)
-  // projects: Project[];
-
-  // Unsure if this is needed
-
-  // @BeforeInsert()
-  // async hashPassword() {
-  //   this.password = await bcrypt.hash(this.password, 6);
-  // }
+  @OneToMany(() => Project, (project) => project.user)
+  projects: Project[];
 }
