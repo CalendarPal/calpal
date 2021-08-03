@@ -1,19 +1,19 @@
+import { Exclude } from "class-transformer";
 import { randomUUID } from "crypto";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import {
-  Entity as TOEntity,
-  Column,
-  Index,
-  ManyToOne,
-  JoinColumn,
   BeforeInsert,
+  Column,
+  Entity as TOEntity,
+  Index,
+  JoinColumn,
+  ManyToOne,
 } from "typeorm";
 
 import Entity from "./Entity";
+import Project from "./Project";
 import User from "./User";
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import { Exclude } from "class-transformer";
 
 dayjs.extend(relativeTime);
 
@@ -54,12 +54,9 @@ export default class Task extends Entity {
   @JoinColumn({ name: "userId" })
   user: User;
 
-  // For Future
-
-  // @OneToMany(() => Project, (project) => project.user)
-  // projects: Project[];
-
-  // Unsure if this is needed
+  @ManyToOne(() => Project, (project) => project.user)
+  @JoinColumn({ name: "projectId" })
+  project: Project;
 
   @BeforeInsert()
   async genId() {
