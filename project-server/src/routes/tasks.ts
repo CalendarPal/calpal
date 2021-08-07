@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { body } from "express-validator";
 import { getRepository } from "typeorm";
+import { body } from "express-validator";
 
 import Note from "../entities/Notes";
 import Project from "../entities/Project";
@@ -57,7 +57,7 @@ const getTasks = async (_: Request, res: Response, next: NextFunction) => {
     const tasks = await Task.find({
       where: { userId: user.id },
       order: { goalDate: "ASC" },
-      relations: ["project"],
+      relations: ["project", "notes"],
     });
 
     res.status(200).json(tasks);
@@ -74,7 +74,7 @@ const getTask = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const task = await Task.findOneOrFail({
       where: { userId: user.id, id: identifier },
-      relations: ["project"],
+      relations: ["project", "notes"],
     });
 
     res.status(200).json(task);

@@ -3,6 +3,7 @@ import { body } from "express-validator";
 import { getRepository } from "typeorm";
 
 import Project from "../entities/Project";
+import Task from "../entities/Task";
 import User from "../entities/User";
 import { ConflictError } from "../errors/conflict-errors";
 import { requireAuth } from "../middleware/require-auth";
@@ -43,6 +44,31 @@ const createProject = async (
   }
 };
 
+const getProject = async (req: Request, res: Response, next: NextFunction) => {
+  const { identifier } = req.params;
+
+  const user = res.locals.user;
+
+  try {
+    const project = await Project.findOneOrFail({
+      where: { userId: user.id, id: identifier },
+      // relations: ["tasks"],
+    });
+
+    const tasks = await Task.find({
+      where: { project },
+      order: { goalDate: "ASC" },
+      relations: ["project", "notes"],
+    });
+
+    project.tasks = tasks;
+
+    res.status(200).json(project);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const router = Router();
 router.use(requireAuth);
 
@@ -53,5 +79,6 @@ router.post(
   validateRequest,
   createProject
 );
+router.get("/:identifier", user, getProject);
 
 export default router;
