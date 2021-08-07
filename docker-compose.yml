@@ -81,7 +81,7 @@ services:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.account-client.rule=Host(`calpal.test`) && PathPrefix(`/account`)"
+      - "traefik.http.routers.account-client.rule=Host(`calpal.test`) && PathPrefix(`/account/`)"
     volumes:
       - ./account-client:/app
       - /app/node_modules
