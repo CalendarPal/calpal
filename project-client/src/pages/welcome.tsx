@@ -9,13 +9,15 @@ const Welcome: React.FC = () => {
   const currentUser = useAuth((state) => state.currentUser!);
 
   useEffect(() => {
-    getUser(false);
+    getUser(true);
     setBeginUserLoad(true);
   }, [getUser]);
 
   const Router = useRouter();
 
-  if (currentUser) {
+  // console.log(typeof currentUser);
+
+  if (typeof currentUser !== "undefined") {
     Router.push("/");
     return null;
   }
