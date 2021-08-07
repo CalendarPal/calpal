@@ -15,8 +15,6 @@ const Welcome: React.FC = () => {
 
   const Router = useRouter();
 
-  // console.log(typeof currentUser);
-
   if (typeof currentUser !== "undefined") {
     Router.push("/");
     return null;
