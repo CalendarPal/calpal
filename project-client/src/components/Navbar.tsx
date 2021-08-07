@@ -7,7 +7,7 @@ import { useAuth } from "../store/auth";
 const Navbar: React.FC = () => {
   const { pathname } = useRouter();
 
-  console.log(pathname);
+  // console.log(pathname);
 
   const welcomePath = pathname === "/welcome";
 
@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
       <div className="flex items-center">
         <Link href="/">
           <a>
-            <img src="CalpalLogo.jpg" className="w-8 h-8 mr-2" />
+            <img src="/CalpalLogo.jpg" className="w-8 h-8 mr-2" />
           </a>
         </Link>
         <span className="text-2xl font-semibold">
@@ -116,6 +116,9 @@ const Navbar: React.FC = () => {
       {/* Signout */}
       {!welcomePath && (
         <div className="flex">
+          <Link href="http://calpal.test/account/account">
+            <a className="w-32 py-1 mr-4 leading-5 blue button">edit account</a>
+          </Link>
           <Link href="#">
             <a
               className="w-32 py-1 leading-5 hollow blue button"
