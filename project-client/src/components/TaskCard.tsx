@@ -11,13 +11,14 @@ interface TaskCardProps {
   task: Task;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard(props: TaskCardProps) {
+  const { task } = props;
   return (
     <div key={task.id} className="flex mb-4 bg-white rounded">
       {/* Task data section */}
       <div className="w-full p-2">
         <div className="flex items-center">
-          <Link href={`/project/${task.projectId}`}>
+          <Link href={`/p/${task.projectId}`}>
             <a className="text-xs font-bold cursor-pointer hover:underline">
               {task.project.title}
             </a>
@@ -36,7 +37,7 @@ export default function TaskCard({ task }: TaskCardProps) {
             <a>
               <div className="px-1 py-1 mr-2 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
                 <i className="mr-1 fas fa-comment-alt fa-xs"></i>
-                <span>{task.noteCount || `No notes`}</span>
+                <span>{task.noteCount || `No`} notes</span>
               </div>
             </a>
           </Link>
