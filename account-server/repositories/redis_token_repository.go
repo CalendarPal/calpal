@@ -37,6 +37,8 @@ func (r *redisTokenRepository) SetRefreshToken(ctx context.Context, userID strin
 func (r *redisTokenRepository) DeleteRefreshToken(ctx context.Context, userID string, tokenID string) error {
 	key := fmt.Sprintf("%s:%s", userID, tokenID)
 
+	fmt.Println(key)
+
 	result := r.Redis.Del(ctx, key)
 
 	if err := result.Err(); err != nil {

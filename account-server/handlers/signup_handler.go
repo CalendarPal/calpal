@@ -8,6 +8,7 @@ import (
 	"github.com/CalendarPal/calpal/account-server/utils/apperrors"
 	"github.com/CalendarPal/calpal/account-server/utils/data"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 // signupRequest is not exported, it is used for json marshalling and validation
@@ -30,7 +31,15 @@ func (h *Handler) Signup(c *gin.Context) { // Variable to hold the incoming json
 		Password: req.Password,
 	}
 	ctx := c.Request.Context()
-	err := h.UserService.Signup(ctx, u)
+
+	userId, err := uuid.NewRandom()
+	if err != nil {
+		log.Printf("Could not create a new user UUID with email: %v. Reason: %v\n", u.Email, err)
+	}
+
+	u.UID = userId
+
+	err = h.UserService.Signup(ctx, u)
 
 	if err != nil {
 		log.Printf("Failed to sign up user: %v\n", err.Error())
