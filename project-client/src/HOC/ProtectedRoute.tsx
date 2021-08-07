@@ -1,33 +1,33 @@
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { useAuth } from "../store/auth";
 
-const ProtectedRoute = (ProtectedComponent: React.FC) => {
-  return (props: any) => {
-    if (typeof window !== "undefined") {
-      const getUser = useAuth((state) => state.getUser);
-      const [_, setBeginUserLoad] = useState(false);
-      const currentUser = useAuth((state) => state.currentUser!);
+const isBrowser = () => typeof window !== "undefined";
 
-      useEffect(() => {
-        getUser(false);
-        setBeginUserLoad(true);
-      }, [getUser]);
+const ProtectedRoute = ({
+  router,
+  children,
+}: {
+  router: any;
+  children: any;
+}) => {
+  const getUser = useAuth((state) => state.getUser);
+  const [_, setBeginUserLoad] = useState(false);
+  const currentUser = useAuth((state) => state.currentUser);
 
-      const Router = useRouter();
+  useEffect(() => {
+    getUser(true);
+    setBeginUserLoad(true);
+  }, [getUser]);
 
-      if (!currentUser) {
-        Router.push("/welcome");
-        return null;
-      } else {
-        props = { ...props, currentUser };
-        return <ProtectedComponent {...props} />;
-      }
-    }
+  let unprotectedRoutes = ["/welcome"];
 
-    return null;
-  };
+  let pathIsProtected = unprotectedRoutes.indexOf(router.pathname) === -1;
+  if (isBrowser() && !currentUser && pathIsProtected) {
+    router.push("/welcome");
+  }
+
+  return children;
 };
 
 export default ProtectedRoute;
