@@ -1,3 +1,19 @@
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  projectId: string;
+  userId: string;
+  startDate: string;
+  goalDate: string;
+  createdAt: string;
+  updatedAt: string;
+  project: Project;
+  // Virtual fields
+  url: string;
+  noteCount?: number;
+}
+
 export interface User {
   createdAt: string;
   email: string;
@@ -19,22 +35,6 @@ export interface Project {
   tasks: Task[];
   // Virtual fields
   taskCount?: number;
-}
-
-export interface Task {
-  id: string;
-  title: string;
-  description: string;
-  projectId: string;
-  userId: string;
-  startDate: string;
-  goalDate: string;
-  createdAt: string;
-  updatedAt: string;
-  project: Project;
-  // Virtual fields
-  url: string;
-  noteCount?: number;
 }
 
 export interface Note {
