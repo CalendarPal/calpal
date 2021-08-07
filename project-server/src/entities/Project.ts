@@ -37,7 +37,7 @@ export default class Project extends Entity {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @ManyToOne(() => User, (user) => user.tasks)
+  @ManyToOne(() => User, (user) => user.projects)
   @JoinColumn({ name: "userId" })
   user: User;
 

@@ -49,15 +49,14 @@ export default class Task extends Entity {
   goalDate: Date;
 
   @Index()
-  @Exclude()
-  @Column()
+  @Column({ type: "uuid" })
   projectId: string;
 
   @ManyToOne(() => User, (user) => user.tasks)
   @JoinColumn({ name: "userId" })
   user: User;
 
-  @ManyToOne(() => Project, (project) => project.user)
+  @ManyToOne(() => Project, (project) => project.tasks)
   @JoinColumn({ name: "projectId" })
   project: Project;
 
@@ -65,7 +64,7 @@ export default class Task extends Entity {
   notes: Note[];
 
   @Expose() get url(): string {
-    return `/project/${this.projectId}/${this.id}`;
+    return `/p/${this.projectId}/${this.id}`;
   }
 
   @Expose() get noteCount(): number {

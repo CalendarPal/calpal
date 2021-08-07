@@ -1,14 +1,12 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import dotenv from 'dotenv';
-import path from 'path';
-import { createConnection } from 'typeorm';
+import dotenv from "dotenv";
+import path from "path";
+import { createConnection } from "typeorm";
 
-import createApp from './app';
-import { DataSources, initDS } from './data';
-import { UserUpdatesListener } from './events/user-updates-listener';
-
-
+import createApp from "./app";
+import { DataSources, initDS } from "./data";
+import { UserUpdatesListener } from "./events/user-updates-listener";
 
 const startup = async () => {
   /*
@@ -40,7 +38,7 @@ const startup = async () => {
 
   const app = createApp();
   app.listen(8080, async () => {
-    console.log("Server was ccreated at http://localhost:8080");
+    console.log("Server was created at http://localhost:8080");
 
     try {
       await createConnection();
