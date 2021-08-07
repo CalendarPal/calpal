@@ -1,4 +1,4 @@
-import { classToPlain, Exclude } from "class-transformer";
+import { classToPlain } from "class-transformer";
 import {
   BaseEntity,
   CreateDateColumn,
@@ -7,7 +7,6 @@ import {
 } from "typeorm";
 
 export default abstract class Entity extends BaseEntity {
-  @Exclude()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

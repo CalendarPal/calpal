@@ -1,4 +1,4 @@
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { randomUUID } from "crypto";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -43,6 +43,10 @@ export default class Project extends Entity {
 
   @OneToMany(() => Task, (task) => task.project)
   tasks: Task[];
+
+  @Expose() get taskCount(): number {
+    return this.tasks?.length;
+  }
 
   @BeforeInsert()
   async genId() {
