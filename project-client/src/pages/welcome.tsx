@@ -1,21 +1,10 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { useAuth } from "../store/auth";
-
-const Welcome: React.FC = () => {
-  const getUser = useAuth((state) => state.getUser);
-  const [_, setBeginUserLoad] = useState(false);
-  const currentUser = useAuth((state) => state.currentUser!);
-
-  useEffect(() => {
-    getUser(true);
-    setBeginUserLoad(true);
-  }, [getUser]);
-
+const Welcome: React.FC = (props: any) => {
   const Router = useRouter();
 
-  if (typeof currentUser !== "undefined") {
+  if (props.user) {
     Router.push("/");
     return null;
   }
