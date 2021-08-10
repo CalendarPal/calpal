@@ -1,33 +1,28 @@
-import { useEffect, useState } from "react";
-
-import { useAuth } from "../store/auth";
+import React from "react";
 
 const isBrowser = () => typeof window !== "undefined";
 
 const ProtectedRoute = ({
+  user,
   router,
   children,
 }: {
+  user: any;
   router: any;
   children: any;
 }) => {
-  const getUser = useAuth((state) => state.getUser);
-  const [_, setBeginUserLoad] = useState(false);
-  const currentUser = useAuth((state) => state.currentUser);
-
-  useEffect(() => {
-    getUser(true);
-    setBeginUserLoad(true);
-  }, [getUser]);
-
   let unprotectedRoutes = ["/welcome"];
 
   let pathIsProtected = unprotectedRoutes.indexOf(router.pathname) === -1;
-  if (isBrowser() && !currentUser && pathIsProtected) {
+  if (isBrowser() && !user && pathIsProtected) {
     router.push("/welcome");
   }
 
-  return children;
+  var newChildren = React.Children.map(children, function (child) {
+    return React.cloneElement(child, { user: user });
+  });
+
+  return newChildren;
 };
 
 export default ProtectedRoute;
