@@ -44,6 +44,21 @@ const createProject = async (
   }
 };
 
+const getProjects = async (_: Request, res: Response, next: NextFunction) => {
+  const user = res.locals.user;
+
+  try {
+    let projects = await Project.find({
+      where: { userId: user.id },
+      relations: ["tasks"],
+    });
+
+    res.status(200).json(projects);
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getProject = async (req: Request, res: Response, next: NextFunction) => {
   const { identifier } = req.params;
 
@@ -79,6 +94,7 @@ router.post(
   validateRequest,
   createProject
 );
+router.get("/", user, getProjects);
 router.get("/:identifier", user, getProject);
 
 export default router;
