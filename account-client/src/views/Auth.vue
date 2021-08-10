@@ -1,29 +1,17 @@
 <template>
-  <div class="max-w-xl mx-auto px-4">
-    <div class="rounded-lg shadow-lg p-4">
-      <ul class="mx-8 mb-2 flex justify-center">
+  <div class="max-w-xl px-4 mx-auto">
+    <div class="p-4 rounded-lg shadow-lg">
+      <ul class="flex justify-center mx-8 mb-2">
         <li
           @click="setIsLogin(true)"
-          class="
-            mx-2
-            cursor-pointer
-            text-center
-            hover:opacity-75
-            transition-opacity
-          "
+          class="mx-2 text-center transition-opacity cursor-pointer hover:opacity-75"
           :class="{ 'border-b-2 border-blue-400': isLogin }"
         >
           Login
         </li>
         <li
           @click="setIsLogin(false)"
-          class="
-            mx-2
-            cursor-pointer
-            text-center
-            hover:opacity-75
-            transition-opacity
-          "
+          class="mx-2 text-center transition-opacity cursor-pointer hover:opacity-75"
           :class="{ 'border-b-2 border-blue-400': !isLogin }"
         >
           Sign Up
@@ -34,7 +22,7 @@
         :isSubmitting="isLoading"
         @submitAuth="authSubmitted"
       />
-      <div v-if="error" class="text-center my-2">
+      <div v-if="error" class="my-2 text-center">
         <p class="text-red-400">{{ error.message }}</p>
       </div>
     </div>

@@ -35,14 +35,14 @@ services:
       - "6379:6379"
     volumes:
       - "redisdata:/data"
-  postgres-tasks:
+  postgres-project:
     image: "postgres:alpine"
     environment:
       - POSTGRES_PASSWORD=password
     ports:
       - "5433:5432"
     volumes:
-      - "pgdata_tasks:/var/lib/postgresql/data"
+      - "pgdata_project:/var/lib/postgresql/data"
     command:
       [
         "postgres",
@@ -51,21 +51,21 @@ services:
         "-c",
         "log_min_error_statement=ERROR",
       ]
-  account:
+  account-server:
     build:
-      context: ./account
+      context: ./account-server
       target: builder
-    image: account
-    env_file: ./account/.env.dev
+    image: account-server
+    env_file: ./account-server/.env.dev
     expose:
       - "8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.account.rule=Host(`calpal.test`) && PathPrefix(`/api/account`)"
+      - "traefik.http.routers.account-server.rule=Host(`calpal.test`) && PathPrefix(`/api/account`)"
     environment:
       - ENV=dev
     volumes:
-      - ./account:/go/src/app
+      - ./account-server:/go/src/app
     depends_on:
       - postgres-account
       - redis-account
@@ -81,33 +81,33 @@ services:
       - "3000:3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.account-client.rule=Host(`calpal.test`) && PathPrefix(`/account`)"
+      - "traefik.http.routers.account-client.rule=Host(`calpal.test`) && PathPrefix(`/account/`)"
     volumes:
       - ./account-client:/app
       - /app/node_modules
     depends_on:
       - reverse-proxy
-  tasks:
+  project-server:
     build:
-      context: ./tasks
+      context: ./project-server
       target: builder
-    image: tasks
+    image: project-server
     expose:
       - "8080"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tasks.rule=Host(`calpal.test`) && PathPrefix(`/api/tasks`) || PathPrefix(`/api/projects`)"
+      - "traefik.http.routers.project-server.rule=Host(`calpal.test`) && PathPrefix(`/api`)"
     volumes:
-      - ./tasks:/app
+      - ./project-server:/app
     depends_on:
-      - postgres-tasks
+      - postgres-project
     environment:
       - NODE_ENV=development
     command: ["npm", "run", "dev"]
-  tasks-client:
+  project-client:
     build:
-      context: ./tasks-client
-    image: tasks-client
+      context: ./project-client
+    image: project-client
     stdin_open: true
     expose:
       - "3000"
@@ -115,11 +115,11 @@ services:
       - "3003:3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tasks-client.rule=Host(`calpal.test`)"
+      - "traefik.http.routers.project-client.rule=Host(`calpal.test`)"
     volumes:
-      - ./tasks-client:/app
+      - ./project-client:/app
       - /app/node_modules
 volumes:
   pgdata_account:
-  pgdata_tasks:
+  pgdata_project:
   redisdata:

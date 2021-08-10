@@ -1,13 +1,13 @@
-import { createApp } from 'vue';
-import App from './App.vue';
-import { createAuthStore } from './store/auth';
-import router from './routes';
-import './validators';
-import './index.css';
+import { createApp } from "vue";
+import App from "./App.vue";
+import { createAuthStore } from "./store/auth";
+import router from "./routes";
+import "./validators";
+import "./index.css";
 
 const authStore = createAuthStore({
-  onAuthRoute: '/',
-  requireAuthRoute: '/authenticate',
+  onAuthRoute: "/",
+  requireAuthRoute: "/authenticate",
 });
 
-createApp(App).use(authStore).use(router).mount('#app');
+createApp(App).use(authStore).use(router).mount("#app");

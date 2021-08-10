@@ -1,12 +1,12 @@
-import { reactive, inject, toRefs, readonly, watchEffect } from 'vue';
+import { reactive, inject, toRefs, readonly, watchEffect } from "vue";
 import {
   storeTokens,
   getTokens,
   doRequest,
   getTokenPayload,
   removeTokens,
-} from '../util';
-import { useRouter } from 'vue-router';
+} from "../util";
+import { useRouter } from "vue-router";
 
 const state = reactive({
   currentUser: null,
@@ -18,18 +18,18 @@ const state = reactive({
 const storeSymbol = Symbol();
 
 const signin = async (email, password) =>
-  await authenticate(email, password, '/api/account/signin');
+  await authenticate(email, password, "/api/account/signin");
 
 const signup = async (email, password) =>
-  await authenticate(email, password, '/api/account/signup');
+  await authenticate(email, password, "/api/account/signup");
 
 const signout = async () => {
   state.isLoading = true;
   state.error = null;
 
   const { error } = await doRequest({
-    url: '/api/account/signout',
-    method: 'post',
+    url: "/api/account/signout",
+    method: "post",
     headers: {
       Authorization: `Bearer ${state.idToken}`,
     },
@@ -70,15 +70,15 @@ const initializeUser = async () => {
   }
 
   const { data, error } = await doRequest({
-    url: '/api/account/tokens',
-    method: 'post',
+    url: "/api/account/tokens",
+    method: "post",
     data: {
       refreshToken,
     },
   });
 
   if (error) {
-    console.error('Error refreshing tokens\n', error);
+    console.error("Error refreshing tokens\n", error);
     return;
   }
 
@@ -116,13 +116,13 @@ export function useAuth() {
   const store = inject(storeSymbol);
 
   if (!store) {
-    throw new Error('Auth store has not been instantiated');
+    throw new Error("Auth store has not been instantiated");
   }
 
   const router = useRouter();
 
   watchEffect(() => {
-    const isLoginOnly = new URL(location.href).searchParams.has('loginOnly');
+    const isLoginOnly = new URL(location.href).searchParams.has("loginOnly");
 
     if (store.currentUser.value && store.onAuthRoute) {
       if (isLoginOnly) {
@@ -133,8 +133,9 @@ export function useAuth() {
     }
 
     if (!store.currentUser.value && store.requireAuthRoute) {
+      console.log(isLoginOnly);
       if (isLoginOnly) {
-        router.push(store.requireAuthRoute + '?loginOnly');
+        router.push(store.requireAuthRoute + "?loginOnly");
       } else {
         router.push(store.requireAuthRoute);
       }
@@ -151,7 +152,7 @@ const authenticate = async (email, password, url) => {
 
   const { data, error } = await doRequest({
     url,
-    method: 'post',
+    method: "post",
     data: {
       email,
       password,
