@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import React from "react";
 import useSwr from "swr";
 
 import TaskCard from "../../components/TaskCard";
@@ -12,18 +13,34 @@ export default function ProjectPage() {
 
   const projectId = router.query.project;
 
-  const { data: project } = useSwr<Project | null>([
-    projectId ? `/projects/${projectId}` : null,
+  const { data: project, error } = useSwr<Project>([
+    `/projects/${projectId}`,
     idToken,
   ]);
+
+  if (error) router.push("/");
+
+  let tasksMarkup;
+  if (
+    typeof project === "undefined" ||
+    typeof project === "string" ||
+    !project
+  ) {
+    tasksMarkup = <p className="text-lg text-center">Loading..</p>;
+  } else if (project.tasks.length === 0) {
+    tasksMarkup = (
+      <p className="text-lg text-center">No tasks have been added yet</p>
+    );
+  } else {
+    tasksMarkup = project.tasks.map((task) => (
+      <TaskCard key={task.id} task={task} />
+    ));
+  }
+
   return (
     <div className="container flex pt-5">
-      {typeof project !== "undefined" && (
-        <div className="w-160">
-          {project.tasks.map((task) => (
-            <TaskCard key={task.id} task={task} />
-          ))}
-        </div>
+      {typeof project !== "undefined" && typeof project !== "string" && (
+        <div className="w-160">{tasksMarkup}</div>
       )}
     </div>
   );
