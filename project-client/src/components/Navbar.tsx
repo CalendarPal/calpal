@@ -1,8 +1,15 @@
+import { useRouter } from "next/router";
 import React from "react";
 
 import UserDropdown from "./UserDropdown";
 
 function Navbar() {
+  const router = useRouter();
+
+  if (router.pathname === "/welcome") {
+    return <></>;
+  }
+
   return (
     <>
       {/* Navbar */}
