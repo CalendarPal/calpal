@@ -26,7 +26,7 @@ export default function UpcomingTaskTable(props: { tasks: Task[] }) {
       <tbody>
         {/* Upcoming tasks list */}
         {tasks.map((task: Task) => (
-          <UpcomingTaskItem task={task} />
+          <UpcomingTaskItem task={task} key={task.id} />
         ))}
       </tbody>
     </table>
