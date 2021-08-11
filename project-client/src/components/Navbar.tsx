@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import EditItemForm from "./EditItemForm";
 
 import UserDropdown from "./UserDropdown";
 
@@ -36,6 +37,10 @@ function Navbar() {
               />
             </div>
           </form>
+          {/* Create Project/Task dropdown */}
+          <ul className="flex-col items-center hidden h-full list-none md:flex-row md:flex">
+            <EditItemForm itemType={"Task"} />
+          </ul>
           {/* User */}
           <ul className="flex-col items-center hidden list-none md:flex-row md:flex">
             <UserDropdown />
