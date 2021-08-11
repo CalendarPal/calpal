@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import Link from "next/link";
 import React from "react";
 
 import { Project } from "../types";
@@ -10,7 +11,7 @@ interface ProjectCardProps {
 }
 export default function ProjectCard(props: ProjectCardProps) {
   const { project } = props;
-  console.log(project);
+  // console.log(project);
   return (
     <div className="w-full px-4 lg:w-6/12 xl:w-3/12">
       <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white rounded shadow-lg xl:mb-0">
@@ -20,9 +21,11 @@ export default function ProjectCard(props: ProjectCardProps) {
               <h5 className="text-xs font-bold uppercase text-blueGray-400">
                 {project.taskCount || 0} Tasks
               </h5>
-              <span className="text-xl font-semibold text-blueGray-700">
-                {project.title}
-              </span>
+              <Link href={`/p/${project.id}`}>
+                <a className="text-xl font-semibold text-blueGray-700 hover:underline">
+                  {project.title}
+                </a>
+              </Link>
             </div>
             <div className="relative flex-initial w-auto pl-4">
               <div className="inline-flex items-center justify-center w-12 h-12 p-3 text-center text-white bg-red-500 rounded-full shadow-lg">
