@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/CalendarPal/calpal/account-server/models"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 )
 

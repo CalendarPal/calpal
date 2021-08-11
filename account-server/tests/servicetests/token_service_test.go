@@ -11,7 +11,7 @@ import (
 	"github.com/CalendarPal/calpal/account-server/models"
 	"github.com/CalendarPal/calpal/account-server/services"
 	"github.com/CalendarPal/calpal/account-server/tests/mocks"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
