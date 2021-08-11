@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.9.3",
+    "@tailwindcss/forms": "^0.3.3",
     "autoprefixer": "^10.3.1",
     "axios": "^0.21.1",
     "date-fns": "^2.23.0",
     "dayjs": "^1.10.6",
+    "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
     "next": "11.0.1",
     "postcss": "^8.3.6",
@@ -22,6 +24,7 @@
     "react-dom": "17.0.2",
     "swr": "^0.5.6",
     "tailwindcss": "^2.2.7",
+    "yup": "^0.32.9",
     "zustand": "^3.5.7"
   },
   "devDependencies": {

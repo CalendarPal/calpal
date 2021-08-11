@@ -21,7 +21,8 @@ const fetcher = async (url: string, token: string) => {
     });
     return res.data;
   } catch (err: any) {
-    throw err.response.data.errors;
+    const e: Error = err;
+    throw e;
   }
 };
 
